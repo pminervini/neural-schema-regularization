@@ -36,7 +36,7 @@ class TestSimilarities(unittest.TestCase):
 
                 for s in [s1, s2]:
                     for d in [d1, d2]:
-                        assert((False in (s > d)) is False)
+                        self.assertTrue((False in (s > d)) is False)
 
     def test_l1(self):
         x_values = np.random.rand(1024)
@@ -48,7 +48,7 @@ class TestSimilarities(unittest.TestCase):
         function = K.function([X, Y], [sim(X, Y, f=sim_f)])
 
         for x, y in zip(x_values, y_values):
-            assert(abs(function([[[x]], [[y]]])[0] - (- abs(x - y))) < 1e-6)
+            self.assertTrue(abs(function([[[x]], [[y]]])[0] - (- abs(x - y))) < 1e-6)
 
     def test_l2(self):
         x_values = np.random.rand(1024)
@@ -60,7 +60,7 @@ class TestSimilarities(unittest.TestCase):
         function = K.function([X, Y], [sim(X, Y, f=sim_f)])
 
         for x, y in zip(x_values, y_values):
-            assert(abs(function([[[x]], [[y]]])[0] - (- math.sqrt((x - y) ** 2))) < 1e-6)
+            self.assertTrue(abs(function([[[x]], [[y]]])[0] - (- math.sqrt((x - y) ** 2))) < 1e-6)
 
     def test_l2sqr(self):
         x_values = np.random.rand(1024)
@@ -72,7 +72,7 @@ class TestSimilarities(unittest.TestCase):
         function = K.function([X, Y], [sim(X, Y, f=sim_f)])
 
         for x, y in zip(x_values, y_values):
-            assert(abs(function([[[x]], [[y]]])[0] - (- (x - y) ** 2)) < 1e-6)
+            self.assertTrue(abs(function([[[x]], [[y]]])[0] - (- (x - y) ** 2)) < 1e-6)
 
     def test_dot(self):
         x_values = np.random.rand(1024)
@@ -84,7 +84,7 @@ class TestSimilarities(unittest.TestCase):
         function = K.function([X, Y], [sim(X, Y, f=sim_f)])
 
         for x, y in zip(x_values, y_values):
-            assert(abs(function([[[x]], [[y]]])[0] - (x * y)) < 1e-6)
+            self.assertTrue(abs(function([[[x]], [[y]]])[0] - (x * y)) < 1e-6)
 
     def test_cosine(self):
         x_values = np.random.rand(1024)
@@ -97,7 +97,7 @@ class TestSimilarities(unittest.TestCase):
 
         for x, y in zip(x_values, y_values):
             cos = x * y / (math.sqrt(x ** 2) * math.sqrt(y ** 2))
-            assert(abs(function([[[x]], [[y]]])[0] - cos) < 1e-6)
+            self.assertTrue(abs(function([[[x]], [[y]]])[0] - cos) < 1e-6)
 
 
 if __name__ == '__main__':

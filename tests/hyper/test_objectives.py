@@ -22,7 +22,7 @@ class TestObjectives(unittest.TestCase):
     def test_objectives(self):
         for loss_f in [objectives.MSE, objectives.RMSE, objectives.MAE, objectives.MAPE, objectives.MSLE,
                        objectives.SHL, objectives.HL, objectives.BC, objectives.PL]:
-            for _ in range(2):
+            for _ in range(16):
                 p = np.random.random(self.nb_samples).astype(K.floatx())
                 t = np.random.random_integers(0, 1, self.nb_samples).astype(K.floatx())
 
@@ -32,7 +32,7 @@ class TestObjectives(unittest.TestCase):
                 d = function([t, p])[0]
                 s = function([t, t])[0]
 
-                assert(d > s)
+                self.assertTrue(d > s)
 
     def test_mse(self):
         p_values = np.random.rand(1024)
@@ -44,7 +44,7 @@ class TestObjectives(unittest.TestCase):
         function = K.function([T, P], [loss(T, P, f=loss_f)])
 
         for p, t in zip(p_values, t_values):
-            assert(abs(function([[t], [p]])[0] - ((t - p) ** 2)) < 1e-6)
+            self.assertTrue(abs(function([[t], [p]])[0] - ((t - p) ** 2)) < 1e-6)
 
     def test_rmse(self):
         p_values = np.random.rand(1024)
@@ -56,7 +56,7 @@ class TestObjectives(unittest.TestCase):
         function = K.function([T, P], [loss(T, P, f=loss_f)])
 
         for p, t in zip(p_values, t_values):
-            assert(abs(function([[t], [p]])[0] - math.sqrt((t - p) ** 2)) < 1e-6)
+            self.assertTrue(abs(function([[t], [p]])[0] - math.sqrt((t - p) ** 2)) < 1e-6)
 
     def test_mae(self):
         p_values = np.random.rand(1024)
@@ -68,7 +68,7 @@ class TestObjectives(unittest.TestCase):
         function = K.function([T, P], [loss(T, P, f=loss_f)])
 
         for p, t in zip(p_values, t_values):
-            assert(abs(function([[t], [p]])[0] - abs(t - p)) < 1e-6)
+            self.assertTrue(abs(function([[t], [p]])[0] - abs(t - p)) < 1e-6)
 
     def test_bc(self):
         p_values = np.random.rand(1024)
@@ -82,7 +82,7 @@ class TestObjectives(unittest.TestCase):
         for p, t in zip(p_values, t_values):
             cp = np.clip(p, 10e-8, 1.0 - 10e-8)
             bc = - (t * math.log(cp) + (1. - t) * math.log(1. - cp))
-            assert(abs(function([[t], [p]])[0] - bc) < 1e-4)
+            self.assertTrue(abs(function([[t], [p]])[0] - bc) < 1e-4)
 
 if __name__ == '__main__':
     unittest.main()

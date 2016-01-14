@@ -15,10 +15,10 @@ class TestKnowledgeBaseParser(unittest.TestCase):
             's1 p2 s1'
         ]
 
-        facts = list()
+        facts = []
         for line in lines:
-            subject, predicate, object = line.split()
-            facts.append(kb.Fact(predicate_name=predicate, argument_names=[subject, object]))
+            subj, pred, obj = line.split()
+            facts += [kb.Fact(predicate_name=pred, argument_names=[subj, obj])]
 
         parser = kb.KnowledgeBaseParser(facts)
 

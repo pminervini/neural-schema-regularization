@@ -15,12 +15,12 @@ def read_lines(fname):
 def main(argv):
     logging.info("Loading data...")
 
-    training_lines = read_lines('data/fb15k/freebase_mtr100_mte100-train.txt')
+    lines = read_lines('data/fb15k/freebase_mtr100_mte100-train.txt')
 
     facts = []
-    for line in training_lines:
-        subject, predicate, object = line.split()
-        facts += [kb.Fact(predicate_name=predicate, argument_names=[subject, object])]
+    for line in lines:
+        subj, pred, obj = line.split()
+        facts += [kb.Fact(predicate_name=pred, argument_names=[subj, obj])]
 
     parser = kb.KnowledgeBaseParser(facts)
 
