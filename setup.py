@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from setuptools import setup
 from setuptools import find_packages
 
@@ -10,5 +12,5 @@ setup(name='hyper',
       url='https://github.com/pminervini/hyper',
       test_suite='tests',
       license='MIT',
-      install_requires=['keras'],
+      install_requires=['keras>=0.3.1'],
       packages=find_packages())
