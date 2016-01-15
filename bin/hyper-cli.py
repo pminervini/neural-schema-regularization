@@ -3,9 +3,11 @@
 
 import numpy as np
 
+from keras.models import Sequential
 from keras.layers.embeddings import Embedding
-from keras.layers.core import Activation, TimeDistributedMerge
-from keras.models import Graph
+from keras.layers.core import LambdaMerge
+
+from keras import backend as K
 
 from hyper.preprocessing import knowledgebase
 
@@ -17,25 +19,29 @@ __author__ = 'pminervini'
 __copyright__ = 'INSIGHT Centre for Data Analytics 2015'
 
 
+def merge_function(args):
+    relation_embedding = args[0]
+    entity_embeddings = args[1]
+    return relation_embedding[:, 0, :] #* entity_embeddings[:, 0, :] #* entity_embeddings[:, 1, :]
+
+
 def experiment(train_sequences, nb_entities, nb_predicates,
                entity_embedding_size=100, predicate_embedding_size=100):
 
-    model = Graph()
+    predicate_encoder = Sequential()
+    entity_encoder = Sequential()
 
-    model.add_input(name='entity_idx', input_shape=(None,), dtype='int32')
-    model.add_input(name='predicate_idx', input_shape=(1,), dtype='int32')
+    predicate_embedding_layer = Embedding(input_dim=nb_predicates, output_dim=predicate_embedding_size, input_length=1)
+    predicate_encoder.add(predicate_embedding_layer)
 
-    entity_embedding_layer = Embedding(input_dim=nb_entities, output_dim=entity_embedding_size)
-    predicate_embedding_layer = Embedding(input_dim=nb_predicates, output_dim=predicate_embedding_size)
+    entity_embedding_layer = Embedding(input_dim=nb_entities, output_dim=entity_embedding_size, input_length=None)
+    entity_encoder.add(entity_embedding_layer)
 
-    model.add_node(entity_embedding_layer, name='entity_embedding', input='entity_idx')
-    model.add_node(predicate_embedding_layer, name='predicate_embedding', input='predicate_idx')
+    model = Sequential()
+    merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=merge_function)
+    model.add(merge_layer)
 
-    model.add_node(layer=Activation('linear'), name='concat',
-                   inputs=['predicate_embedding', 'entity_embedding'],
-                   merge_mode='concat', concat_axis=1)
-
-    model.add_output(name='output', input='concat')
+    model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
 
     return
 
@@ -58,10 +64,10 @@ def main(argv):
 
     np.random.seed(args.seed)
 
-    train_facts = list()
+    train_facts = []
     for line in args.train:
-        subject, predicate, object = line.split()
-        train_facts.append(knowledgebase.Fact(predicate_name=predicate, argument_names=[subject, object]))
+        subj, pred, obj = line.split()
+        train_facts += [knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])]
 
     parser = knowledgebase.KnowledgeBaseParser(train_facts)
 

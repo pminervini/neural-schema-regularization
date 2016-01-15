@@ -4,12 +4,6 @@ from abc import ABCMeta, abstractmethod
 
 import numpy as np
 
-from keras.preprocessing import sequence
-from keras.datasets import imdb
-
-import logging
-import sys
-
 
 class IndexGenerator(metaclass=ABCMeta):
     @abstractmethod
