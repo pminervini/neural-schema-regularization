@@ -31,8 +31,6 @@ def main(argv):
 
     print(Y)
 
-
-
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     main(sys.argv[1:])
