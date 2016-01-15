@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from hyper.preprocessing import kb
+from hyper.preprocessing import knowledgebase
 
 import logging
 import sys
@@ -20,9 +20,9 @@ def main(argv):
     facts = []
     for line in lines:
         subj, pred, obj = line.split()
-        facts += [kb.Fact(predicate_name=pred, argument_names=[subj, obj])]
+        facts += [knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])]
 
-    parser = kb.KnowledgeBaseParser(facts)
+    parser = knowledgebase.KnowledgeBaseParser(facts)
 
     training_pairs = parser.facts_to_sequences(facts)
 

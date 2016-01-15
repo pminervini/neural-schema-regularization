@@ -7,7 +7,7 @@ from keras.layers.embeddings import Embedding
 from keras.layers.core import Activation, TimeDistributedMerge
 from keras.models import Graph
 
-from hyper.preprocessing import kb
+from hyper.preprocessing import knowledgebase
 
 import sys
 import logging
@@ -61,9 +61,9 @@ def main(argv):
     train_facts = list()
     for line in args.train:
         subject, predicate, object = line.split()
-        train_facts.append(kb.Fact(predicate_name=predicate, argument_names=[subject, object]))
+        train_facts.append(knowledgebase.Fact(predicate_name=predicate, argument_names=[subject, object]))
 
-    parser = kb.KnowledgeBaseParser(train_facts)
+    parser = knowledgebase.KnowledgeBaseParser(train_facts)
 
     nb_entities, nb_predicates = len(parser.entity_vocabulary), len(parser.predicate_vocabulary)
 

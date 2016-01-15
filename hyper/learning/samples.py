@@ -37,22 +37,3 @@ class UniformRandomIndexGenerator(IndexGenerator):
 
         rand_ints = self.random_state.random_integers(0, indices.size - 1, n_samples)
         return indices[rand_ints]
-
-
-
-def main(argv):
-    max_features = 5000
-    maxlen = 200
-    (X_train, y_train), (X_test, y_test) = imdb.load_data(nb_words=max_features, test_split=0.2)
-    X_train = sequence.pad_sequences(X_train, maxlen=maxlen)
-    print(X_train[0, :])
-
-    rs = np.random.RandomState(seed=0)
-    ig = UniformRandomIndexGenerator(rs)
-
-    print(ig.generate(10, [1, 3, 5]))
-
-
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    main(sys.argv[1:])

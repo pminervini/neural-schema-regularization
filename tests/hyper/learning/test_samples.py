@@ -16,7 +16,6 @@ class TestSamples(unittest.TestCase):
         pass
 
     def test_samples(self):
-
         for _ in range(1024):
             seed = np.random.random_integers(0, 8192)
 
