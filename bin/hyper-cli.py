@@ -22,7 +22,7 @@ __copyright__ = 'INSIGHT Centre for Data Analytics 2015'
 def merge_function(args):
     relation_embedding = args[0]
     entity_embeddings = args[1]
-    return relation_embedding[:, 0, :] #* entity_embeddings[:, 0, :] #* entity_embeddings[:, 1, :]
+    return relation_embedding[:, 0, :] * entity_embeddings[:, 0, :] * entity_embeddings[:, 1, :]
 
 
 def experiment(train_sequences, nb_entities, nb_predicates,
@@ -43,6 +43,12 @@ def experiment(train_sequences, nb_entities, nb_predicates,
 
     model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
 
+    print(train_sequences)
+    Xr = np.array([[1]])
+    Xe = np.array([[1, 2]])
+
+    model.predict([Xr, Xe], batch_size=1)
+
     return
 
 
@@ -57,7 +63,7 @@ def main(argv):
 
     argparser.add_argument('--entity-embedding-size', action='store', type=int, default=100,
                            help='Size of entity embeddings')
-    argparser.add_argument('--predicate-embedding-size', action='store', type=int, default=None,
+    argparser.add_argument('--predicate-embedding-size', action='store', type=int, default=100,
                            help='Size of predicate embeddings')
 
     args = argparser.parse_args(argv)
@@ -71,13 +77,17 @@ def main(argv):
 
     parser = knowledgebase.KnowledgeBaseParser(train_facts)
 
-    nb_entities, nb_predicates = len(parser.entity_vocabulary), len(parser.predicate_vocabulary)
+    nb_entities = len(parser.entity_vocabulary) + 1
+    nb_predicates = len(parser.predicate_vocabulary) + 1
+
+    entity_embedding_size = args.entity_embedding_size
+    predicate_embedding_size = args.predicate_embedding_size
 
     train_sequences = parser.facts_to_sequences(train_facts)
 
     experiment(train_sequences, nb_entities, nb_predicates,
-               entity_embedding_size=args.entity_embedding_size,
-               predicate_embedding_size=args.predicate_embedding_size)
+               entity_embedding_size=entity_embedding_size,
+               predicate_embedding_size=predicate_embedding_size)
     return
 
 
