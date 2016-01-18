@@ -6,7 +6,7 @@ from keras import backend as K
 
 from keras.models import Sequential
 from keras.layers.embeddings import Embedding
-from keras.layers.core import Lambda
+from hyper.layers.core import Lambda
 
 import unittest
 

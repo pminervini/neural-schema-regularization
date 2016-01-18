@@ -6,10 +6,10 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers.embeddings import Embedding
 from keras.layers.core import LambdaMerge
-
-from keras import backend as K
+from keras.models import make_batches
 
 from hyper.preprocessing import knowledgebase
+from hyper.learning import samples
 
 import sys
 import logging
@@ -19,14 +19,12 @@ __author__ = 'pminervini'
 __copyright__ = 'INSIGHT Centre for Data Analytics 2015'
 
 
-def merge_function(args):
-    relation_embedding = args[0]
-    entity_embeddings = args[1]
-    return relation_embedding[:, 0, :] * entity_embeddings[:, 0, :] * entity_embeddings[:, 1, :]
-
-
 def experiment(train_sequences, nb_entities, nb_predicates,
-               entity_embedding_size=100, predicate_embedding_size=100):
+               entity_embedding_size=100, predicate_embedding_size=100,
+               nb_epochs=100, batch_size=128, seed=1):
+
+    np.random.seed(seed)
+    random_state = np.random.RandomState(seed=seed)
 
     predicate_encoder = Sequential()
     entity_encoder = Sequential()
@@ -38,16 +36,85 @@ def experiment(train_sequences, nb_entities, nb_predicates,
     entity_encoder.add(entity_embedding_layer)
 
     model = Sequential()
-    merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=merge_function)
+
+    core = sys.modules['keras.layers.core']
+
+    setattr(core, 'hyper_similarity', 'L2')
+    setattr(core, 'hyper_merge_function', 'ScalE')
+
+    def f(args):
+        import sys
+        import hyper.similarities as similarities
+        import hyper.layers.binary.merge_functions as merge_functions
+
+        core = sys.modules['keras.layers.core']
+
+        sim = getattr(core, 'hyper_similarity')
+        mer = getattr(core, 'hyper_merge_function')
+
+        similarity_function = similarities.get_function(sim)
+        merge_function = merge_functions.get_function(mer)
+
+        return merge_function(args, similarity=similarity_function)
+
+    merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=f)
+
     model.add(merge_layer)
 
     model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
 
     print(train_sequences)
-    Xr = np.array([[1]])
-    Xe = np.array([[1, 2]])
 
-    model.predict([Xr, Xe], batch_size=1)
+    Xr = np.array([[rel_idx] for (rel_idx, _) in train_sequences])
+    Xe = np.array([ent_idxs for (_, ent_idxs) in train_sequences])
+
+    y = model.predict([Xr, Xe], batch_size=1)
+
+    print(y, Xr.shape, Xe.shape)
+
+    nb_samples = Xr.shape[0]
+    assert Xr.shape[0] == Xe.shape[0]
+
+    # Random index generator for sampling negative examples
+    random_index_generator = samples.UniformRandomIndexGenerator(random_state=random_state)
+
+    for epoch_no in range(1, nb_epochs + 1):
+        logging.info('Epoch no. %d of %d' % (epoch_no, nb_epochs))
+
+        # Shuffling training (positive) triples..
+        order = random_state.permutation(nb_samples)
+
+        Xr_shuffled = Xr[order, :]
+        Xe_shuffled = Xe[order, :]
+
+        assert Xr_shuffled.shape[0] == Xe_shuffled.shape[0]
+
+        # Creating negative examples..
+        candidate_indices = np.arange(1, nb_entities)
+
+        negative_subjects = random_index_generator.generate(nb_samples, candidate_indices)
+        negative_objects = random_index_generator.generate(nb_samples, candidate_indices)
+
+        # Negative examples (with different subjects and objects)
+        # TODO: I should corrupt only subjects first, and then only objects (LCWA)
+        nXe_shuffled = np.copy(Xe_shuffled)
+        nXe_shuffled[:, 0] = negative_subjects
+        nXe_shuffled[:, 1] = negative_objects
+
+        batches = make_batches(nb_samples, batch_size)
+
+        # Iterate over batches of (positive) training examples
+        for batch_index, (batch_start, batch_end) in enumerate(batches):
+            Xr_batch = Xr_shuffled[batch_start:batch_end]
+            Xe_batch = Xe_shuffled[batch_start:batch_end]
+
+            Xr_batch = Xr_shuffled[batch_start:batch_end]
+            nXe_batch = nXe_shuffled[batch_start:batch_end]
+
+            assert Xr_batch.shape[0] == Xe_batch.shape[0]
+            assert Xr_batch.shape[0] == nXe_batch.shape[0]
+
+
 
     return
 
@@ -57,8 +124,10 @@ def main(argv):
         return argparse.HelpFormatter(prog, max_help_position=100, width=200)
 
     argparser = argparse.ArgumentParser('Latent Factor Models for Knowledge Hypergraphs', formatter_class=formatter)
-    argparser.add_argument('--train', required=True, type=argparse.FileType('r'))
 
+    argparser.add_argument('--train', required=True, type=argparse.FileType('r'))
+    argparser.add_argument('--epochs', action='store', type=int, default=10, help='Number of training epochs')
+    argparser.add_argument('--batch-size', action='store', type=int, default=128, help='Batch size')
     argparser.add_argument('--seed', action='store', type=int, default=1, help='Seed for the PRNG')
 
     argparser.add_argument('--entity-embedding-size', action='store', type=int, default=100,
@@ -68,14 +137,16 @@ def main(argv):
 
     args = argparser.parse_args(argv)
 
-    np.random.seed(args.seed)
-
     train_facts = []
     for line in args.train:
         subj, pred, obj = line.split()
         train_facts += [knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])]
 
     parser = knowledgebase.KnowledgeBaseParser(train_facts)
+
+    epochs = args.epochs
+    batch_size = args.batch_size
+    seed = args.seed
 
     nb_entities = len(parser.entity_vocabulary) + 1
     nb_predicates = len(parser.predicate_vocabulary) + 1
@@ -87,7 +158,9 @@ def main(argv):
 
     experiment(train_sequences, nb_entities, nb_predicates,
                entity_embedding_size=entity_embedding_size,
-               predicate_embedding_size=predicate_embedding_size)
+               predicate_embedding_size=predicate_embedding_size,
+               nb_epochs=epochs, batch_size=batch_size,
+               seed=seed)
     return
 
 

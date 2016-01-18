@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from keras import backend as K
+import sys
 
 
 def negative_l1_distance(x, y, axis=1):
@@ -81,3 +82,13 @@ l2 = L2 = negative_l2_distance
 l2sqr = L2SQR = negative_square_l2_distance
 dot = DOT = dot_product
 cosine = COSINE = cosine_similarity
+
+
+def get_function(function_name):
+    this_module = sys.modules[__name__]
+    if hasattr(this_module, function_name):
+        function = getattr(this_module, function_name)
+    else:
+        raise ValueError("Unknown similarity function: %s" % function_name)
+    return function
+
