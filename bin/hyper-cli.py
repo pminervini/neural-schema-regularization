@@ -8,6 +8,9 @@ from keras.layers.embeddings import Embedding
 from keras.layers.core import LambdaMerge
 from keras.models import make_batches
 
+from keras import backend as K
+
+from hyper.layers.core import Arguments
 from hyper.preprocessing import knowledgebase
 from hyper.learning import samples
 
@@ -37,40 +40,40 @@ def experiment(train_sequences, nb_entities, nb_predicates,
 
     model = Sequential()
 
-    core = sys.modules['keras.layers.core']
-
-    setattr(core, 'hyper_similarity', 'L2')
-    setattr(core, 'hyper_merge_function', 'ScalE')
+    core = sys.modules['hyper.layers.core']
+    setattr(core, 'similarity function', 'L2')
+    setattr(core, 'merge function', 'ScalE')
 
     def f(args):
         import sys
         import hyper.similarities as similarities
         import hyper.layers.binary.merge_functions as merge_functions
 
-        core = sys.modules['keras.layers.core']
+        core = sys.modules['hyper.layers.core']
+        similarity_function_name = getattr(core, 'similarity function')
+        merge_function_name = getattr(core, 'merge function')
 
-        sim = getattr(core, 'hyper_similarity')
-        mer = getattr(core, 'hyper_merge_function')
-
-        similarity_function = similarities.get_function(sim)
-        merge_function = merge_functions.get_function(mer)
+        similarity_function = similarities.get_function(similarity_function_name)
+        merge_function = merge_functions.get_function(merge_function_name)
 
         return merge_function(args, similarity=similarity_function)
 
     merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=f)
-
     model.add(merge_layer)
 
-    model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
+    def margin_based_loss(y_true, y_pred):
+        pos = y_pred[0::2]
+        neg = y_pred[1::2]
+        diff = (K.clip((neg - pos + 1), 0, np.inf)).sum(axis=1, keepdims=True)
+        y_true = y_true[0::2]
+        return diff.mean()
 
-    print(train_sequences)
+    model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
 
     Xr = np.array([[rel_idx] for (rel_idx, _) in train_sequences])
     Xe = np.array([ent_idxs for (_, ent_idxs) in train_sequences])
 
     y = model.predict([Xr, Xe], batch_size=1)
-
-    print(y, Xr.shape, Xe.shape)
 
     nb_samples = Xr.shape[0]
     assert Xr.shape[0] == Xe.shape[0]
@@ -98,7 +101,7 @@ def experiment(train_sequences, nb_entities, nb_predicates,
         # Negative examples (with different subjects and objects)
         # TODO: I should corrupt only subjects first, and then only objects (LCWA)
         nXe_shuffled = np.copy(Xe_shuffled)
-        nXe_shuffled[:, 0] = negative_subjects
+        #nXe_shuffled[:, 0] = negative_subjects
         nXe_shuffled[:, 1] = negative_objects
 
         batches = make_batches(nb_samples, batch_size)
@@ -106,15 +109,24 @@ def experiment(train_sequences, nb_entities, nb_predicates,
         # Iterate over batches of (positive) training examples
         for batch_index, (batch_start, batch_end) in enumerate(batches):
             Xr_batch = Xr_shuffled[batch_start:batch_end]
-            Xe_batch = Xe_shuffled[batch_start:batch_end]
 
-            Xr_batch = Xr_shuffled[batch_start:batch_end]
+            Xe_batch = Xe_shuffled[batch_start:batch_end]
             nXe_batch = nXe_shuffled[batch_start:batch_end]
 
             assert Xr_batch.shape[0] == Xe_batch.shape[0]
             assert Xr_batch.shape[0] == nXe_batch.shape[0]
 
+            sXr_batch = np.empty((Xr_batch.shape[0] * 2, Xr_batch.shape[1]))
+            sXr_batch[0::2] = Xr_batch
+            sXr_batch[1::2] = Xr_batch
 
+            sXe_batch = np.empty((Xe_batch.shape[0] * 2, Xe_batch.shape[1]))
+            sXe_batch[0::2] = Xe_batch
+            sXe_batch[1::2] = nXe_batch
+
+            y_batch = np.zeros(Xe_batch.shape[0] * 2)
+
+            model.fit([sXr_batch, sXe_batch], y_batch)
 
     return
 
