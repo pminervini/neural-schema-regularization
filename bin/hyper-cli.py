@@ -10,7 +10,7 @@ from keras.models import make_batches
 
 from keras import backend as K
 
-from hyper.layers.core import Arguments
+import hyper.layers.core
 from hyper.preprocessing import knowledgebase
 from hyper.learning import samples
 
@@ -64,16 +64,14 @@ def experiment(train_sequences, nb_entities, nb_predicates,
     def margin_based_loss(y_true, y_pred):
         pos = y_pred[0::2]
         neg = y_pred[1::2]
-        diff = (K.clip((neg - pos + 1), 0, np.inf)).sum(axis=1, keepdims=True)
+        diff = K.clip((neg - pos + 1), 0, np.inf).sum(axis=1, keepdims=True)
         y_true = y_true[0::2]
-        return diff.mean()
+        return K.abs(diff - y_true).sum()
 
-    model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
+    model.compile(loss=margin_based_loss, optimizer='adagrad')
 
     Xr = np.array([[rel_idx] for (rel_idx, _) in train_sequences])
     Xe = np.array([ent_idxs for (_, ent_idxs) in train_sequences])
-
-    y = model.predict([Xr, Xe], batch_size=1)
 
     nb_samples = Xr.shape[0]
     assert Xr.shape[0] == Xe.shape[0]
@@ -126,7 +124,8 @@ def experiment(train_sequences, nb_entities, nb_predicates,
 
             y_batch = np.zeros(Xe_batch.shape[0] * 2)
 
-            model.fit([sXr_batch, sXe_batch], y_batch)
+            hist = model.fit([sXr_batch, sXe_batch], y_batch, nb_epoch=1, batch_size=batch_size + 999999, verbose=0)
+            print(hist.history)
 
     return
 
