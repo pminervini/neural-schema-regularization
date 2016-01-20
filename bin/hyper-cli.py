@@ -5,9 +5,9 @@ import numpy as np
 
 from keras.models import Sequential
 from keras.layers.embeddings import Embedding
+from keras.constraints import unitnorm
 from keras.layers.core import LambdaMerge
 from keras.models import make_batches
-
 from keras.optimizers import Adagrad
 
 from keras import backend as K
@@ -37,7 +37,8 @@ def experiment(train_sequences, nb_entities, nb_predicates,
     predicate_embedding_layer = Embedding(input_dim=nb_predicates, output_dim=predicate_embedding_size, input_length=1)
     predicate_encoder.add(predicate_embedding_layer)
 
-    entity_embedding_layer = Embedding(input_dim=nb_entities, output_dim=entity_embedding_size, input_length=2)
+    entity_embedding_layer = Embedding(input_dim=nb_entities, output_dim=entity_embedding_size,
+                                       input_length=2, W_constraint=unitnorm())
     entity_encoder.add(entity_embedding_layer)
 
     model = Sequential()
@@ -106,8 +107,6 @@ def experiment(train_sequences, nb_entities, nb_predicates,
         negative_subjects = random_index_generator.generate(nb_samples, candidate_indices)
         negative_objects = random_index_generator.generate(nb_samples, candidate_indices)
 
-        # Negative examples (with different subjects and objects)
-        # TODO: I should corrupt only subjects first, and then only objects (LCWA)
         nXe_subj_shuffled = np.copy(Xe_shuffled)
         nXe_subj_shuffled[:, 0] = negative_subjects
 
@@ -156,8 +155,6 @@ def main(argv):
     argparser = argparse.ArgumentParser('Latent Factor Models for Knowledge Hypergraphs', formatter_class=formatter)
 
     argparser.add_argument('--train', required=True, type=argparse.FileType('r'))
-    argparser.add_argument('--epochs', action='store', type=int, default=10, help='Number of training epochs')
-    argparser.add_argument('--batch-size', action='store', type=int, default=128, help='Batch size')
     argparser.add_argument('--seed', action='store', type=int, default=1, help='Seed for the PRNG')
 
     argparser.add_argument('--entity-embedding-size', action='store', type=int, default=100,
@@ -165,32 +162,64 @@ def main(argv):
     argparser.add_argument('--predicate-embedding-size', action='store', type=int, default=100,
                            help='Size of predicate embeddings')
 
+    argparser.add_argument('--model', action='store', type=str, default=None, help='Name of the model to use')
+    argparser.add_argument('--epochs', action='store', type=int, default=10, help='Number of training epochs')
+    argparser.add_argument('--batch-size', action='store', type=int, default=128, help='Batch size')
+
+    argparser.add_argument('--optimizer', action='store', type=str, default='adagrad',
+                           help='Optimization algorithm to use - sgd, adagrad, adadelta, rmsprop, adam, adamax')
+    argparser.add_argument('--lr', action='store', type=float, default=0.01, help='Learning rate')
+    argparser.add_argument('--momentum', action='store', type=float, default=0.0,
+                           help='Momentum parameter of the SGD optimizer')
+    argparser.add_argument('--decay', action='store', type=float, default=0.0,
+                           help='Decay parameter of the SGD optimizer')
+    argparser.add_argument('--nesterov', action='store_true', help='Applies Nesterov momentum to the SGD optimizer')
+    argparser.add_argument('--epsilon', action='store', type=float, default=1e-06,
+                           help='Epsilon parameter of the adagrad, adadelta, rmsprop, adam and adamax optimizers')
+    argparser.add_argument('--rho', action='store', type=float, default=0.95,
+                           help='Rho parameter of the adadelta and rmsprop optimizers')
+    argparser.add_argument('--beta1', action='store', type=float, default=0.9,
+                           help='Beta1 parameter for the adam and adamax optimizers')
+    argparser.add_argument('--beta2', action='store', type=float, default=0.999,
+                           help='Beta2 parameter for the adam and adamax optimizers')
+
     args = argparser.parse_args(argv)
 
     train_facts = []
     for line in args.train:
         subj, pred, obj = line.split()
         train_facts += [knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])]
-
     parser = knowledgebase.KnowledgeBaseParser(train_facts)
-
-    epochs = args.epochs
-    batch_size = args.batch_size
-    seed = args.seed
-
     nb_entities = len(parser.entity_vocabulary) + 1
     nb_predicates = len(parser.predicate_vocabulary) + 1
+
+    seed = args.seed
 
     entity_embedding_size = args.entity_embedding_size
     predicate_embedding_size = args.predicate_embedding_size
 
+    model = args.model
+    nb_epochs = args.epochs
+    batch_size = args.batch_size
+
+    optimizer = args.optimizer
+    lr = args.lr
+    momentum = args.momentum
+    decay = args.decay
+    nesterov = args.nesterov
+    epsilon = args.epsilon
+    rho = args.rho
+    beta1 = args.beta1
+    beta2 = args.beta2
+
     train_sequences = parser.facts_to_sequences(train_facts)
 
     experiment(train_sequences, nb_entities, nb_predicates,
-               entity_embedding_size=entity_embedding_size,
-               predicate_embedding_size=predicate_embedding_size,
-               nb_epochs=epochs, batch_size=batch_size,
-               seed=seed)
+               seed=seed,
+               entity_embedding_size=entity_embedding_size, predicate_embedding_size=predicate_embedding_size,
+               model=model, nb_epochs=nb_epochs, batch_size=batch_size,
+               optimizer=optimizer, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
+               epsilon=epsilon, rho=rho, beta1=beta1, beta2=beta2)
     return
 
 
