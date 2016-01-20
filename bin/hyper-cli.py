@@ -8,6 +8,8 @@ from keras.layers.embeddings import Embedding
 from keras.layers.core import LambdaMerge
 from keras.models import make_batches
 
+from keras.optimizers import Adagrad
+
 from keras import backend as K
 
 import hyper.layers.core
@@ -35,7 +37,7 @@ def experiment(train_sequences, nb_entities, nb_predicates,
     predicate_embedding_layer = Embedding(input_dim=nb_predicates, output_dim=predicate_embedding_size, input_length=1)
     predicate_encoder.add(predicate_embedding_layer)
 
-    entity_embedding_layer = Embedding(input_dim=nb_entities, output_dim=entity_embedding_size, input_length=None)
+    entity_embedding_layer = Embedding(input_dim=nb_entities, output_dim=entity_embedding_size, input_length=2)
     entity_encoder.add(entity_embedding_layer)
 
     model = Sequential()
@@ -61,14 +63,22 @@ def experiment(train_sequences, nb_entities, nb_predicates,
     merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=f)
     model.add(merge_layer)
 
-    def margin_based_loss(y_true, y_pred):
-        pos = y_pred[0::2]
-        neg = y_pred[1::2]
-        diff = K.clip((neg - pos + 1), 0, np.inf).sum(axis=1, keepdims=True)
-        y_true = y_true[0::2]
-        return K.abs(diff - y_true).sum()
+    margin = 1
 
-    model.compile(loss=margin_based_loss, optimizer='adagrad')
+    def margin_based_loss(y_true, y_pred):
+        pos = y_pred[0::3]
+        neg_subj = y_pred[1::3]
+        neg_obj = y_pred[2::3]
+
+        diff_subj = K.clip((neg_subj - pos + margin), 0, np.inf).sum(axis=1, keepdims=True)
+        diff_obj = K.clip((neg_obj - pos + margin), 0, np.inf).sum(axis=1, keepdims=True)
+
+        y_true = y_true[0::3]
+
+        return K.abs(diff_subj - y_true).sum() + K.abs(diff_obj - y_true).sum()
+
+    optimizer = Adagrad(lr=0.1, epsilon=1e-06)
+    model.compile(loss=margin_based_loss, optimizer=optimizer)
 
     Xr = np.array([[rel_idx] for (rel_idx, _) in train_sequences])
     Xe = np.array([ent_idxs for (_, ent_idxs) in train_sequences])
@@ -98,34 +108,43 @@ def experiment(train_sequences, nb_entities, nb_predicates,
 
         # Negative examples (with different subjects and objects)
         # TODO: I should corrupt only subjects first, and then only objects (LCWA)
-        nXe_shuffled = np.copy(Xe_shuffled)
-        #nXe_shuffled[:, 0] = negative_subjects
-        nXe_shuffled[:, 1] = negative_objects
+        nXe_subj_shuffled = np.copy(Xe_shuffled)
+        nXe_subj_shuffled[:, 0] = negative_subjects
+
+        nXe_obj_shuffled = np.copy(Xe_shuffled)
+        nXe_obj_shuffled[:, 1] = negative_objects
 
         batches = make_batches(nb_samples, batch_size)
+
+        cumulative_loss = 0.0
 
         # Iterate over batches of (positive) training examples
         for batch_index, (batch_start, batch_end) in enumerate(batches):
             Xr_batch = Xr_shuffled[batch_start:batch_end]
 
             Xe_batch = Xe_shuffled[batch_start:batch_end]
-            nXe_batch = nXe_shuffled[batch_start:batch_end]
+            nXe_subj_batch = nXe_subj_shuffled[batch_start:batch_end]
+            nXe_obj_batch = nXe_obj_shuffled[batch_start:batch_end]
 
             assert Xr_batch.shape[0] == Xe_batch.shape[0]
-            assert Xr_batch.shape[0] == nXe_batch.shape[0]
+            assert Xr_batch.shape[0] == nXe_subj_batch.shape[0]
 
-            sXr_batch = np.empty((Xr_batch.shape[0] * 2, Xr_batch.shape[1]))
-            sXr_batch[0::2] = Xr_batch
-            sXr_batch[1::2] = Xr_batch
+            sXr_batch = np.empty((Xr_batch.shape[0] * 3, Xr_batch.shape[1]))
+            sXr_batch[0::3] = Xr_batch
+            sXr_batch[1::3] = Xr_batch
+            sXr_batch[2::3] = Xr_batch
 
-            sXe_batch = np.empty((Xe_batch.shape[0] * 2, Xe_batch.shape[1]))
-            sXe_batch[0::2] = Xe_batch
-            sXe_batch[1::2] = nXe_batch
+            sXe_batch = np.empty((Xe_batch.shape[0] * 3, Xe_batch.shape[1]))
+            sXe_batch[0::3] = Xe_batch
+            sXe_batch[1::3] = nXe_subj_batch
+            sXe_batch[2::3] = nXe_obj_batch
 
-            y_batch = np.zeros(Xe_batch.shape[0] * 2)
+            y_batch = np.zeros(Xe_batch.shape[0] * 3)
 
-            hist = model.fit([sXr_batch, sXe_batch], y_batch, nb_epoch=1, batch_size=batch_size + 999999, verbose=0)
-            print(hist.history)
+            hist = model.fit([sXr_batch, sXe_batch], y_batch, nb_epoch=1, batch_size=batch_size * 3, verbose=0)
+            cumulative_loss += hist.history['loss'][0]
+
+        logging.info('Cumulative loss: %s' % cumulative_loss)
 
     return
 
