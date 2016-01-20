@@ -7,7 +7,7 @@ import logging
 
 
 def make_optimizer(optimizer_name, lr=0.01, momentum=0., decay=0., nesterov=False, epsilon=1e-6, rho=0.95,
-                  beta_1=0.9, beta_2=0.999):
+                   beta_1=0.9, beta_2=0.999):
     """
     Returns a Keras Optimizer.
     :param optimizer_name: Name of the optimizer - sgd, adagrad, adadelta, rmsprop, adam.

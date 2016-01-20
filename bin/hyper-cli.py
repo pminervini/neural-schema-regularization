@@ -8,13 +8,13 @@ from keras.layers.embeddings import Embedding
 from keras.constraints import unitnorm
 from keras.layers.core import LambdaMerge
 from keras.models import make_batches
-from keras.optimizers import Adagrad
 
 from keras import backend as K
 
 import hyper.layers.core
 from hyper.preprocessing import knowledgebase
 from hyper.learning import samples
+from hyper import optimizers
 
 import sys
 import logging
@@ -24,10 +24,11 @@ __author__ = 'pminervini'
 __copyright__ = 'INSIGHT Centre for Data Analytics 2015'
 
 
-def experiment(train_sequences, nb_entities, nb_predicates,
+def experiment(train_sequences, nb_entities, nb_predicates, seed=1,
                entity_embedding_size=100, predicate_embedding_size=100,
-               nb_epochs=100, batch_size=128, seed=1):
-
+               model_name='ScalE', similarity_name='DOT', nb_epochs=1000, batch_size=128,
+               optimizer_name='adagrad', lr=0.1, momentum=0.9, decay=.0, nesterov=False,
+               epsilon=1e-6, rho=0.9, beta_1=0.9, beta_2=0.999):
     np.random.seed(seed)
     random_state = np.random.RandomState(seed=seed)
 
@@ -44,8 +45,8 @@ def experiment(train_sequences, nb_entities, nb_predicates,
     model = Sequential()
 
     core = sys.modules['hyper.layers.core']
-    setattr(core, 'similarity function', 'L2')
-    setattr(core, 'merge function', 'ScalE')
+    setattr(core, 'similarity function', similarity_name)
+    setattr(core, 'merge function', model_name)
 
     def f(args):
         import sys
@@ -78,7 +79,8 @@ def experiment(train_sequences, nb_entities, nb_predicates,
 
         return K.abs(diff_subj - y_true).sum() + K.abs(diff_obj - y_true).sum()
 
-    optimizer = Adagrad(lr=0.1, epsilon=1e-06)
+    optimizer = optimizers.make_optimizer(optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
+                                          epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2)
     model.compile(loss=margin_based_loss, optimizer=optimizer)
 
     Xr = np.array([[rel_idx] for (rel_idx, _) in train_sequences])
@@ -138,9 +140,9 @@ def experiment(train_sequences, nb_entities, nb_predicates,
             sXe_batch[1::3] = nXe_subj_batch
             sXe_batch[2::3] = nXe_obj_batch
 
-            y_batch = np.zeros(Xe_batch.shape[0] * 3)
+            y_batch = np.zeros(sXe_batch.shape[0])
 
-            hist = model.fit([sXr_batch, sXe_batch], y_batch, nb_epoch=1, batch_size=batch_size * 3, verbose=0)
+            hist = model.fit([sXr_batch, sXe_batch], y_batch, nb_epoch=1, batch_size=sXe_batch.shape[0], verbose=0)
             cumulative_loss += hist.history['loss'][0]
 
         logging.info('Cumulative loss: %s' % cumulative_loss)
@@ -163,6 +165,8 @@ def main(argv):
                            help='Size of predicate embeddings')
 
     argparser.add_argument('--model', action='store', type=str, default=None, help='Name of the model to use')
+    argparser.add_argument('--similarity', action='store', type=str, default=None,
+                           help='Name of the similarity function to use (if distance-based model)')
     argparser.add_argument('--epochs', action='store', type=int, default=10, help='Number of training epochs')
     argparser.add_argument('--batch-size', action='store', type=int, default=128, help='Batch size')
 
@@ -198,28 +202,28 @@ def main(argv):
     entity_embedding_size = args.entity_embedding_size
     predicate_embedding_size = args.predicate_embedding_size
 
-    model = args.model
+    model_name = args.model
+    similarity_name = args.similarity
     nb_epochs = args.epochs
     batch_size = args.batch_size
 
-    optimizer = args.optimizer
+    optimizer_name = args.optimizer
     lr = args.lr
     momentum = args.momentum
     decay = args.decay
     nesterov = args.nesterov
     epsilon = args.epsilon
     rho = args.rho
-    beta1 = args.beta1
-    beta2 = args.beta2
+    beta_1 = args.beta1
+    beta_2 = args.beta2
 
     train_sequences = parser.facts_to_sequences(train_facts)
 
-    experiment(train_sequences, nb_entities, nb_predicates,
-               seed=seed,
+    experiment(train_sequences, nb_entities, nb_predicates, seed=seed,
                entity_embedding_size=entity_embedding_size, predicate_embedding_size=predicate_embedding_size,
-               model=model, nb_epochs=nb_epochs, batch_size=batch_size,
-               optimizer=optimizer, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
-               epsilon=epsilon, rho=rho, beta1=beta1, beta2=beta2)
+               model_name=model_name, similarity_name=similarity_name, nb_epochs=nb_epochs, batch_size=batch_size,
+               optimizer_name=optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
+               epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2)
     return
 
 
