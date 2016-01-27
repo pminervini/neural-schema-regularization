@@ -80,6 +80,11 @@ class TestMetrics(unittest.TestCase):
         err_subj, err_obj = metrics.filtered_ranking_score(scoring_function, [(2, 1, 1)], 4, 4, true_triples)
         self.assertTrue(err_subj[0] == 2 and err_obj[0] == 3)
 
+        true_triples = np.array([[1, 1, 3], [3, 1, 1], [1, 1, 1]])
+
+        err_subj, err_obj = metrics.filtered_ranking_score(scoring_function, [(1, 1, 1)], 4, 4, true_triples)
+        self.assertTrue(err_subj[0] == 1 and err_obj[0] == 2)
+
 
 if __name__ == '__main__':
     unittest.main()

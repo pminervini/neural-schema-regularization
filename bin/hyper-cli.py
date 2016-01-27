@@ -16,6 +16,8 @@ from hyper.preprocessing import knowledgebase
 from hyper.learning import samples
 from hyper import optimizers
 
+from hyper.evaluation import metrics
+
 import sys
 import logging
 import inspect
@@ -52,11 +54,11 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     predicate_encoder = Sequential()
     entity_encoder = Sequential()
 
-    predicate_embedding_layer = Embedding(input_dim=nb_predicates, output_dim=predicate_embedding_size,
+    predicate_embedding_layer = Embedding(input_dim=nb_predicates + 1, output_dim=predicate_embedding_size,
                                           input_length=None, init='glorot_uniform')
     predicate_encoder.add(predicate_embedding_layer)
 
-    entity_embedding_layer = Embedding(input_dim=nb_entities, output_dim=entity_embedding_size,
+    entity_embedding_layer = Embedding(input_dim=nb_entities + 1, output_dim=entity_embedding_size,
                                        input_length=None, init='glorot_uniform', W_constraint=FixedNorm())
     entity_encoder.add(entity_embedding_layer)
 
@@ -120,7 +122,7 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
         Xe_shuffled = Xe[order, :]
 
         # Creating negative examples..
-        candidate_negative_indices = np.arange(1, nb_entities)
+        candidate_negative_indices = np.arange(1, nb_entities + 1)
 
         nXe_subj_shuffled = np.copy(Xe_shuffled)
         negative_subjects = random_index_generator.generate(nb_samples, candidate_negative_indices)
@@ -163,6 +165,17 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     return model
 
 
+def evaluate_model(model, validation_sequences, nb_entities):
+
+    def scoring_function(args):
+        Xr, Xe = args[0], args[1]
+        y = model.predict([Xr, Xe], batch_size=Xr.shape[0])
+        return y
+
+    validation_triples = [(s, p, o) for (p, [s, o]) in validation_sequences]
+    metrics.ranking_score(scoring_function, validation_triples, nb_entities, nb_entities)
+
+
 def main(argv):
     def formatter(prog):
         return argparse.HelpFormatter(prog, max_help_position=100, width=200)
@@ -170,6 +183,8 @@ def main(argv):
     argparser = argparse.ArgumentParser('Latent Factor Models for Knowledge Hypergraphs', formatter_class=formatter)
 
     argparser.add_argument('--train', required=True, type=argparse.FileType('r'))
+    argparser.add_argument('--validation', required=False, type=argparse.FileType('r'))
+
     argparser.add_argument('--seed', action='store', type=int, default=1, help='Seed for the PRNG')
 
     argparser.add_argument('--entity-embedding-size', action='store', type=int, default=100,
@@ -210,9 +225,25 @@ def main(argv):
     for line in args.train:
         subj, pred, obj = line.split()
         train_facts += [knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])]
-    parser = knowledgebase.KnowledgeBaseParser(train_facts)
-    nb_entities = len(parser.entity_vocabulary) + 1
-    nb_predicates = len(parser.predicate_vocabulary) + 1
+
+    validation_facts = []
+    if args.validation is not None:
+        for line in args.validation:
+            sub, pred, obj = line.split()
+            validation_facts += [knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])]
+
+    parser = knowledgebase.KnowledgeBaseParser(train_facts + validation_facts)
+
+    nb_entities = len(parser.entity_vocabulary)
+    nb_predicates = len(parser.predicate_vocabulary)
+
+    print(min([i for i in [j for _, j in parser.entity_index.items()]]))
+    print(max([i for i in [j for _, j in parser.entity_index.items()]]))
+    print(nb_entities)
+
+    print(min([i for i in [j for _, j in parser.predicate_index.items()]]))
+    print(max([i for i in [j for _, j in parser.predicate_index.items()]]))
+    print(nb_predicates)
 
     seed = args.seed
 
@@ -246,6 +277,9 @@ def main(argv):
 
     if args.save is not None:
         pass
+
+    validation_sequences = parser.facts_to_sequences(validation_facts)
+    evaluate_model(model, validation_sequences, nb_entities)
 
     return
 
