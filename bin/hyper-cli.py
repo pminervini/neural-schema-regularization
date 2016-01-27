@@ -37,11 +37,11 @@ class FixedNorm(Constraint):
         return {'name': self.__class__.__name__, 'm': self.m}
 
 
-def experiment(train_sequences, nb_entities, nb_predicates, seed=1,
-               entity_embedding_size=100, predicate_embedding_size=100,
-               model_name='ScalE', similarity_name='DOT', nb_epochs=1000, batch_size=128, margin=1.0,
-               optimizer_name='adagrad', lr=0.1, momentum=0.9, decay=.0, nesterov=False,
-               epsilon=1e-6, rho=0.9, beta_1=0.9, beta_2=0.999):
+def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
+                entity_embedding_size=100, predicate_embedding_size=100,
+                model_name='ScalE', similarity_name='DOT', nb_epochs=1000, batch_size=128, margin=1.0,
+                optimizer_name='adagrad', lr=0.1, momentum=0.9, decay=.0, nesterov=False,
+                epsilon=1e-6, rho=0.9, beta_1=0.9, beta_2=0.999):
 
     args, _, _, values = inspect.getargvalues(inspect.currentframe())
     logging.info('Experiment: %s' % {arg: values[arg] for arg in args if len(str(values[arg])) < 32})
@@ -160,7 +160,7 @@ def experiment(train_sequences, nb_entities, nb_predicates, seed=1,
 
         logging.info('Cumulative loss: %s' % cumulative_loss)
 
-    return
+    return model
 
 
 def main(argv):
@@ -201,6 +201,9 @@ def main(argv):
     argparser.add_argument('--beta2', action='store', type=float, default=0.999,
                            help='Beta2 parameter for the adam and adamax optimizers')
 
+    argparser.add_argument('--save', action='store', type=str, default=None,
+                           help='Where to save the trained model')
+
     args = argparser.parse_args(argv)
 
     train_facts = []
@@ -234,12 +237,16 @@ def main(argv):
 
     train_sequences = parser.facts_to_sequences(train_facts)
 
-    experiment(train_sequences, nb_entities, nb_predicates, seed=seed,
-               entity_embedding_size=entity_embedding_size, predicate_embedding_size=predicate_embedding_size,
-               model_name=model_name, similarity_name=similarity_name,
-               nb_epochs=nb_epochs, batch_size=batch_size, margin=margin,
-               optimizer_name=optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
-               epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2)
+    model = train_model(train_sequences, nb_entities, nb_predicates, seed=seed,
+                        entity_embedding_size=entity_embedding_size, predicate_embedding_size=predicate_embedding_size,
+                        model_name=model_name, similarity_name=similarity_name,
+                        nb_epochs=nb_epochs, batch_size=batch_size, margin=margin,
+                        optimizer_name=optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
+                        epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2)
+
+    if args.save is not None:
+        pass
+
     return
 
 
