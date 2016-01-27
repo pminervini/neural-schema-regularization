@@ -173,7 +173,8 @@ def evaluate_model(model, validation_sequences, nb_entities):
         return y
 
     validation_triples = [(s, p, o) for (p, [s, o]) in validation_sequences]
-    metrics.ranking_score(scoring_function, validation_triples, nb_entities, nb_entities)
+    res = metrics.ranking_score(scoring_function, validation_triples, nb_entities, nb_entities)
+    metrics.ranking_summary(res)
 
 
 def main(argv):
@@ -236,14 +237,6 @@ def main(argv):
 
     nb_entities = len(parser.entity_vocabulary)
     nb_predicates = len(parser.predicate_vocabulary)
-
-    print(min([i for i in [j for _, j in parser.entity_index.items()]]))
-    print(max([i for i in [j for _, j in parser.entity_index.items()]]))
-    print(nb_entities)
-
-    print(min([i for i in [j for _, j in parser.predicate_index.items()]]))
-    print(max([i for i in [j for _, j in parser.predicate_index.items()]]))
-    print(nb_predicates)
 
     seed = args.seed
 

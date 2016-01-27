@@ -75,7 +75,6 @@ def filtered_ranking_score(scoring_function, triples, max_subj_idx, max_obj_idx,
 
 
 def ranking_summary(res, idxo=None, n=10, tag='raw'):
-    resg = res[0] + res[1]
     dres = {}
     dres.update({'microlmean': np.mean(res[0])})
     dres.update({'microlmedian': np.median(res[0])})
