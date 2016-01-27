@@ -91,14 +91,14 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
         neg_obj = y_pred[2::3]
 
         out_subj = margin + neg_subj - pos
-        diff_subj = out_subj * (out_subj > 0)
+        diff_subj = out_subj * (out_subj > 0).sum(axis=1, keepdims=True)
 
         out_obj = margin + neg_obj - pos
-        diff_obj = out_obj * (out_obj > 0)
+        diff_obj = out_obj * (out_obj > 0).sum(axis=1, keepdims=True)
 
         target = y_true[0::3]
 
-        return (diff_subj + diff_obj - target).sum()
+        return (diff_subj + diff_obj - target).mean()
 
     optimizer = optimizers.make_optimizer(optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
                                           epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2)
