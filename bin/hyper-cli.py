@@ -94,10 +94,10 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
         neg_obj = y_pred[2::3]
 
         out_subj = margin + neg_subj - pos
-        diff_subj = out_subj * (out_subj > 0).sum(axis=1, keepdims=True)
+        diff_subj = out_subj * K.cast(out_subj >= 0., K.floatx()).sum(axis=1, keepdims=True)
 
         out_obj = margin + neg_obj - pos
-        diff_obj = out_obj * (out_obj > 0).sum(axis=1, keepdims=True)
+        diff_obj = out_obj * K.cast(out_obj >= 0., K.floatx()).sum(axis=1, keepdims=True)
 
         target = y_true[0::3]
 
