@@ -184,7 +184,7 @@ def evaluate_model(model, validation_sequences, nb_entities):
     def scoring_function(args):
         Xr, Xe = args[0], args[1]
         y = model.predict([Xr, Xe], batch_size=Xr.shape[0])
-        return y[0]
+        return y[:, 0]
 
     validation_triples = [(s, p, o) for (p, [s, o]) in validation_sequences]
     res = metrics.ranking_score(scoring_function, validation_triples, nb_entities, nb_entities)
