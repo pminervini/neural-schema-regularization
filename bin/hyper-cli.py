@@ -98,7 +98,7 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
         target = y_true[0::3]
 
-        return (diff_subj + diff_obj - target).mean()
+        return (diff_subj + diff_obj - target).sum()
 
     optimizer = optimizers.make_optimizer(optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
                                           epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2)
@@ -134,7 +134,7 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
         batches = make_batches(nb_samples, batch_size)
 
-        cumulative_loss = 0.0
+        losses = []
 
         # Iterate over batches of (positive) training examples
         for batch_index, (batch_start, batch_end) in enumerate(batches):
@@ -158,9 +158,11 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
             hist = model.fit([sXr_batch, sXe_batch], y_batch, nb_epoch=1, batch_size=sXe_batch.shape[0],
                              shuffle=False, verbose=0)
-            cumulative_loss += hist.history['loss'][0]
 
-        logging.info('Cumulative loss: %s' % cumulative_loss)
+            loss = hist.history['loss'][0]
+            losses += [loss / sXr_batch.shape[0]]
+
+        logging.info('Loss: %s +/- %s' % (round(np.mean(loss), 4), round(np.std(loss), 4)))
 
     return model
 
