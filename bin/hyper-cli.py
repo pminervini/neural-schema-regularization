@@ -179,16 +179,24 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     return model
 
 
-def evaluate_model(model, validation_sequences, nb_entities):
+def evaluate_model(model, evaluation_sequences, nb_entities, true_triples=None, tag=None):
 
     def scoring_function(args):
         Xr, Xe = args[0], args[1]
         y = model.predict([Xr, Xe], batch_size=Xr.shape[0])
         return y[:, 0]
 
-    validation_triples = [(s, p, o) for (p, [s, o]) in validation_sequences]
-    res = metrics.ranking_score(scoring_function, validation_triples, nb_entities, nb_entities)
-    metrics.ranking_summary(res)
+    evaluation_triples = [(s, p, o) for (p, [s, o]) in evaluation_sequences]
+
+    if true_triples is None:
+        res = metrics.ranking_score(scoring_function, evaluation_triples, nb_entities, nb_entities)
+    else:
+        res = metrics.filtered_ranking_score(scoring_function, evaluation_triples,
+                                             nb_entities, nb_entities, true_triples)
+
+    metrics.ranking_summary(res, tag=tag)
+
+    return res
 
 
 def main(argv):
@@ -199,6 +207,7 @@ def main(argv):
 
     argparser.add_argument('--train', required=True, type=argparse.FileType('r'))
     argparser.add_argument('--validation', required=False, type=argparse.FileType('r'))
+    argparser.add_argument('--test', required=False, type=argparse.FileType('r'))
 
     argparser.add_argument('--seed', action='store', type=int, default=1, help='Seed for the PRNG')
 
@@ -248,7 +257,13 @@ def main(argv):
             subj, pred, obj = line.split()
             validation_facts += [knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])]
 
-    parser = knowledgebase.KnowledgeBaseParser(train_facts + validation_facts)
+    test_facts = []
+    if args.test is not None:
+        for line in args.validation:
+            subj, pred, obj = line.split()
+            test_facts += [knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])]
+
+    parser = knowledgebase.KnowledgeBaseParser(train_facts + validation_facts + test_facts)
 
     nb_entities = len(parser.entity_vocabulary)
     nb_predicates = len(parser.predicate_vocabulary)
@@ -288,7 +303,15 @@ def main(argv):
         pass
 
     validation_sequences = parser.facts_to_sequences(validation_facts)
-    evaluate_model(model, validation_sequences, nb_entities)
+    test_sequences = parser.facts_to_sequences(test_facts)
+
+    true_triples = np.array([[s, p, o] for (p, [s, o]) in train_sequences + validation_sequences + test_sequences])
+
+    evaluate_model(model, validation_sequences, nb_entities, tag='validation raw')
+    evaluate_model(model, validation_sequences, nb_entities, true_triples=true_triples, tag='validation filtered')
+
+    evaluate_model(model, test_sequences, nb_entities, tag='test raw')
+    evaluate_model(model, test_sequences, nb_entities, true_triples=true_triples, tag='test filtered')
 
     return
 
