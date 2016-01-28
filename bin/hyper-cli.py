@@ -32,7 +32,9 @@ class FixedNorm(Constraint):
         self.m = m
 
     def __call__(self, p):
+        p = K.transpose(p)
         unit_norm = p / (K.sqrt(K.sum(K.square(p), axis=0)) + 1e-7)
+        unit_norm = K.transpose(unit_norm)
         return unit_norm * self.m
 
     def get_config(self):
