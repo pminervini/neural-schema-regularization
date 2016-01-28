@@ -89,14 +89,12 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     model.add(merge_layer)
 
     def margin_based_loss(y_true, y_pred):
-        pos = y_pred[0::3]
-        neg_subj = y_pred[1::3]
-        neg_obj = y_pred[2::3]
+        pos, neg_subj, neg_obj = y_pred[0::3], y_pred[1::3], y_pred[2::3]
 
-        out_subj = margin + neg_subj - pos
+        out_subj = (margin + neg_subj - pos)
         diff_subj = out_subj * K.cast(out_subj >= 0., K.floatx()).sum(axis=1, keepdims=True)
 
-        out_obj = margin + neg_obj - pos
+        out_obj = (margin + neg_obj - pos)
         diff_obj = out_obj * K.cast(out_obj >= 0., K.floatx()).sum(axis=1, keepdims=True)
 
         target = y_true[0::3]
@@ -151,21 +149,21 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
         for batch_index, (batch_start, batch_end) in enumerate(batches):
             logging.info('Batch no. %d of %d (%d:%d)' % (batch_index, len(batches), batch_start, batch_end))
 
-            Xr_batch = Xr_shuffled[batch_start:batch_end]
+            Xr_batch = Xr_shuffled[batch_start:batch_end, :]
 
-            Xe_batch = Xe_shuffled[batch_start:batch_end]
-            nXe_subj_batch = nXe_subj_shuffled[batch_start:batch_end]
-            nXe_obj_batch = nXe_obj_shuffled[batch_start:batch_end]
+            Xe_batch = Xe_shuffled[batch_start:batch_end, :]
+            nXe_subj_batch = nXe_subj_shuffled[batch_start:batch_end, :]
+            nXe_obj_batch = nXe_obj_shuffled[batch_start:batch_end, :]
 
             sXr_batch = np.empty((Xr_batch.shape[0] * 3, Xr_batch.shape[1]))
-            sXr_batch[0::3] = Xr_batch
-            sXr_batch[1::3] = Xr_batch
-            sXr_batch[2::3] = Xr_batch
+            sXr_batch[0::3, :] = Xr_batch
+            sXr_batch[1::3, :] = Xr_batch
+            sXr_batch[2::3, :] = Xr_batch
 
             sXe_batch = np.empty((Xe_batch.shape[0] * 3, Xe_batch.shape[1]))
-            sXe_batch[0::3] = Xe_batch
-            sXe_batch[1::3] = nXe_subj_batch
-            sXe_batch[2::3] = nXe_obj_batch
+            sXe_batch[0::3, :] = Xe_batch
+            sXe_batch[1::3, :] = nXe_subj_batch
+            sXe_batch[2::3, :] = nXe_obj_batch
 
             y_batch = np.zeros(sXe_batch.shape[0])
 
