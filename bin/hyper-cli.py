@@ -107,22 +107,24 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     Xr = np.array([[rel_idx] for (rel_idx, _) in train_sequences])
     Xe = np.array([ent_idxs for (_, ent_idxs) in train_sequences])
 
+    print(Xr.min(), Xr.max())
+    print(Xe.min(), Xe.max())
+
     nb_samples = Xr.shape[0]
 
     # Random index generator for sampling negative examples
     random_index_generator = samples.GlorotRandomIndexGenerator(random_state=random_state)
 
+    # Creating negative indices..
+    candidate_negative_indices = np.arange(1, nb_entities + 1)
+
     for epoch_no in range(1, nb_epochs + 1):
-        logging.info('Epoch no. %d of %d' % (epoch_no, nb_epochs))
+        logging.info('Epoch no. %d of %d (samples: %d)' % (epoch_no, nb_epochs, nb_samples))
 
         # Shuffling training (positive) triples..
         order = random_state.permutation(nb_samples)
 
-        Xr_shuffled = Xr[order, :]
-        Xe_shuffled = Xe[order, :]
-
-        # Creating negative examples..
-        candidate_negative_indices = np.arange(1, nb_entities + 1)
+        Xr_shuffled, Xe_shuffled = Xr[order, :], Xe[order, :]
 
         nXe_subj_shuffled = np.copy(Xe_shuffled)
         negative_subjects = random_index_generator.generate(nb_samples, candidate_negative_indices)
