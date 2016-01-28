@@ -17,7 +17,7 @@ def ranking_score(scoring_function, triples, max_subj_idx, max_obj_idx):
 
         scores_left = scoring_function([Xr, Xe])
 
-        err_subj += [np.argsort(np.argsort(- scores_left))[subj_idx - 1] + 1]
+        err_subj += [np.argsort(np.argsort(- scores_left))[subj_idx] + 1]
 
         Xr = np.empty((max_obj_idx, 1))
         Xr[:, 0] = pred_idx
@@ -28,7 +28,7 @@ def ranking_score(scoring_function, triples, max_subj_idx, max_obj_idx):
 
         scores_right = scoring_function([Xr, Xe])
 
-        err_obj += [np.argsort(np.argsort(- scores_right))[obj_idx - 1] + 1]
+        err_obj += [np.argsort(np.argsort(- scores_right))[obj_idx] + 1]
 
     return err_subj, err_obj
 
