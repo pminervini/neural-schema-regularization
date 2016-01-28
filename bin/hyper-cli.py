@@ -245,7 +245,7 @@ def main(argv):
     validation_facts = []
     if args.validation is not None:
         for line in args.validation:
-            sub, pred, obj = line.split()
+            subj, pred, obj = line.split()
             validation_facts += [knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])]
 
     parser = knowledgebase.KnowledgeBaseParser(train_facts + validation_facts)
