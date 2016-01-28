@@ -147,7 +147,8 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
         # Iterate over batches of (positive) training examples
         for batch_index, (batch_start, batch_end) in enumerate(batches):
-            logging.info('Batch no. %d of %d (%d:%d)' % (batch_index, len(batches), batch_start, batch_end))
+            logging.info('Batch no. %d of %d (%d:%d), size %d'
+                         % (batch_index, len(batches), batch_start, batch_end, batch_end - batch_start))
 
             Xr_batch = Xr_shuffled[batch_start:batch_end, :]
 
