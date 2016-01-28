@@ -162,7 +162,7 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
             loss = hist.history['loss'][0]
             losses += [loss / sXr_batch.shape[0]]
 
-        logging.info('Loss: %s +/- %s' % (round(np.mean(loss), 4), round(np.std(loss), 4)))
+        logging.info('Loss: %s +/- %s' % (round(np.mean(losses), 4), round(np.std(losses), 4)))
 
     return model
 
