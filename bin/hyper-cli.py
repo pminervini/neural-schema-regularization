@@ -109,8 +109,8 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     Xr = np.array([[rel_idx] for (rel_idx, _) in train_sequences])
     Xe = np.array([ent_idxs for (_, ent_idxs) in train_sequences])
 
-    print(Xr.min(), Xr.max())
-    print(Xe.min(), Xe.max())
+    print(Xr.shape, Xr.min(), Xr.max())
+    print(Xe.shape, Xe.min(), Xe.max())
 
     nb_samples = Xr.shape[0]
 
@@ -144,6 +144,8 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
         # Iterate over batches of (positive) training examples
         for batch_index, (batch_start, batch_end) in enumerate(batches):
+            logging.info('Batch no. %d of %d (%d:%d)' % (batch_index, len(batches), batch_start, batch_end))
+
             Xr_batch = Xr_shuffled[batch_start:batch_end]
 
             Xe_batch = Xe_shuffled[batch_start:batch_end]
