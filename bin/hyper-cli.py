@@ -98,7 +98,7 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
         target = y_true[0::3]
 
-        return (diff_subj + diff_obj - target).sum()
+        return diff_subj.sum() + diff_obj.sum() + target.sum()
 
     optimizer = optimizers.make_optimizer(optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
                                           epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2)
@@ -127,10 +127,12 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
         Xr_shuffled, Xe_shuffled = Xr[order, :], Xe[order, :]
 
         nXe_subj_shuffled = np.copy(Xe_shuffled)
+
         negative_subjects = random_index_generator.generate(nb_samples, candidate_negative_indices)
         nXe_subj_shuffled[:, 0] = negative_subjects
 
         nXe_obj_shuffled = np.copy(Xe_shuffled)
+
         negative_objects = random_index_generator.generate(nb_samples, candidate_negative_indices)
         nXe_obj_shuffled[:, 1] = negative_objects
 
