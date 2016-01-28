@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import math
 import numpy as np
 
 from keras.models import Sequential
@@ -43,7 +44,7 @@ class FixedNorm(Constraint):
 
 def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
                 entity_embedding_size=100, predicate_embedding_size=100,
-                model_name='ScalE', similarity_name='DOT', nb_epochs=1000, batch_size=128, margin=1.0,
+                model_name='TransE', similarity_name='L1', nb_epochs=1000, batch_size=128, nb_batches=None, margin=1.0,
                 optimizer_name='adagrad', lr=0.1, momentum=0.9, decay=.0, nesterov=False,
                 epsilon=1e-6, rho=0.9, beta_1=0.9, beta_2=0.999):
 
@@ -113,6 +114,10 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     print(Xe.shape, Xe.min(), Xe.max())
 
     nb_samples = Xr.shape[0]
+
+    if nb_batches is not None:
+        batch_size = math.ceil(nb_samples / nb_batches)
+        logging.info("Samples: %d, no. batches: %d -> batch size: %d" % (nb_samples, nb_batches, batch_size))
 
     # Random index generator for sampling negative examples
     random_index_generator = samples.GlorotRandomIndexGenerator(random_state=random_state)
@@ -208,6 +213,7 @@ def main(argv):
                            help='Name of the similarity function to use (if distance-based model)')
     argparser.add_argument('--epochs', action='store', type=int, default=10, help='Number of training epochs')
     argparser.add_argument('--batch-size', action='store', type=int, default=128, help='Batch size')
+    argparser.add_argument('--batches', action='store', type=int, default=None, help='Number of batches')
     argparser.add_argument('--margin', action='store', type=float, default=1.0, help='Margin to use in the hinge loss')
 
     argparser.add_argument('--optimizer', action='store', type=str, default='adagrad',
@@ -257,6 +263,7 @@ def main(argv):
     similarity_name = args.similarity
     nb_epochs = args.epochs
     batch_size = args.batch_size
+    nb_batches = args.batches
     margin = args.margin
 
     optimizer_name = args.optimizer
@@ -274,7 +281,7 @@ def main(argv):
     model = train_model(train_sequences, nb_entities, nb_predicates, seed=seed,
                         entity_embedding_size=entity_embedding_size, predicate_embedding_size=predicate_embedding_size,
                         model_name=model_name, similarity_name=similarity_name,
-                        nb_epochs=nb_epochs, batch_size=batch_size, margin=margin,
+                        nb_epochs=nb_epochs, batch_size=batch_size, nb_batches=nb_batches, margin=margin,
                         optimizer_name=optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
                         epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2)
 
