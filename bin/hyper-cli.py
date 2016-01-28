@@ -259,7 +259,7 @@ def main(argv):
 
     test_facts = []
     if args.test is not None:
-        for line in args.validation:
+        for line in args.test:
             subj, pred, obj = line.split()
             test_facts += [knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])]
 
