@@ -7,7 +7,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers.embeddings import Embedding
 from keras.constraints import Constraint
-from keras.layers.core import LambdaMerge
+from keras.layers.core import Dropout, LambdaMerge
 from keras.models import make_batches
 
 from keras import backend as K
@@ -25,7 +25,7 @@ import inspect
 import argparse
 
 __author__ = 'pminervini'
-__copyright__ = 'INSIGHT Centre for Data Analytics 2015'
+__copyright__ = 'INSIGHT Centre for Data Analytics 2016'
 
 
 class FixedNorm(Constraint):
@@ -44,6 +44,9 @@ class FixedNorm(Constraint):
 
 def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
                 entity_embedding_size=100, predicate_embedding_size=100,
+
+                dropout_entity_embeddings=None, dropout_predicate_embeddings=None,
+
                 model_name='TransE', similarity_name='L1', nb_epochs=1000, batch_size=128, nb_batches=None, margin=1.0,
                 optimizer_name='adagrad', lr=0.1, momentum=0.9, decay=.0, nesterov=False,
                 epsilon=1e-6, rho=0.9, beta_1=0.9, beta_2=0.999):
@@ -61,9 +64,15 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
                                           input_length=None, init='glorot_uniform')
     predicate_encoder.add(predicate_embedding_layer)
 
+    if dropout_predicate_embeddings is not None and dropout_predicate_embeddings > .0:
+        predicate_encoder.add(Dropout(dropout_predicate_embeddings))
+
     entity_embedding_layer = Embedding(input_dim=nb_entities + 1, output_dim=entity_embedding_size,
                                        input_length=None, init='glorot_uniform', W_constraint=FixedNorm(m=1.))
     entity_encoder.add(entity_embedding_layer)
+
+    if dropout_entity_embeddings is not None and dropout_entity_embeddings > .0:
+        entity_encoder.add(Dropout(dropout_entity_embeddings))
 
     model = Sequential()
 
@@ -216,6 +225,11 @@ def main(argv):
     argparser.add_argument('--predicate-embedding-size', action='store', type=int, default=100,
                            help='Size of predicate embeddings')
 
+    argparser.add_argument('--dropout-entity-embeddings', action='store', type=float, default=None,
+                           help='Dropout after the entity embeddings layer')
+    argparser.add_argument('--dropout-predicate-embeddings', action='store', type=float, default=None,
+                           help='Dropout after the predicate embeddings layer')
+
     argparser.add_argument('--model', action='store', type=str, default=None, help='Name of the model to use')
     argparser.add_argument('--similarity', action='store', type=str, default=None,
                            help='Name of the similarity function to use (if distance-based model)')
@@ -273,6 +287,9 @@ def main(argv):
     entity_embedding_size = args.entity_embedding_size
     predicate_embedding_size = args.predicate_embedding_size
 
+    dropout_entity_embeddings = args.dropout_entity_embeddings
+    dropout_predicate_embeddings = args.dropout_predicate_embeddings
+
     model_name = args.model
     similarity_name = args.similarity
     nb_epochs = args.epochs
@@ -294,6 +311,10 @@ def main(argv):
 
     model = train_model(train_sequences, nb_entities, nb_predicates, seed=seed,
                         entity_embedding_size=entity_embedding_size, predicate_embedding_size=predicate_embedding_size,
+
+                        dropout_entity_embeddings=dropout_entity_embeddings,
+                        dropout_predicate_embeddings=dropout_predicate_embeddings,
+
                         model_name=model_name, similarity_name=similarity_name,
                         nb_epochs=nb_epochs, batch_size=batch_size, nb_batches=nb_batches, margin=margin,
                         optimizer_name=optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
