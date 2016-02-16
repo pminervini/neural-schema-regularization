@@ -9,7 +9,7 @@ class TestPathRankingAPI(unittest.TestCase):
     def setUp(self):
         self.client = PathRankingClient()
 
-    def test_api(self):
+    def test_friends(self):
         if self.client.is_online():
             triples = [
                 ('Mark', 'friendOf', 'John'),
