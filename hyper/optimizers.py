@@ -23,7 +23,7 @@ def make_optimizer(optimizer_name, lr=0.01, momentum=0., decay=0., nesterov=Fals
     """
 
     args, _, _, values = inspect.getargvalues(inspect.currentframe())
-    logging.info('Optimizer: %s' % {arg: values[arg] for arg in args if len(str(values[arg])) < 32})
+    logging.debug('Optimizer: %s' % {arg: values[arg] for arg in args if len(str(values[arg])) < 32})
 
     optimizer = None
 

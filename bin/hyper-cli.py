@@ -6,7 +6,6 @@ import numpy as np
 
 from keras.models import Sequential
 from keras.layers.embeddings import Embedding
-from keras.constraints import Constraint
 from keras.layers.core import Dropout, LambdaMerge
 from keras.models import make_batches
 
@@ -15,7 +14,7 @@ from keras import backend as K
 import hyper.layers.core
 from hyper.preprocessing import knowledgebase
 from hyper.learning import samples
-from hyper import optimizers
+from hyper import optimizers, constraints
 
 from hyper.evaluation import metrics
 
@@ -28,20 +27,6 @@ __author__ = 'pminervini'
 __copyright__ = 'INSIGHT Centre for Data Analytics 2016'
 
 
-class FixedNorm(Constraint):
-    def __init__(self, m=1.):
-        self.m = m
-
-    def __call__(self, p):
-        p = K.transpose(p)
-        unit_norm = p / (K.sqrt(K.sum(K.square(p), axis=0)) + 1e-7)
-        unit_norm = K.transpose(unit_norm)
-        return unit_norm * self.m
-
-    def get_config(self):
-        return {'name': self.__class__.__name__, 'm': self.m}
-
-
 def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
                 entity_embedding_size=100, predicate_embedding_size=100,
 
@@ -52,7 +37,7 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
                 epsilon=1e-6, rho=0.9, beta_1=0.9, beta_2=0.999):
 
     args, _, _, values = inspect.getargvalues(inspect.currentframe())
-    logging.info('Experiment: %s' % {arg: values[arg] for arg in args if len(str(values[arg])) < 32})
+    logging.debug('Experiment: %s' % {arg: values[arg] for arg in args if len(str(values[arg])) < 32})
 
     np.random.seed(seed)
     random_state = np.random.RandomState(seed=seed)
@@ -68,7 +53,8 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
         predicate_encoder.add(Dropout(dropout_predicate_embeddings))
 
     entity_embedding_layer = Embedding(input_dim=nb_entities + 1, output_dim=entity_embedding_size,
-                                       input_length=None, init='glorot_uniform', W_constraint=FixedNorm(m=1.))
+                                       input_length=None, init='glorot_uniform',
+                                       W_constraint=constraints.NormConstraint(norm=1.))
     entity_encoder.add(entity_embedding_layer)
 
     if dropout_entity_embeddings is not None and dropout_entity_embeddings > .0:
@@ -117,9 +103,6 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     Xr = np.array([[rel_idx] for (rel_idx, _) in train_sequences])
     Xe = np.array([ent_idxs for (_, ent_idxs) in train_sequences])
 
-    print(Xr.shape, Xr.min(), Xr.max())
-    print(Xe.shape, Xe.min(), Xe.max())
-
     nb_samples = Xr.shape[0]
 
     if nb_batches is not None:
@@ -140,19 +123,15 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
         Xr_shuffled, Xe_shuffled = Xr[order, :], Xe[order, :]
 
-        nXe_subj_shuffled = np.copy(Xe_shuffled)
-
         negative_subjects = random_index_generator.generate(nb_samples, candidate_negative_indices)
-        nXe_subj_shuffled[:, 0] = negative_subjects
-
-        nXe_obj_shuffled = np.copy(Xe_shuffled)
+        Xe_neg_subj_shuffled = np.copy(Xe_shuffled)
+        Xe_neg_subj_shuffled[:, 0] = negative_subjects
 
         negative_objects = random_index_generator.generate(nb_samples, candidate_negative_indices)
-        nXe_obj_shuffled[:, 1] = negative_objects
+        Xe_neg_obj_shuffled = np.copy(Xe_shuffled)
+        Xe_neg_obj_shuffled[:, 1] = negative_objects
 
-        batches = make_batches(nb_samples, batch_size)
-
-        losses = []
+        batches, losses = make_batches(nb_samples, batch_size), []
 
         # Iterate over batches of (positive) training examples
         for batch_index, (batch_start, batch_end) in enumerate(batches):
@@ -162,26 +141,22 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
             Xr_batch = Xr_shuffled[batch_start:batch_end, :]
 
             Xe_batch = Xe_shuffled[batch_start:batch_end, :]
-            nXe_subj_batch = nXe_subj_shuffled[batch_start:batch_end, :]
-            nXe_obj_batch = nXe_obj_shuffled[batch_start:batch_end, :]
+            Xe_neg_subj_batch = Xe_neg_subj_shuffled[batch_start:batch_end, :]
+            Xe_neg_obj_batch = Xe_neg_obj_shuffled[batch_start:batch_end, :]
 
-            sXr_batch = np.empty((Xr_batch.shape[0] * 3, Xr_batch.shape[1]))
-            sXr_batch[0::3, :] = Xr_batch
-            sXr_batch[1::3, :] = Xr_batch
-            sXr_batch[2::3, :] = Xr_batch
+            train_Xr_batch = np.empty((Xr_batch.shape[0] * 3, Xr_batch.shape[1]))
+            train_Xr_batch[0::3, :], train_Xr_batch[1::3, :], train_Xr_batch[2::3, :] = Xr_batch, Xr_batch, Xr_batch
 
-            sXe_batch = np.empty((Xe_batch.shape[0] * 3, Xe_batch.shape[1]))
-            sXe_batch[0::3, :] = Xe_batch
-            sXe_batch[1::3, :] = nXe_subj_batch
-            sXe_batch[2::3, :] = nXe_obj_batch
+            train_Xe_batch = np.empty((Xe_batch.shape[0] * 3, Xe_batch.shape[1]))
+            train_Xe_batch[0::3, :], train_Xe_batch[1::3, :], train_Xe_batch[2::3, :] = \
+                Xe_batch, Xe_neg_subj_batch, Xe_neg_obj_batch
 
-            y_batch = np.zeros(sXe_batch.shape[0])
+            y_batch = np.zeros(train_Xr_batch.shape[0])
 
-            hist = model.fit([sXr_batch, sXe_batch], y_batch, nb_epoch=1, batch_size=sXe_batch.shape[0],
+            hist = model.fit([train_Xr_batch, train_Xe_batch], y_batch, nb_epoch=1, batch_size=train_Xe_batch.shape[0],
                              shuffle=False, verbose=0)
 
-            loss = hist.history['loss'][0]
-            losses += [loss / sXr_batch.shape[0]]
+            losses += [hist.history['loss'][0] / train_Xr_batch.shape[0]]
 
         logging.info('Loss: %s +/- %s' % (round(np.mean(losses), 4), round(np.std(losses), 4)))
 
