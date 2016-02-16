@@ -108,8 +108,6 @@ class PathRankingClient(object):
         return ans_predicates
 
 
-import sys
-
 if __name__ == '__main__':
     triples = [
         ('Mark', 'friendOf', 'John'),
@@ -118,10 +116,7 @@ if __name__ == '__main__':
     ]
 
     client = PathRankingClient()
-    print(client.is_online())
-
-    sys.exit(0)
-
-    predicates = client.request(triples, parameters=PathRankingClient.DEFAULT_PRA_PARAMETERS)
-    for p in predicates:
-        print(str(p))
+    if client.is_online():
+        predicates = client.request(triples, parameters=PathRankingClient.DEFAULT_PRA_PARAMETERS)
+        for p in predicates:
+            print(str(p))
