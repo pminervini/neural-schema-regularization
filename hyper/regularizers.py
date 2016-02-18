@@ -65,7 +65,5 @@ class ScalingRuleRegularizer(Regularizer):
         loss += diff * self.l
         return loss
 
-
-
     def get_config(self):
         return {"name": self.__class__.__name__, "l": self.l}
