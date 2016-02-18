@@ -14,7 +14,9 @@ from keras import backend as K
 import hyper.layers.core
 from hyper.preprocessing import knowledgebase
 from hyper.learning import samples
-from hyper import optimizers, constraints
+from hyper import optimizers, constraints, regularizers
+
+from hyper.pathranking.api import PathRankingClient
 
 from hyper.evaluation import metrics
 
@@ -34,7 +36,8 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
                 model_name='TransE', similarity_name='L1', nb_epochs=1000, batch_size=128, nb_batches=None, margin=1.0,
                 optimizer_name='adagrad', lr=0.1, momentum=0.9, decay=.0, nesterov=False,
-                epsilon=1e-6, rho=0.9, beta_1=0.9, beta_2=0.999):
+                epsilon=1e-6, rho=0.9, beta_1=0.9, beta_2=0.999,
+                rule_regularizer=None):
 
     args, _, _, values = inspect.getargvalues(inspect.currentframe())
     logging.debug('Experiment: %s' % {arg: values[arg] for arg in args if len(str(values[arg])) < 32})
@@ -46,7 +49,7 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     entity_encoder = Sequential()
 
     predicate_embedding_layer = Embedding(input_dim=nb_predicates + 1, output_dim=predicate_embedding_size,
-                                          input_length=None, init='glorot_uniform')
+                                          input_length=None, init='glorot_uniform', W_regularizer=rule_regularizer)
     predicate_encoder.add(predicate_embedding_layer)
 
     if dropout_predicate_embeddings is not None and dropout_predicate_embeddings > .0:
@@ -200,10 +203,19 @@ def main(argv):
     argparser.add_argument('--predicate-embedding-size', action='store', type=int, default=100,
                            help='Size of predicate embeddings')
 
+    # Dropout-related arguments
     argparser.add_argument('--dropout-entity-embeddings', action='store', type=float, default=None,
                            help='Dropout after the entity embeddings layer')
     argparser.add_argument('--dropout-predicate-embeddings', action='store', type=float, default=None,
                            help='Dropout after the predicate embeddings layer')
+
+    # Rules-related arguments
+    argparser.add_argument('--rules', action='store', type=str, default=None,
+                           help='JSON document containing the rules extracted from the KG')
+    argparser.add_argument('--rules-top-k', action='store', type=int, default=None,
+                           help='Top-k rules to consider during the training process')
+    argparser.add_argument('--rules-lambda', action='store', type=float, default=None,
+                           help='Weight of the Rules-related regularization term')
 
     argparser.add_argument('--model', action='store', type=str, default=None, help='Name of the model to use')
     argparser.add_argument('--similarity', action='store', type=str, default=None,
@@ -262,15 +274,41 @@ def main(argv):
     entity_embedding_size = args.entity_embedding_size
     predicate_embedding_size = args.predicate_embedding_size
 
-    dropout_entity_embeddings = args.dropout_entity_embeddings
-    dropout_predicate_embeddings = args.dropout_predicate_embeddings
-
     model_name = args.model
     similarity_name = args.similarity
     nb_epochs = args.epochs
     batch_size = args.batch_size
     nb_batches = args.batches
     margin = args.margin
+
+    # Dropout-related parameters
+    dropout_entity_embeddings = args.dropout_entity_embeddings
+    dropout_predicate_embeddings = args.dropout_predicate_embeddings
+
+    # Rules-related parameters
+    rules = args.rules
+    rules_top_k = args.rules_top_k
+    rules_lambda = args.rules_lambda
+
+    rule_regularizer = None
+
+    if rules is not None:
+        path_ranking_client = PathRankingClient(url_or_path=rules)
+        pfw_triples = path_ranking_client.request(None, threshold=.0, top_k=rules_top_k)
+
+        rule_regularizers = []
+        for _p, _f, _w in pfw_triples:
+            head = parser.predicate_index[_p]
+            tail = [(parser.predicate_index[hop.predicate], hop.is_inverse) for hop in _f.hops]
+
+            if model_name == 'TransE':
+                rule_regularizers += [regularizers.TranslationRuleRegularizer(head, tail, l=rules_lambda)]
+            elif model_name == 'ScalE':
+                rule_regularizers += [regularizers.ScalingRuleRegularizer(head, tail, l=rules_lambda)]
+            else:
+                raise ValueError('Rule-based regularizers unsupported for the model: %s' % model_name)
+
+        rule_regularizer = regularizers.GroupRegularizer(regularizers=rule_regularizers) if rule_regularizers else None
 
     optimizer_name = args.optimizer
     lr = args.lr
@@ -293,7 +331,8 @@ def main(argv):
                         model_name=model_name, similarity_name=similarity_name,
                         nb_epochs=nb_epochs, batch_size=batch_size, nb_batches=nb_batches, margin=margin,
                         optimizer_name=optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
-                        epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2)
+                        epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2,
+                        rule_regularizer=rule_regularizer)
 
     if args.save is not None:
         pass
