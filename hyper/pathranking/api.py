@@ -2,39 +2,10 @@
 
 import json
 import requests
-
+from hyper.pathranking.domain import Hop, Feature
 from urllib.parse import urljoin
-
-import logging
-
-
-class Hop(object):
-    def __init__(self, predicate, is_inverse=False):
-        self.predicate = predicate
-        self.is_inverse = is_inverse
-
-    def __str__(self):
-        return self.predicate + ('^-1' if self.is_inverse is True else '')
-
-
-class Feature(object):
-    def __init__(self, hops):
-        self.hops = hops
-
-    def __str__(self):
-        return ' . '.join([str(hop) for hop in self.hops])
-
-
-class PredicateFeatures(object):
-    def __init__(self, predicate, features, weights):
-        self.predicate = predicate
-        self.features = features
-        self.weights = weights
-
-    def __str__(self):
-        sorted_features_weights = reversed(sorted(zip(self.features, self.weights), key=lambda fw: fw[1]))
-        return '\n'.join([self.predicate + ' : ' + str(feature) + ' (' + str(weight) + ')'
-                          for feature, weight in sorted_features_weights])
+import gzip
+import os.path
 
 
 class PathRankingClient(object):
@@ -44,7 +15,7 @@ class PathRankingClient(object):
             'path finder': {
                 'type': 'RandomWalkPathFinder',
                 'walks per source': 100,
-                'path finding iterations': 3,
+                'path findsing iterations': 3,
                 'path accept policy': 'paired-only'
             },
             'path selector': {
@@ -52,7 +23,7 @@ class PathRankingClient(object):
             },
             'path follower': {
                 'walks per path': 50,
-                'matrix accept policy': 'all-targets'
+                'matrix accept policy': 'paired-targets-only'
             }
         },
         'learning': {
@@ -61,51 +32,67 @@ class PathRankingClient(object):
         }
     }
 
-    def __init__(self, url='http://127.0.0.1:8091/'):
-        self.service_url = url
+    def __init__(self, url_or_path='http://127.0.0.1:8091/'):
+        self.url_or_path = url_or_path
 
-    def is_online(self):
-        is_online = False
-        try:
-            ans = requests.get(urljoin(self.service_url, '/status'))
-            status = ans.json()
-            if status['status'] == 'up':
-                is_online = True
-        except requests.exceptions.ConnectionError:
-            pass
-        return is_online
+    def is_up(self):
+        is_up = False
+        if self.url_or_path.startswith('http'):
+            try:
+                ans = requests.get(urljoin(self.url_or_path, '/status'))
+                status = ans.json()
+                if status['status'] == 'up':
+                    is_up = True
+            except requests.exceptions.ConnectionError:
+                pass
+        else:
+            is_up = os.path.isfile(self.url_or_path)
+        return is_up
 
-    def request(self, triples, parameters=None, predicates=None):
+    def request(self, triples, parameters=None, predicates=None, *args, **kwargs):
+        if self.url_or_path.startswith('http'):
+            ans = self._http_request(triples, parameters, predicates)
+        else:
+            def _open(path, mode):
+                return gzip.open(path, mode) if path.endswith('.gz') else open(path, mode)
+            with _open(self.url_or_path, 'r') as f:
+                ans = f.read().decode("utf-8") if self.url_or_path.endswith('.gz') else f.read()
+        return self._to_pfw_triples(json_str=ans, *args, **kwargs)
+
+    @staticmethod
+    def _to_pfw_triples(json_str, threshold=None, top_k=None):
+        pfw_triples = []
+        for predicate_obj in json.loads(json_str):
+            predicate_name = predicate_obj['predicate']
+
+            for feature_obj in predicate_obj['features']:
+                weight = feature_obj['weight']
+                if threshold is None or weight > threshold:
+
+                    hops = []
+                    for hop_obj in feature_obj['feature']['hops']:
+                        _predicate = hop_obj['predicate']
+                        reverse = hop_obj['reverse']
+                        hops += [Hop(_predicate, reverse)]
+
+                    pfw_triples += [(predicate_name, Feature(hops), weight)]
+
+        if top_k is not None:
+            sorted_pfw_triples = list(reversed(sorted(pfw_triples, key=lambda x: x[2])))
+            pfw_triples = sorted_pfw_triples[:top_k]
+
+        return pfw_triples
+
+    def _http_request(self, triples, parameters=None, predicates=None):
         request = dict()
-
         if parameters is not None:
             request['parameters'] = parameters
         if predicates is not None:
             request['predicates'] = predicates
         if triples is not None:
             request['triples'] = triples
-
-        ans = requests.post(urljoin(self.service_url, '/pathRanking'), json=request)
-
-        ans_predicates = []
-        for predicate_obj in json.loads(ans.json()):
-            ans_predicate = predicate_obj['predicate']
-
-            features, weights = [], []
-            for feature_obj in predicate_obj['features']:
-
-                hops = []
-                for hop_obj in feature_obj['feature']['hops']:
-                    _predicate = hop_obj['predicate']
-                    reverse = hop_obj['reverse']
-                    hops += [Hop(_predicate, reverse)]
-
-                features += [Feature(hops)]
-                weights += [feature_obj['weight']]
-
-            ans_predicates += [PredicateFeatures(ans_predicate, features, weights)]
-
-        return ans_predicates
+        ans = requests.post(urljoin(self.url_or_path, '/pathRanking'), json=request)
+        return ans.json()
 
 
 if __name__ == '__main__':
@@ -116,7 +103,7 @@ if __name__ == '__main__':
     ]
 
     client = PathRankingClient()
-    if client.is_online():
+    if client.is_up():
         predicates = client.request(triples, parameters=PathRankingClient.DEFAULT_PRA_PARAMETERS)
         for p in predicates:
             print(str(p))
