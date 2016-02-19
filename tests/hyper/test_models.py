@@ -128,7 +128,7 @@ class TestModels(unittest.TestCase):
 
             model.fit([Xr, Xe], y, batch_size=1, nb_epoch=1, verbose=0)
 
-            normalized_embeddings = entity_layer.params[0].get_value()
+            normalized_embeddings = entity_layer.trainable_weights[0].get_value()
 
             self.assertTrue(abs(np.linalg.norm(normalized_embeddings[0, :]) - 1.5) < 1e-6)
             self.assertTrue(abs(np.linalg.norm(normalized_embeddings[1, :]) - 1.5) < 1e-6)

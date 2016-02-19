@@ -15,7 +15,7 @@ class GroupRegularizer(Regularizer):
     def __call__(self, loss):
         for regularizer in self.regularizers:
             loss += regularizer(loss)
-            return loss
+        return loss
 
     def get_config(self):
         return {"name": self.__class__.__name__}
