@@ -11,14 +11,16 @@ from hyper import regularizers
 from hyper import constraints
 
 import unittest
-
+import sys
 
 class TestRegularizers(unittest.TestCase):
 
     def setUp(self):
-        pass
+        np.random.seed(0)
 
-    def test_translation_rule_regularizer(self):
+    def test_translation(self):
+        #return
+
         r = regularizers.TranslationRuleRegularizer([0], [(1, False), (2, False)], l=1.)
 
         model = Sequential()
@@ -38,11 +40,13 @@ class TestRegularizers(unittest.TestCase):
 
         d = np.sum(abs(W[0, :] - (W[1, :] + W[2, :])))
 
-        print(d)
+        #print('test_translation: ', d)
 
         self.assertTrue(d < 0.01)
 
-    def test_group_regularizer(self):
+    def test_group(self):
+        #return
+
         reg_1 = regularizers.TranslationRuleRegularizer([0], [(1, False), (2, False)], l=1.)
         reg_2 = regularizers.TranslationRuleRegularizer([2], [(3, False)], l=1.)
 
@@ -65,8 +69,43 @@ class TestRegularizers(unittest.TestCase):
         d_1 = np.sum(abs(W[0, :] - (W[1, :] + W[2, :])))
         d_2 = np.sum(abs(W[2, :] - W[3, :]))
 
+        #print('test_group: ', d_1, d_2)
+
         self.assertTrue(d_1 < 0.01)
         self.assertTrue(d_2 < 0.01)
+
+    def test_stress(self):
+        #return
+
+        n = 10
+        rs = [regularizers.TranslationRuleRegularizer([i], [(i + 1, False)], l=0.1) for i in range(n)]
+
+        r = regularizers.GroupRegularizer(rs)
+
+        model = Sequential()
+        embedding_layer = Embedding(input_dim=n + 1, output_dim=10, input_length=None, init='glorot_uniform',
+                                    W_regularizer=r, W_constraint=constraints.NormConstraint(1.))
+        model.add(embedding_layer)
+
+        def zero_loss(y_true, y_pred):
+            return .0 * (y_true.sum() + y_pred.sum())
+
+        #sys.setrecursionlimit(65536)
+
+        model.compile(loss=zero_loss, optimizer='adagrad')
+
+        X, y = np.zeros((32, 3)), np.zeros((32, 1, 1))
+        model.fit(X, y, batch_size=32, nb_epoch=100000, verbose=0)
+
+        W = embedding_layer.trainable_weights[0].get_value()
+
+        #print(W)
+
+        d = np.sum(abs(W[0, :] - W[n, :]))
+
+        #print('test_stress: ', d)
+
+        self.assertTrue(d < 0.01)
 
 
 if __name__ == '__main__':
