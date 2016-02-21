@@ -44,7 +44,7 @@ class RuleRegularizer(Regularizer):
 
 class TranslationRuleRegularizer(RuleRegularizer):
     def __init__(self, head, tail, *args, **kwargs):
-        super(TranslationRuleRegularizer, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.head, self.tail = head, tail
 
     def __call__(self, loss):
@@ -61,7 +61,7 @@ class TranslationRuleRegularizer(RuleRegularizer):
         return loss
 
     def get_config(self):
-        sc = super(TranslationRuleRegularizer, self).get_config()
+        sc = super().get_config()
         config = {"name": self.__class__.__name__}
         config.update(sc)
         return config
@@ -69,7 +69,7 @@ class TranslationRuleRegularizer(RuleRegularizer):
 
 class ScalingRuleRegularizer(RuleRegularizer):
     def __init__(self, head, tail, *args, **kwargs):
-        super(ScalingRuleRegularizer, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.head, self.tail = head, tail
 
     def __call__(self, loss):
@@ -86,7 +86,7 @@ class ScalingRuleRegularizer(RuleRegularizer):
         return loss
 
     def get_config(self):
-        sc = super(ScalingRuleRegularizer, self).get_config()
+        sc = super().get_config()
         config = {"name": self.__class__.__name__}
         config.update(sc)
         return config

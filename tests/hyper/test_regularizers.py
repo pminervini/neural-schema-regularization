@@ -44,7 +44,7 @@ class TestRegularizers(unittest.TestCase):
 
         d = np.sum(abs(W[0, :] - (W[1, :] + W[2, :])))
 
-        print('test_translation: ', d)
+        #print('test_translation: ', d)
 
         self.assertTrue(d < 0.01)
 
