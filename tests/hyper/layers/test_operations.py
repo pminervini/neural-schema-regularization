@@ -17,7 +17,6 @@ class TestOperations(unittest.TestCase):
 
     def test_cross_correlation(self):
         x, y = T.vector(), T.vector()
-        y = T.dvector()
         f = theano.function([x, y], operations.circular_cross_correlation_theano(x, y))
 
         a, b = np.array([63, 23, 12, 27]), np.array([84, 24, 66, 32])

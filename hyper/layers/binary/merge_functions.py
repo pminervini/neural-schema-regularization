@@ -54,7 +54,7 @@ def scaling_merge_function(args, similarity):
 def holographic_merge_function(args, similarity):
     """
     Keras Merge function for the multiplicative interactions model described in:
-        M. Nickel et al. - EHolographic Embeddings of Knowledge Graphs - AAAI 2016
+        M Nickel et al. - EHolographic Embeddings of Knowledge Graphs - AAAI 2016
     :param args: List of two arguments: the former containing the relation embedding,
         and the latter containing the two entity embeddings.
     :param similarity: Similarity function.
@@ -71,6 +71,8 @@ def holographic_merge_function(args, similarity):
 
     res, _ = theano.scan(lambda s, o: operations.circular_cross_correlation_theano(s, o),
                          sequences=[subj, obj])
+
+    #res = operations.circular_cross_correlation_theano_batch(subj, obj)
 
     sim = K.reshape(similarity(pred, res), (nb_samples, 1))
 
