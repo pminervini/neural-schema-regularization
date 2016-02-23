@@ -47,6 +47,22 @@ def scaling_merge_function(args, similarity):
 
     return sim
 
+from hyper.layers import operations
+
+
+def holographic_merge_function(args, similarity):
+    relation_embedding, entity_embeddings = args[0], args[1]
+
+    pred = relation_embedding[:, 0, :]
+    subj, obj = entity_embeddings[:, 0, :], entity_embeddings[:, 1, :]
+
+    scaling = subj * pred
+    nb_samples = K.shape(scaling)[0]
+
+    sim = K.reshape(similarity(scaling, obj), (nb_samples, 1))
+
+    return sim
+
 
 # aliases
 TransE = TranslatingEmbeddings = translating_merge_function
