@@ -40,7 +40,7 @@ class TestOperations(unittest.TestCase):
         _os = np.array([[84, 24, 66, 32], [84, 24, 66, 32]])
 
         _res = f(_ss, _os)
-        
+
         for i in range(_ss.shape[1]):
             self.assertTrue(_res[0, i] == _res[1, i])
 

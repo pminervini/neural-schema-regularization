@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import theano
 from keras import backend as K
+from hyper.layers import operations
+
 import sys
 
 
@@ -47,10 +50,17 @@ def scaling_merge_function(args, similarity):
 
     return sim
 
-from hyper.layers import operations
-
 
 def holographic_merge_function(args, similarity):
+    """
+    Keras Merge function for the multiplicative interactions model described in:
+        M. Nickel et al. - EHolographic Embeddings of Knowledge Graphs - AAAI 2016
+    :param args: List of two arguments: the former containing the relation embedding,
+        and the latter containing the two entity embeddings.
+    :param similarity: Similarity function.
+    :return: The dot product between between the predicate embedding, and the cross correlation
+        of the subject and the object embeddings.
+    """
     relation_embedding, entity_embeddings = args[0], args[1]
 
     pred = relation_embedding[:, 0, :]
@@ -59,7 +69,10 @@ def holographic_merge_function(args, similarity):
     scaling = subj * pred
     nb_samples = K.shape(scaling)[0]
 
-    sim = K.reshape(similarity(scaling, obj), (nb_samples, 1))
+    res, _ = theano.scan(lambda s, o: operations.circular_cross_correlation_theano(s, o),
+                         sequences=[subj, obj])
+
+    sim = K.reshape(similarity(pred, res), (nb_samples, 1))
 
     return sim
 
@@ -67,6 +80,7 @@ def holographic_merge_function(args, similarity):
 # aliases
 TransE = TranslatingEmbeddings = translating_merge_function
 ScalE = ScalingEmbeddings = scaling_merge_function
+HolE = HolographicEmbeddings = holographic_merge_function
 
 
 def get_function(function_name):
