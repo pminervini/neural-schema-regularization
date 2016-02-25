@@ -35,7 +35,7 @@ def to_command(c):
 hyperparameters_space = dict(
     epochs=[500],
     optimizer=['adagrad'],
-    lr=[.001, .01, .1, 1.],
+    lr=[.01, .1],
     batches=[10],
     model=['TransE', 'ScalE', 'HolE'],
     similarity=['l1', 'l2', 'dot'],
