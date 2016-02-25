@@ -31,8 +31,8 @@ def circular_cross_correlation_theano_nnet(x, y):
 
 
 def circular_cross_correlation_theano_batch(X, Y):
-    corr_expr = T.nnet.conv2d(X.reshape(X.shape[0], 1, 1, X.shape[1]),
-                              Y.reshape(Y.shape[0], 1, 1, Y.shape[1]),
+    corr_expr = T.nnet.conv2d(X.reshape((X.shape[0], 1, 1, X.shape[1])),
+                              Y.reshape((Y.shape[0], 1, 1, Y.shape[1])),
                               border_mode='full',
                               filter_flip=False)[:, 0, 0, :]
     diff = corr_expr.shape[-1] - X.shape[1]

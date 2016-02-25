@@ -22,9 +22,7 @@ def translating_merge_function(args, similarity):
     subj, obj = entity_embeddings[:, 0, :], entity_embeddings[:, 1, :]
 
     translation = subj + pred
-    nb_samples = K.shape(translation)[0]
-
-    sim = K.reshape(similarity(translation, obj), (nb_samples, 1))
+    sim = K.reshape(similarity(translation, obj), (-1, 1))
 
     return sim
 
@@ -44,9 +42,7 @@ def scaling_merge_function(args, similarity):
     subj, obj = entity_embeddings[:, 0, :], entity_embeddings[:, 1, :]
 
     scaling = subj * pred
-    nb_samples = K.shape(scaling)[0]
-
-    sim = K.reshape(similarity(scaling, obj), (nb_samples, 1))
+    sim = K.reshape(similarity(scaling, obj), (-1, 1))
 
     return sim
 
@@ -66,16 +62,11 @@ def holographic_merge_function(args, similarity):
     pred = relation_embedding[:, 0, :]
     subj, obj = entity_embeddings[:, 0, :], entity_embeddings[:, 1, :]
 
-    scaling = subj * pred
-    nb_samples = K.shape(scaling)[0]
-
     res, _ = theano.scan(lambda s, o: operations.circular_cross_correlation_theano(s, o),
                          sequences=[subj, obj])
 
     #res = operations.circular_cross_correlation_theano_batch(subj, obj)
-
-    sim = K.reshape(similarity(pred, res), (nb_samples, 1))
-
+    sim = K.reshape(similarity(pred, res), (-1, 1))
     return sim
 
 
