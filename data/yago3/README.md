@@ -52,5 +52,6 @@ pasquale@koeln:~/insight/workspace/hyper/data/yago3/tmp$ wc -l *.txt
   5628166 total
 $ mv *.txt ..
 $ cd ..
+$ gzip -9 yago3-*.txt
 $ rm -rf tmp/
 ```
