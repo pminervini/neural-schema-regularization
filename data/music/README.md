@@ -19,7 +19,17 @@ $ du -hs *.nt
 134M	music.nt
 $ md5sum music.nt 
 f0241e99bde3c880e33180dbfbbab443  music.nt
-$ gzip -9 music.nt
+$ ./tools/splitter.py --kb music.nt --train music-train.txt --validation music-valid.txt --validation-size 50000 --test music-test.txt --test-size 50000 --seed 0
+DEBUG:root:Importing the Knowledge Graph ..
+DEBUG:root:Number of triples in the Knowledge Graph: 1025587
+DEBUG:root:Generating a random permutation of RDF triples ..
+DEBUG:root:Building the training, validation and test sets ..
+DEBUG:root:Saving ..
+$ md5sum *.txt
+80981ad632d8d46319b3851be5cee792  music-test.txt
+01b68d31c62708695fbdf98f5969e38b  music-train.txt
+d395986c7392a3c1045f507336464719  music-valid.txt
+$ gzip -9 *.txt music.nt
 $ zcat music.nt.gz | cut -f 2 -d ' ' | sort | uniq -c
   37989 <http://dbpedia.org/ontology/album>
  116444 <http://dbpedia.org/ontology/associatedBand>
