@@ -16,9 +16,9 @@ def summary(configuration):
 
 def to_command(c):
     command = "PYTHONPATH=. ./bin/hyper-cli.py" \
-              " --train data/yago3/yago3-train.txt" \
-              " --valid data/yago3/yago3-valid.txt" \
-              " --test data/yago3/yago3-test.txt" \
+              " --train data/music/music-train.txt" \
+              " --valid data/music/music-valid.txt" \
+              " --test data/music/music-test.txt" \
               " --epochs %s" \
               " --optimizer %s" \
               " --lr %s" \
@@ -34,7 +34,7 @@ def to_command(c):
 
 
 def to_logfile(c):
-    outfile = "logs/exp_yago3_v1/exp_yago3_v1." + summary(c) + ".log"
+    outfile = "logs/exp_music_v1/exp_music_v1." + summary(c) + ".log"
     return outfile
 
 

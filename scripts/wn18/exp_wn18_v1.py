@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import itertools
+import os.path
 
 
 def cartesian_product(dicts):
@@ -29,7 +30,12 @@ def to_command(c):
               % (c['epochs'], c['optimizer'], c['lr'], c['batches'],
                  c['model'], c['similarity'], c['margin'],
                  c['embedding_size'], c['embedding_size'])
-    return command + " >> logs/exp_wn18_v1." + summary(c) + ".log 2>&1"
+    return command
+
+
+def to_logfile(c):
+    outfile = "logs/exp_wn18_v1/exp_wn18_v1." + summary(c) + ".log"
+    return outfile
 
 
 hyperparameters_space = dict(
@@ -44,9 +50,15 @@ hyperparameters_space = dict(
 
 configurations = cartesian_product(hyperparameters_space)
 
-for configuration in configurations:
-    print(to_command(configuration))
+for c in configurations:
+    logfile = to_logfile(c)
 
+    completed = False
+    if os.path.isfile(logfile):
+        with open(logfile, 'r') as f:
+            content = f.read()
+            completed = '### MICRO (test filtered)' in content
 
-
-
+    if not completed:
+        line = '%s >> %s 2>&1' % (to_command(c), logfile)
+        print(line)
