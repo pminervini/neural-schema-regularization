@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import itertools
+import os
 import os.path
 
 
@@ -33,8 +34,8 @@ def to_command(c):
     return command
 
 
-def to_logfile(c):
-    outfile = "logs/exp_wn18_v1/exp_wn18_v1." + summary(c) + ".log"
+def to_logfile(c, dir):
+    outfile = "%s/exp_wn18_v1.%s.log" % (dir, summary(c))
     return outfile
 
 
@@ -50,14 +51,18 @@ hyperparameters_space = dict(
 
 configurations = cartesian_product(hyperparameters_space)
 
+dir = 'logs/exp_wn18_v1/'
+#if not os.path.isdir(dir):
+#    os.makedirs(dir)
+
 for c in configurations:
-    logfile = to_logfile(c)
+    logfile = to_logfile(c, dir)
 
     completed = False
     if os.path.isfile(logfile):
         with open(logfile, 'r') as f:
             content = f.read()
-            completed = '### MICRO (test filtered)' in content
+            completed = ('### MICRO (test filtered)' in content) or ('### COMPLETED' in content)
 
     if not completed:
         line = '%s >> %s 2>&1' % (to_command(c), logfile)

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import itertools
+import os
 import os.path
 
 
@@ -33,8 +34,8 @@ def to_command(c):
     return command
 
 
-def to_logfile(c):
-    outfile = "logs/exp_yago3_v1/exp_yago3_v1." + summary(c) + ".log"
+def to_logfile(c, dir):
+    outfile = "%s/exp_yago3_v1.%s.log" % (dir, summary(c))
     return outfile
 
 
@@ -50,8 +51,12 @@ hyperparameters_space = dict(
 
 configurations = cartesian_product(hyperparameters_space)
 
+dir = 'logs/exp_yago3_v1/'
+#if not os.path.isdir(dir):
+#    os.makedirs(dir)
+
 for c in configurations:
-    logfile = to_logfile(c)
+    logfile = to_logfile(c, dir)
 
     completed = False
     if os.path.isfile(logfile):
