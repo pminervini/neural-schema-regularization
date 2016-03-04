@@ -214,6 +214,12 @@ def main(argv):
                            help='JSON document containing the rules extracted from the KG')
     argparser.add_argument('--rules-top-k', action='store', type=int, default=None,
                            help='Top-k rules to consider during the training process')
+    argparser.add_argument('--rules-max-length', action='store', type=int, default=None,
+                           help='Maximum (body) length for the considered rules')
+
+    argparser.add_argument('--sample-facts', action='store', type=float, default=None,
+                           help='Fraction of (randomly sampled) facts to use during training')
+
     argparser.add_argument('--rules-lambda', action='store', type=float, default=None,
                            help='Weight of the Rules-related regularization term')
 
@@ -279,6 +285,10 @@ def main(argv):
     # Rules-related parameters
     rules = args.rules
     rules_top_k = args.rules_top_k
+    rules_max_length = args.rules_max_length
+
+    sample_facts = args.sample_facts
+
     rules_lambda = args.rules_lambda
 
     rule_regularizer = None
@@ -287,19 +297,34 @@ def main(argv):
         path_ranking_client = PathRankingClient(url_or_path=rules)
         pfw_triples = path_ranking_client.request(None, threshold=.0, top_k=rules_top_k)
 
-        rule_regularizers = []
-        for _p, _f, _w in pfw_triples:
-            head = parser.predicate_index[_p]
-            tail = [(parser.predicate_index[hop.predicate], hop.is_inverse) for hop in _f.hops]
+        model_to_regularizer = {
+            'TransE': regularizers.TranslationRuleRegularize,
+            'ScalE': regularizers.ScalingRuleRegularize
+        }
 
-            if model_name == 'TransE':
-                rule_regularizers += [regularizers.TranslationRuleRegularizer(head, tail, l=rules_lambda)]
-            elif model_name == 'ScalE':
-                rule_regularizers += [regularizers.ScalingRuleRegularizer(head, tail, l=rules_lambda)]
-            else:
-                raise ValueError('Rule-based regularizers unsupported for the model: %s' % model_name)
+        rule_regularizers = []
+        for rule_predicate, rule_feature, rule_weight in pfw_triples:
+            if rules_max_length is None or len(rule_feature.hops) <= rules_max_length:
+                head = parser.predicate_index[rule_predicate]
+                tail = [(parser.predicate_index[hop.predicate], hop.is_inverse) for hop in rule_feature.hops]
+
+                if model_name not in model_to_regularizer:
+                    raise ValueError('Rule-based regularizers unsupported for the model: %s' % model_name)
+
+                Regularizer = model_to_regularizer[model_name]
+                rule_regularizers += [Regularizer(head, tail, l=rules_lambda)]
 
         rule_regularizer = regularizers.GroupRegularizer(regularizers=rule_regularizers) if rule_regularizers else None
+
+    if sample_facts is not None:
+        nb_train_facts = float(len(train_facts))
+        sample_size = int(round(sample_facts * nb_train_facts))
+
+        random_state = np.random.RandomState(seed)
+        sample_indices = random_state.choice(nb_train_facts, sample_size, replace=False)
+        train_facts_sample = [train_facts[i] for i in sample_indices]
+
+        train_facts = train_facts_sample
 
     optimizer_name = args.optimizer
     lr = args.lr
