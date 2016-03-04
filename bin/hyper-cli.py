@@ -247,22 +247,13 @@ def main(argv):
 
     args = argparser.parse_args(argv)
 
-    train_facts = []
-    for line in args.train:
+    def to_fact(line):
         subj, pred, obj = line.split()
-        train_facts += [knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])]
+        return knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])
 
-    validation_facts = []
-    if args.validation is not None:
-        for line in args.validation:
-            subj, pred, obj = line.split()
-            validation_facts += [knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])]
-
-    test_facts = []
-    if args.test is not None:
-        for line in args.test:
-            subj, pred, obj = line.split()
-            test_facts += [knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])]
+    train_facts = [to_fact(line) for line in args.train]
+    validation_facts = [to_fact(line) for line in args.validation] if args.validation is not None else []
+    test_facts = [to_fact(line) for line in args.test] if args.test is not None else []
 
     parser = knowledgebase.KnowledgeBaseParser(train_facts + validation_facts + test_facts)
 
