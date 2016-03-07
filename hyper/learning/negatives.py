@@ -50,7 +50,7 @@ class CorruptedSamplesGenerator(NegativeSamplesGenerator):
 
         # Relation indices are not changed.
         # TODO: This could be an option anyway - might improve some results.
-        negative_Xr = Xr  # np.copy(Xr)
+        negative_Xr = Xr
 
         # Entity (subject and object) indices, on the other hand, are corrupted for generating
         # two new sets of triples.

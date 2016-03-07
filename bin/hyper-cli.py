@@ -131,30 +131,31 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
         negative_samples = negative_samples_generator(Xr_shuffled, Xe_shuffled)
         positive_negative_samples = [(Xr_shuffled, Xe_shuffled)] + negative_samples
 
-        nb_samples_set = len(positive_negative_samples)
+        nb_samples_sets = len(positive_negative_samples)
+
         batches, losses = make_batches(nb_samples, batch_size), []
 
         # Iterate over batches of (positive) training examples
         for batch_index, (batch_start, batch_end) in enumerate(batches):
-            batch_size = batch_end - batch_start
+            current_batch_size = batch_end - batch_start
             logging.debug('Batch no. %d of %d (%d:%d), size %d'
-                          % (batch_index, len(batches), batch_start, batch_end, batch_size))
+                          % (batch_index, len(batches), batch_start, batch_end, current_batch_size))
 
-            train_Xr_batch = np.empty((batch_size * nb_samples_set, Xr_shuffled.shape[1]))
-            train_Xe_batch = np.empty((batch_size * nb_samples_set, Xe_shuffled.shape[1]))
+            train_Xr_batch = np.empty((current_batch_size * nb_samples_sets, Xr_shuffled.shape[1]))
+            train_Xe_batch = np.empty((current_batch_size * nb_samples_sets, Xe_shuffled.shape[1]))
 
             for i, samples_set in enumerate(positive_negative_samples):
                 (_Xr, _Xe) = samples_set
-                train_Xr_batch[i::nb_samples_set] = _Xr[batch_start:batch_end, :]
-                train_Xe_batch[i::nb_samples_set] = _Xe[batch_start:batch_end, :]
+                train_Xr_batch[i::nb_samples_sets, :] = _Xr[batch_start:batch_end, :]
+                train_Xe_batch[i::nb_samples_sets, :] = _Xe[batch_start:batch_end, :]
 
             y_batch = np.zeros(train_Xr_batch.shape[0])
 
             hist = model.fit([train_Xr_batch, train_Xe_batch], y_batch,
-                             nb_epoch=1, batch_size=train_Xe_batch.shape[0],
+                             nb_epoch=1, batch_size=train_Xr_batch.shape[0],
                              shuffle=False, verbose=0)
 
-            losses += [hist.history['loss'][0] / train_Xr_batch.shape[0]]
+            losses += [hist.history['loss'][0] / float(train_Xr_batch.shape[0])]
 
         logging.info('Loss: %s +/- %s' % (round(np.mean(losses), 4), round(np.std(losses), 4)))
 
