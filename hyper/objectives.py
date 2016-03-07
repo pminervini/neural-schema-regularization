@@ -4,7 +4,7 @@ import numpy as np
 from keras import backend as K
 
 
-def mean_squared_error(y_true, y_pred):
+def mean_squared_error(y_true, y_pred, *args, **kwargs):
     '''
     Mean Squared Error:
 
@@ -17,7 +17,7 @@ def mean_squared_error(y_true, y_pred):
     return K.mean(K.square(y_pred - y_true), axis=-1)
 
 
-def root_mean_squared_error(y_true, y_pred):
+def root_mean_squared_error(y_true, y_pred, *args, **kwargs):
     '''
     Root Mean Squared Error:
 
@@ -31,7 +31,7 @@ def root_mean_squared_error(y_true, y_pred):
     return K.sqrt(K.mean(K.square(y_pred - y_true), axis=-1))
 
 
-def mean_absolute_error(y_true, y_pred):
+def mean_absolute_error(y_true, y_pred, *args, **kwargs):
     '''
     Mean Absolute Error:
 
@@ -44,7 +44,7 @@ def mean_absolute_error(y_true, y_pred):
     return K.mean(K.abs(y_pred - y_true), axis=-1)
 
 
-def mean_absolute_percentage_error(y_true, y_pred, eps=1e-6):
+def mean_absolute_percentage_error(y_true, y_pred, eps=1e-6, *args, **kwargs):
     '''
     Men Absolute Percentage Error:
 
@@ -59,7 +59,7 @@ def mean_absolute_percentage_error(y_true, y_pred, eps=1e-6):
     return 100. * K.mean(diff, axis=-1)
 
 
-def mean_squared_logarithmic_error(y_true, y_pred, eps=1e-6):
+def mean_squared_logarithmic_error(y_true, y_pred, eps=1e-6, *args, **kwargs):
     '''
     Men Squared Logarithmic Error:
 
@@ -75,7 +75,7 @@ def mean_squared_logarithmic_error(y_true, y_pred, eps=1e-6):
     return K.mean(K.square(first_log - second_log), axis=-1)
 
 
-def squared_hinge_loss(y_true, y_pred, margin=1.):
+def squared_hinge_loss(y_true, y_pred, margin=1., *args, **kwargs):
     '''
     Squared Hinge Loss:
 
@@ -89,7 +89,7 @@ def squared_hinge_loss(y_true, y_pred, margin=1.):
     return K.mean(K.square(K.maximum(margin - y_true * y_pred, 0.)), axis=-1)
 
 
-def hinge_loss(y_true, y_pred, margin=1.):
+def hinge_loss(y_true, y_pred, margin=1., *args, **kwargs):
     '''
     Hinge Loss:
 
@@ -103,7 +103,7 @@ def hinge_loss(y_true, y_pred, margin=1.):
     return K.mean(K.maximum(margin - y_true * y_pred, 0.), axis=-1)
 
 
-def categorical_crossentropy(y_true, y_pred):
+def categorical_crossentropy(y_true, y_pred, *args, **kwargs):
     '''
     Categorical Cross-Entropy.
 
@@ -123,7 +123,7 @@ def categorical_crossentropy(y_true, y_pred):
     return K.mean(K.categorical_crossentropy(y_pred, y_true), axis=-1)
 
 
-def binary_crossentropy(y_true, y_pred):
+def binary_crossentropy(y_true, y_pred, *args, **kwargs):
     '''
     Binary Cross-Entropy.
 
@@ -136,7 +136,7 @@ def binary_crossentropy(y_true, y_pred):
     return K.mean(K.binary_crossentropy(y_pred, y_true), axis=-1)
 
 
-def poisson_loss(y_true, y_pred, eps=1e-6):
+def poisson_loss(y_true, y_pred, eps=1e-6, *args, **kwargs):
     '''
     Poisson Loss.
         avg(p - t * log(p))

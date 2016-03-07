@@ -13,8 +13,8 @@ from keras import backend as K
 
 import hyper.layers.core
 from hyper.preprocessing import knowledgebase
-from hyper.learning import samples
-from hyper import optimizers, constraints, regularizers
+from hyper.learning import samples, negatives
+from hyper import ranking_objectives, optimizers, constraints, regularizers
 
 from hyper.pathranking.api import PathRankingClient
 
@@ -49,7 +49,8 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     entity_encoder = Sequential()
 
     predicate_embedding_layer = Embedding(input_dim=nb_predicates + 1, output_dim=predicate_embedding_size,
-                                          input_length=None, init='glorot_uniform', W_regularizer=rule_regularizer)
+                                          input_length=None, init='glorot_uniform',
+                                          W_regularizer=rule_regularizer)
     predicate_encoder.add(predicate_embedding_layer)
 
     if dropout_predicate_embeddings is not None and dropout_predicate_embeddings > .0:
@@ -86,25 +87,11 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=f)
     model.add(merge_layer)
 
-    def margin_based_loss(y_true, y_pred):
-        pos, neg_subj, neg_obj = y_pred[0::3], y_pred[1::3], y_pred[2::3]
-
-        out_subj = (margin + neg_subj - pos)
-        diff_subj = (out_subj * K.cast(out_subj >= 0., K.floatx())).sum(axis=1, keepdims=True)
-
-        out_obj = (margin + neg_obj - pos)
-        diff_obj = (out_obj * K.cast(out_obj >= 0., K.floatx())).sum(axis=1, keepdims=True)
-
-        target = y_true[0::3]
-
-        return diff_subj.sum() + diff_obj.sum() + target.sum()
-
-    optimizer = optimizers.make_optimizer(optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
-                                          epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2)
-    model.compile(loss=margin_based_loss, optimizer=optimizer)
-
     Xr = np.array([[rel_idx] for (rel_idx, _) in train_sequences])
     Xe = np.array([ent_idxs for (_, ent_idxs) in train_sequences])
+
+    # Let's make the training set unwriteable (immutable), just in case
+    Xr.flags.writeable, Xe.flags.writeable = False, False
 
     nb_samples = Xr.shape[0]
 
@@ -118,45 +105,53 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     # Creating negative indices..
     candidate_negative_indices = np.arange(1, nb_entities + 1)
 
+    negative_samples_generator = negatives.CorruptedSamplesGenerator(
+        subject_index_generator=random_index_generator, subject_candidate_indices=candidate_negative_indices,
+        object_index_generator=random_index_generator, object_candidate_indices=candidate_negative_indices)
+
+    negatives_per_positive_example = negative_samples_generator.negatives_per_positive_example
+
+    loss = lambda y_true, y_pred: \
+        ranking_objectives.margin_based_loss(y_true, y_pred,
+                                             negatives_per_positive_example=negatives_per_positive_example,
+                                             margin=margin)
+
+    optimizer = optimizers.make_optimizer(optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
+                                          epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2)
+
+    model.compile(loss=loss, optimizer=optimizer)
+
     for epoch_no in range(1, nb_epochs + 1):
         logging.info('Epoch no. %d of %d (samples: %d)' % (epoch_no, nb_epochs, nb_samples))
 
         # Shuffling training (positive) triples..
         order = random_state.permutation(nb_samples)
-
         Xr_shuffled, Xe_shuffled = Xr[order, :], Xe[order, :]
 
-        negative_subjects = random_index_generator.generate(nb_samples, candidate_negative_indices)
-        Xe_neg_subj_shuffled = np.copy(Xe_shuffled)
-        Xe_neg_subj_shuffled[:, 0] = negative_subjects
+        negative_samples = negative_samples_generator(Xr_shuffled, Xe_shuffled)
+        positive_negative_samples = [(Xr_shuffled, Xe_shuffled)] + negative_samples
 
-        negative_objects = random_index_generator.generate(nb_samples, candidate_negative_indices)
-        Xe_neg_obj_shuffled = np.copy(Xe_shuffled)
-        Xe_neg_obj_shuffled[:, 1] = negative_objects
-
+        nb_samples_set = len(positive_negative_samples)
         batches, losses = make_batches(nb_samples, batch_size), []
 
         # Iterate over batches of (positive) training examples
         for batch_index, (batch_start, batch_end) in enumerate(batches):
+            batch_size = batch_end - batch_start
             logging.debug('Batch no. %d of %d (%d:%d), size %d'
-                          % (batch_index, len(batches), batch_start, batch_end, batch_end - batch_start))
+                          % (batch_index, len(batches), batch_start, batch_end, batch_size))
 
-            Xr_batch = Xr_shuffled[batch_start:batch_end, :]
+            train_Xr_batch = np.empty((batch_size * nb_samples_set, Xr_shuffled.shape[1]))
+            train_Xe_batch = np.empty((batch_size * nb_samples_set, Xe_shuffled.shape[1]))
 
-            Xe_batch = Xe_shuffled[batch_start:batch_end, :]
-            Xe_neg_subj_batch = Xe_neg_subj_shuffled[batch_start:batch_end, :]
-            Xe_neg_obj_batch = Xe_neg_obj_shuffled[batch_start:batch_end, :]
-
-            train_Xr_batch = np.empty((Xr_batch.shape[0] * 3, Xr_batch.shape[1]))
-            train_Xr_batch[0::3, :], train_Xr_batch[1::3, :], train_Xr_batch[2::3, :] = Xr_batch, Xr_batch, Xr_batch
-
-            train_Xe_batch = np.empty((Xe_batch.shape[0] * 3, Xe_batch.shape[1]))
-            train_Xe_batch[0::3, :], train_Xe_batch[1::3, :], train_Xe_batch[2::3, :] = \
-                Xe_batch, Xe_neg_subj_batch, Xe_neg_obj_batch
+            for i, samples_set in enumerate(positive_negative_samples):
+                (_Xr, _Xe) = samples_set
+                train_Xr_batch[i::nb_samples_set] = _Xr[batch_start:batch_end, :]
+                train_Xe_batch[i::nb_samples_set] = _Xe[batch_start:batch_end, :]
 
             y_batch = np.zeros(train_Xr_batch.shape[0])
 
-            hist = model.fit([train_Xr_batch, train_Xe_batch], y_batch, nb_epoch=1, batch_size=train_Xe_batch.shape[0],
+            hist = model.fit([train_Xr_batch, train_Xe_batch], y_batch,
+                             nb_epoch=1, batch_size=train_Xe_batch.shape[0],
                              shuffle=False, verbose=0)
 
             losses += [hist.history['loss'][0] / train_Xr_batch.shape[0]]
@@ -167,22 +162,17 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
 
 def evaluate_model(model, evaluation_sequences, nb_entities, true_triples=None, tag=None):
-
     def scoring_function(args):
         Xr, Xe = args[0], args[1]
         y = model.predict([Xr, Xe], batch_size=Xr.shape[0])
         return y[:, 0]
-
     evaluation_triples = [(s, p, o) for (p, [s, o]) in evaluation_sequences]
-
     if true_triples is None:
         res = metrics.ranking_score(scoring_function, evaluation_triples, nb_entities, nb_entities)
     else:
         res = metrics.filtered_ranking_score(scoring_function, evaluation_triples,
                                              nb_entities, nb_entities, true_triples)
-
     metrics.ranking_summary(res, tag=tag)
-
     return res
 
 

@@ -7,8 +7,9 @@ import numpy as np
 
 class IndexGenerator(metaclass=ABCMeta):
     @abstractmethod
-    def generate(self, n_samples, indices):
-        pass
+    def __call__(self, n_samples, indices):
+        while False:
+            yield None
 
 
 class UniformRandomIndexGenerator(IndexGenerator):
@@ -23,7 +24,7 @@ class UniformRandomIndexGenerator(IndexGenerator):
         """
         self.random_state = random_state
 
-    def generate(self, n_samples, indices):
+    def __call__(self, n_samples, indices):
         """
         Creates a NumPy vector of 'n_samples', randomly selected by 'indices'.
         :param n_samples: Number of samples to generate.
@@ -51,7 +52,7 @@ class GlorotRandomIndexGenerator(IndexGenerator):
         """
         self.random_state = random_state
 
-    def generate(self, n_samples, indices):
+    def __call__(self, n_samples, indices):
         """
         Creates a NumPy vector of 'n_samples', randomly selected by 'indices'.
         :param n_samples: Number of samples to generate.
