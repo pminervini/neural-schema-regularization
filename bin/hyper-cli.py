@@ -9,12 +9,12 @@ from keras.layers.embeddings import Embedding
 from keras.layers.core import Dropout, LambdaMerge
 from keras.models import make_batches
 
-from keras import backend as K
-
 import hyper.layers.core
 from hyper.preprocessing import knowledgebase
 from hyper.learning import samples, negatives
 from hyper import ranking_objectives, optimizers, constraints, regularizers
+
+import hyper.learning.util as learning_util
 
 from hyper.pathranking.api import PathRankingClient
 
@@ -35,6 +35,8 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
                 dropout_entity_embeddings=None, dropout_predicate_embeddings=None,
 
                 model_name='TransE', similarity_name='L1', nb_epochs=1000, batch_size=128, nb_batches=None, margin=1.0,
+                loss_name='hinge', negatives_name='corrupt',
+
                 optimizer_name='adagrad', lr=0.1, momentum=0.9, decay=.0, nesterov=False,
                 epsilon=1e-6, rho=0.9, beta_1=0.9, beta_2=0.999,
                 rule_regularizer=None):
@@ -105,16 +107,30 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     # Creating negative indices..
     candidate_negative_indices = np.arange(1, nb_entities + 1)
 
-    negative_samples_generator = negatives.CorruptedSamplesGenerator(
-        subject_index_generator=random_index_generator, subject_candidate_indices=candidate_negative_indices,
-        object_index_generator=random_index_generator, object_candidate_indices=candidate_negative_indices)
+    negative_samples_generator = None
 
-    negatives_per_positive_example = negative_samples_generator.negatives_per_positive_example
+    if negatives_name == 'corrupt':
+        negative_samples_generator = negatives.CorruptedSamplesGenerator(
+            subject_index_generator=random_index_generator, subject_candidate_indices=candidate_negative_indices,
+            object_index_generator=random_index_generator, object_candidate_indices=candidate_negative_indices)
+    elif negatives_name == 'lcwa':
+        negative_samples_generator = negatives.LCWANegativeSamplesGenerator(
+            object_index_generator=random_index_generator, object_candidate_indices=candidate_negative_indices)
+    elif negatives_name == 'schema':
+        predicate2type = learning_util.find_predicate_types(Xr, Xe)
+        negative_samples_generator = negatives.SchemaAwareNegativeSamplesGenerator(
+            index_generator=random_index_generator, candidate_indices=candidate_negative_indices,
+            random_state=random_state, predicate2type=predicate2type)
 
-    loss = lambda y_true, y_pred: \
-        ranking_objectives.margin_based_loss(y_true, y_pred,
-                                             negatives_per_positive_example=negatives_per_positive_example,
-                                             margin=margin)
+    nb_sample_sets = negative_samples_generator.nb_sample_sets + 1
+
+    def loss(y_true, y_pred):
+        loss_kwargs = dict(
+            y_true=y_true, y_pred=y_pred,
+            nb_sample_sets=nb_sample_sets,
+            margin=margin)
+        ranking_loss = getattr(ranking_objectives, loss_name)
+        return ranking_loss(**loss_kwargs)
 
     optimizer = optimizers.make_optimizer(optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
                                           epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2)
@@ -131,8 +147,6 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
         negative_samples = negative_samples_generator(Xr_shuffled, Xe_shuffled)
         positive_negative_samples = [(Xr_shuffled, Xe_shuffled)] + negative_samples
 
-        nb_samples_sets = len(positive_negative_samples)
-
         batches, losses = make_batches(nb_samples, batch_size), []
 
         # Iterate over batches of (positive) training examples
@@ -141,13 +155,13 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
             logging.debug('Batch no. %d of %d (%d:%d), size %d'
                           % (batch_index, len(batches), batch_start, batch_end, current_batch_size))
 
-            train_Xr_batch = np.empty((current_batch_size * nb_samples_sets, Xr_shuffled.shape[1]))
-            train_Xe_batch = np.empty((current_batch_size * nb_samples_sets, Xe_shuffled.shape[1]))
+            train_Xr_batch = np.empty((current_batch_size * nb_sample_sets, Xr_shuffled.shape[1]))
+            train_Xe_batch = np.empty((current_batch_size * nb_sample_sets, Xe_shuffled.shape[1]))
 
             for i, samples_set in enumerate(positive_negative_samples):
                 (_Xr, _Xe) = samples_set
-                train_Xr_batch[i::nb_samples_sets, :] = _Xr[batch_start:batch_end, :]
-                train_Xe_batch[i::nb_samples_sets, :] = _Xe[batch_start:batch_end, :]
+                train_Xr_batch[i::nb_sample_sets, :] = _Xr[batch_start:batch_end, :]
+                train_Xe_batch[i::nb_sample_sets, :] = _Xe[batch_start:batch_end, :]
 
             y_batch = np.zeros(train_Xr_batch.shape[0])
 
@@ -214,13 +228,23 @@ def main(argv):
     argparser.add_argument('--rules-lambda', action='store', type=float, default=None,
                            help='Weight of the Rules-related regularization term')
 
-    argparser.add_argument('--model', action='store', type=str, default=None, help='Name of the model to use')
+    argparser.add_argument('--model', action='store', type=str, default=None,
+                           help='Name of the model to use')
     argparser.add_argument('--similarity', action='store', type=str, default=None,
                            help='Name of the similarity function to use (if distance-based model)')
-    argparser.add_argument('--epochs', action='store', type=int, default=10, help='Number of training epochs')
-    argparser.add_argument('--batch-size', action='store', type=int, default=128, help='Batch size')
-    argparser.add_argument('--batches', action='store', type=int, default=None, help='Number of batches')
-    argparser.add_argument('--margin', action='store', type=float, default=1.0, help='Margin to use in the hinge loss')
+    argparser.add_argument('--epochs', action='store', type=int, default=10,
+                           help='Number of training epochs')
+    argparser.add_argument('--batch-size', action='store', type=int, default=128,
+                           help='Batch size')
+    argparser.add_argument('--batches', action='store', type=int, default=None,
+                           help='Number of batches')
+    argparser.add_argument('--margin', action='store', type=float, default=1.0,
+                           help='Margin to use in the hinge loss')
+
+    argparser.add_argument('--loss', action='store', type=str, default='hinge',
+                           help='Loss function to be used (e.g. hinge, logistic)')
+    argparser.add_argument('--negatives', action='store', type=str, default='corrupt',
+                           help='Method for generating the negative examples (e.g. corrupt, lcwa, schema)')
 
     argparser.add_argument('--optimizer', action='store', type=str, default='adagrad',
                            help='Optimization algorithm to use - sgd, adagrad, adadelta, rmsprop, adam, adamax')
@@ -269,6 +293,9 @@ def main(argv):
     nb_batches = args.batches
     margin = args.margin
 
+    loss_name = args.loss
+    negatives_name = args.negatives
+
     # Dropout-related parameters
     dropout_entity_embeddings = args.dropout_entity_embeddings
     dropout_predicate_embeddings = args.dropout_predicate_embeddings
@@ -288,10 +315,9 @@ def main(argv):
         path_ranking_client = PathRankingClient(url_or_path=rules)
         pfw_triples = path_ranking_client.request(None, threshold=.0, top_k=rules_top_k)
 
-        model_to_regularizer = {
-            'TransE': regularizers.TranslationRuleRegularize,
-            'ScalE': regularizers.ScalingRuleRegularize
-        }
+        model_to_regularizer = dict(
+            TransE=regularizers.TranslationRuleRegularize,
+            ScalE=regularizers.ScalingRuleRegularize)
 
         rule_regularizers = []
         for rule_predicate, rule_feature, rule_weight in pfw_triples:
@@ -337,6 +363,8 @@ def main(argv):
 
                         model_name=model_name, similarity_name=similarity_name,
                         nb_epochs=nb_epochs, batch_size=batch_size, nb_batches=nb_batches, margin=margin,
+                        loss_name=loss_name, negatives_name=negatives_name,
+
                         optimizer_name=optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
                         epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2,
                         rule_regularizer=rule_regularizer)

@@ -27,7 +27,7 @@ def to_command(c):
               " --model %s" \
               " --similarity %s" \
               " --margin %s" \
-              " --entity-embedding-size %s --predicate-embedding-size %s"\
+              " --entity-embedding-size %s --predicate-embedding-size %s" \
               % (c['epochs'], c['optimizer'], c['lr'], c['batches'],
                  c['model'], c['similarity'], c['margin'],
                  c['embedding_size'], c['embedding_size'])
@@ -52,8 +52,6 @@ hyperparameters_space = dict(
 configurations = cartesian_product(hyperparameters_space)
 
 dir = 'logs/exp_yago3_v1/'
-#if not os.path.isdir(dir):
-#    os.makedirs(dir)
 
 for c in configurations:
     logfile = to_logfile(c, dir)

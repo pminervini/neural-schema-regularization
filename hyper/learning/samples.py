@@ -4,8 +4,13 @@ from abc import ABCMeta, abstractmethod
 
 import numpy as np
 
+import logging
+
 
 class IndexGenerator(metaclass=ABCMeta):
+    def __init__(self, *args, **kwargs):
+        logging.debug('IndexGenerator(%s, %s)' % (str(args), str(kwargs)))
+
     @abstractmethod
     def __call__(self, n_samples, indices):
         while False:
@@ -17,11 +22,12 @@ class UniformRandomIndexGenerator(IndexGenerator):
     Instances of this class are used for generating random entity and predicate indices
     from an uniform distribution.
     """
-    def __init__(self, random_state):
+    def __init__(self, random_state, *args, **kwargs):
         """
         Initializes the generator.
         :param random_state: numpy.random.RandomState instance.
         """
+        super().__init__(*args, **kwargs)
         self.random_state = random_state
 
     def __call__(self, n_samples, indices):
@@ -45,11 +51,12 @@ class GlorotRandomIndexGenerator(IndexGenerator):
 
     A Bordes et al. - Translating Embeddings for Modeling Multi-relational Data - NIPS 2013
     """
-    def __init__(self, random_state):
+    def __init__(self, random_state, *args, **kwargs):
         """
         Initializes the generator.
         :param random_state: numpy.random.RandomState instance.
         """
+        super().__init__(*args, **kwargs)
         self.random_state = random_state
 
     def __call__(self, n_samples, indices):
