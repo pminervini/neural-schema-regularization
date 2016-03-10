@@ -177,17 +177,22 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
 
 def evaluate_model(model, evaluation_sequences, nb_entities, true_triples=None, tag=None):
+
     def scoring_function(args):
         Xr, Xe = args[0], args[1]
         y = model.predict([Xr, Xe], batch_size=Xr.shape[0])
         return y[:, 0]
+
     evaluation_triples = [(s, p, o) for (p, [s, o]) in evaluation_sequences]
+
     if true_triples is None:
         res = metrics.ranking_score(scoring_function, evaluation_triples, nb_entities, nb_entities)
     else:
         res = metrics.filtered_ranking_score(scoring_function, evaluation_triples,
                                              nb_entities, nb_entities, true_triples)
-    metrics.ranking_summary(res, tag=tag)
+    metrics.ranking_summary(res, tag=tag, n=1)
+    metrics.ranking_summary(res, tag=tag, n=3)
+    metrics.ranking_summary(res, tag=tag, n=10)
     return res
 
 

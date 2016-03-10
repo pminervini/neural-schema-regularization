@@ -82,21 +82,23 @@ def ranking_summary(res, idxo=None, n=10, tag='raw'):
     dres.update({'micrormean': np.mean(res[1])})
     dres.update({'micrormedian': np.median(res[1])})
     dres.update({'microrhits@n': np.mean(np.asarray(res[1]) <= n) * 100})
+
     resg = res[0] + res[1]
+
     dres.update({'microgmean': np.mean(resg)})
     dres.update({'microgmedian': np.median(resg)})
     dres.update({'microghits@n': np.mean(np.asarray(resg) <= n) * 100})
 
     logging.info('### MICRO (%s):' % (tag))
-    logging.info('\t-- left   >> mean: %s, median: %s, hits@%s: %s%%' % (
-                    round(dres['microlmean'], 5), round(dres['microlmedian'], 5),
-                    n, round(dres['microlhits@n'], 3)))
-    logging.info('\t-- right  >> mean: %s, median: %s, hits@%s: %s%%' % (
-                    round(dres['micrormean'], 5), round(dres['micrormedian'], 5),
-                    n, round(dres['microrhits@n'], 3)))
-    logging.info('\t-- global >> mean: %s, median: %s, hits@%s: %s%%' % (
-                    round(dres['microgmean'], 5), round(dres['microgmedian'], 5),
-                    n, round(dres['microghits@n'], 3)))
+    logging.info('\t-- left   >> mean: %s, median: %s, hits@%s: %s%%' %
+                 (round(dres['microlmean'], 5), round(dres['microlmedian'], 5),
+                  n, round(dres['microlhits@n'], 3)))
+    logging.info('\t-- right  >> mean: %s, median: %s, hits@%s: %s%%' %
+                 (round(dres['micrormean'], 5), round(dres['micrormedian'], 5),
+                  n, round(dres['microrhits@n'], 3)))
+    logging.info('\t-- global >> mean: %s, median: %s, hits@%s: %s%%' %
+                 (round(dres['microgmean'], 5), round(dres['microgmedian'], 5),
+                  n, round(dres['microghits@n'], 3)))
 
     if idxo is not None:
         listrel = set(idxo)
@@ -154,14 +156,14 @@ def ranking_summary(res, idxo=None, n=10, tag='raw'):
         dres.update({'macroghits@n': np.mean(dictrelgrn.values())})
 
         logging.info('### MACRO (%s):' % (tag))
-        logging.info('\t-- left   >> mean: %s, median: %s, hits@%s: %s%%' % (
-                        round(dres['macrolmean'], 5), round(dres['macrolmedian'], 5),
-                        n, round(dres['macrolhits@n'], 3)))
-        logging.info('\t-- right  >> mean: %s, median: %s, hits@%s: %s%%' % (
-                        round(dres['macrormean'], 5), round(dres['macrormedian'], 5),
-                        n, round(dres['macrorhits@n'], 3)))
-        logging.info('\t-- global >> mean: %s, median: %s, hits@%s: %s%%' % (
-                        round(dres['macrogmean'], 5), round(dres['macrogmedian'], 5),
-                        n, round(dres['macroghits@n'], 3)))
+        logging.info('\t-- left   >> mean: %s, median: %s, hits@%s: %s%%' %
+                     (round(dres['macrolmean'], 5), round(dres['macrolmedian'], 5),
+                      n, round(dres['macrolhits@n'], 3)))
+        logging.info('\t-- right  >> mean: %s, median: %s, hits@%s: %s%%' %
+                     (round(dres['macrormean'], 5), round(dres['macrormedian'], 5),
+                      n, round(dres['macrorhits@n'], 3)))
+        logging.info('\t-- global >> mean: %s, median: %s, hits@%s: %s%%' %
+                     (round(dres['macrogmean'], 5), round(dres['macrogmedian'], 5),
+                      n, round(dres['macroghits@n'], 3)))
 
     return dres
