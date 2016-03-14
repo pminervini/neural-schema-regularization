@@ -2,7 +2,7 @@
 
 import json
 import requests
-from repurposing.models.pathranking.domain import Hop, Feature
+from hyper.pathranking.domain import Hop, Feature
 from urllib.parse import urljoin
 import gzip
 import os.path
