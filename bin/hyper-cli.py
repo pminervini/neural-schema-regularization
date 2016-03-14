@@ -121,6 +121,13 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
         negative_samples_generator = negatives.SchemaAwareNegativeSamplesGenerator(
             index_generator=random_index_generator, candidate_indices=candidate_negative_indices,
             random_state=random_state, predicate2type=predicate2type)
+    elif negatives_name == 'binomial' or negatives_name == 'bernoulli':
+        ps_count, po_count = learning_util.predicate_statistics(Xr, Xe)
+        negative_samples_generator = negatives.BernoulliNegativeSamplesGenerator(
+            index_generator=random_index_generator, candidate_indices=candidate_negative_indices,
+            random_state=random_state, ps_count=ps_count, po_count=po_count)
+    else:
+        raise ValueError("Unknown negative samples generator: %s" % negatives_name)
 
     nb_sample_sets = negative_samples_generator.nb_sample_sets + 1
 
@@ -192,6 +199,7 @@ def evaluate_model(model, evaluation_sequences, nb_entities, true_triples=None, 
                                              nb_entities, nb_entities, true_triples)
     metrics.ranking_summary(res, tag=tag, n=1)
     metrics.ranking_summary(res, tag=tag, n=3)
+    metrics.ranking_summary(res, tag=tag, n=5)
     metrics.ranking_summary(res, tag=tag, n=10)
     return res
 
@@ -249,7 +257,7 @@ def main(argv):
     argparser.add_argument('--loss', action='store', type=str, default='hinge',
                            help='Loss function to be used (e.g. hinge, logistic)')
     argparser.add_argument('--negatives', action='store', type=str, default='corrupt',
-                           help='Method for generating the negative examples (e.g. corrupt, lcwa, schema)')
+                           help='Method for generating the negative examples (e.g. corrupt, lcwa, schema, bernoulli)')
 
     argparser.add_argument('--optimizer', action='store', type=str, default='adagrad',
                            help='Optimization algorithm to use - sgd, adagrad, adadelta, rmsprop, adam, adamax')

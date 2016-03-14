@@ -14,14 +14,9 @@ class PredicateType(Enum):
         return self.name
 
 
-def find_predicate_types(Xr, Xe):
-    logging.info('Recognizing the type of each predicate (1-to-1, 1-to-M, M-to-1, M-to-M) ..')
-
-    # entities = set([s for [s, _] in Xe] + [o for [_, o] in Xe])
-    predicates = set([p for [p] in Xr])
-
-    ps_count = dict()  # {(p, s): 0 for p in predicates for s in entities}
-    po_count = dict()  # {(p, o): 0 for p in predicates for o in entities}
+def predicate_statistics(Xr, Xe):
+    ps_count = dict()
+    po_count = dict()
 
     for [p], [s, o] in zip(Xr, Xe):
         if (p, s) not in ps_count:
@@ -31,6 +26,16 @@ def find_predicate_types(Xr, Xe):
 
         ps_count[(p, s)] += 1
         po_count[(p, o)] += 1
+
+    return ps_count, po_count
+
+
+def find_predicate_types(Xr, Xe):
+    logging.info('Recognizing the type of each predicate (1-to-1, 1-to-M, M-to-1, M-to-M) ..')
+
+    predicates = set([p for [p] in Xr])
+
+    ps_count, po_count = predicate_statistics(Xr, Xe)
 
     predicate2type = dict()
 
@@ -59,3 +64,6 @@ def find_predicate_types(Xr, Xe):
         predicate2type[p] = predicate_type
 
     return predicate2type
+
+
+

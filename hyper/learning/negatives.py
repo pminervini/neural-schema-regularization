@@ -28,8 +28,7 @@ class CorruptedSamplesGenerator(NegativeSamplesGenerator):
 
     [1] A Bordes et al. - Translating Embeddings for Modeling Multi-relational Data - NIPS 2013
     """
-    def __init__(self,
-                 subject_index_generator, subject_candidate_indices,
+    def __init__(self, subject_index_generator, subject_candidate_indices,
                  object_index_generator, object_candidate_indices):
 
         # Generator of random subject indices, and array of candidate indices
@@ -118,9 +117,7 @@ class LCWANegativeSamplesGenerator(NegativeSamplesGenerator):
 
 
 class SchemaAwareNegativeSamplesGenerator(NegativeSamplesGenerator):
-
-    def __init__(self,
-                 index_generator, candidate_indices,
+    def __init__(self, index_generator, candidate_indices,
                  random_state, predicate2type):
         # Generator of random entity indices, and array of candidate indices
         self.index_generator = index_generator
@@ -129,8 +126,6 @@ class SchemaAwareNegativeSamplesGenerator(NegativeSamplesGenerator):
         self._nb_sample_sets = 1
 
         self.random_state = random_state
-
-        #self.predicate2type = predicate2type
 
         max_index = max(predicate2type.keys())
         self.predicate2type = np.zeros(max_index + 1)
@@ -162,6 +157,67 @@ class SchemaAwareNegativeSamplesGenerator(NegativeSamplesGenerator):
                 idx_to_corrupt = 1
             else:
                 idx_to_corrupt = self.random_state.randint(0, 2)
+            negative_Xe[i, idx_to_corrupt] = negative_idxs[i]
+
+        return [(negative_Xr, negative_Xe)]
+
+    @property
+    def nb_sample_sets(self):
+        return self._nb_sample_sets
+
+
+class BernoulliNegativeSamplesGenerator(NegativeSamplesGenerator):
+    def __init__(self, index_generator, candidate_indices,
+                 random_state, ps_count, po_count):
+        # Generator of random entity indices, and array of candidate indices
+        self.index_generator = index_generator
+        self.candidate_indices = candidate_indices
+
+        self._nb_sample_sets = 1
+
+        self.random_state = random_state
+
+        entities = sorted(set([s for (_, s) in ps_count.keys()] + [o for (_, o) in po_count.keys()]))
+        predicates = sorted(set([p for (p, _) in ps_count.keys()] + [p for (p, _) in po_count.keys()]))
+
+        max_entity_index = max(entities)
+        max_predicate_index = max(predicates)
+
+        self.objects_per_subject = np.zeros((max_predicate_index + 1, max_entity_index + 1))
+        for (predicate_idx, subject_idx), objects_count in ps_count.items():
+            self.objects_per_subject[predicate_idx, subject_idx] = objects_count
+
+        self.subjects_per_object = np.zeros((max_predicate_index + 1, max_entity_index + 1))
+        for (predicate_idx, object_idx), subjects_count in po_count.items():
+            self.objects_per_subject[predicate_idx, object_idx] = subjects_count
+
+    def __call__(self, Xr, Xe):
+        """
+        Generates sets of negative examples, by corrupting the facts provided as input according to the LCWA.
+
+        :param Xr: [nb_samples, 1] matrix containing the relation indices.
+        :param Xe: [nb_samples, 2] matrix containing subject and object indices.
+        :return: list of ([nb_samples, 1], [nb_samples, 2]) pairs containing sets of negative examples.
+        """
+        nb_samples = Xr.shape[0]
+
+        # Relation indices are not changed.
+        negative_Xr = np.copy(Xr)
+
+        # Create a new set of examples by corrupting the objects
+        negative_idxs = self.index_generator(nb_samples, self.candidate_indices)
+        negative_Xe = np.copy(Xe)
+
+        for i in range(nb_samples):
+            predicate_idx, subject_idx, object_idx = Xr[i, 0], Xe[i, 0], Xe[i, 1]
+
+            objects_per_subject = self.objects_per_subject[predicate_idx, subject_idx]  # tph
+            subjects_per_object = self.subjects_per_object[predicate_idx, object_idx]  # hpt
+
+            # Probability of replacing the subject
+            p = objects_per_subject / (objects_per_subject + subjects_per_object)
+
+            idx_to_corrupt = 0 if self.random_state.binomial(1, p) == 1 else 1
             negative_Xe[i, idx_to_corrupt] = negative_idxs[i]
 
         return [(negative_Xr, negative_Xe)]
