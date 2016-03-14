@@ -53,7 +53,7 @@ hyperparameters_space = dict(
 
 configurations = cartesian_product(hyperparameters_space)
 
-dir = 'logs/exp_fb15k_corrupt_v1/'
+dir = 'logs/exp_fb15k_corrupt_v2/'
 
 for c in configurations:
     logfile = to_logfile(c, dir)
