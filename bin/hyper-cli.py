@@ -5,11 +5,15 @@ import math
 import numpy as np
 
 from keras.models import Sequential
+from keras.layers import Reshape, Merge, SimpleRNN, GRU, LSTM
 from keras.layers.embeddings import Embedding
 from keras.layers.core import Dropout, LambdaMerge
 from keras.models import make_batches
 
-import hyper.layers.core
+from keras.initializations import normal, identity
+
+import hyper.layers.core as core
+
 from hyper.preprocessing import knowledgebase
 from hyper.learning import samples, negatives
 from hyper import ranking_objectives, optimizers, constraints, regularizers
@@ -68,26 +72,32 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
     model = Sequential()
 
-    core = sys.modules['hyper.layers.core']
-    setattr(core, 'similarity function', similarity_name)
-    setattr(core, 'merge function', model_name)
+    if model_name in ['TransE', 'ScalE']:
+        setattr(core, 'similarity function', similarity_name)
+        setattr(core, 'merge function', model_name)
+        merge_function = core.latent_distance_merge_function
 
-    def f(args):
-        import sys
-        import hyper.similarities as similarities
-        import hyper.layers.binary.merge_functions as merge_functions
+        merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=merge_function)
+        model.add(merge_layer)
+    elif model_name in ['RNN', 'iRNN', 'GRU', 'LSTM']:
+        merge_function = core.concatenate_embeddings_merge_function
 
-        f_core = sys.modules['hyper.layers.core']
-        similarity_function_name = getattr(f_core, 'similarity function')
-        merge_function_name = getattr(f_core, 'merge function')
+        merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=merge_function)
+        model.add(merge_layer)
 
-        similarity_function = similarities.get_function(similarity_function_name)
-        merge_function = merge_functions.get_function(merge_function_name)
+        if model_name == 'RNN':
+            recurrent_layer = SimpleRNN(output_dim=1, return_sequences=False)
+        elif model_name == 'iRNN':
+            recurrent_layer = SimpleRNN(output_dim=1, return_sequences=False, init='normal',
+                                        inner_init='identity', activation='relu')
+        elif model_name == 'GRU':
+            recurrent_layer = GRU(output_dim=1, return_sequences=False)
+        elif model_name == 'LSTM':
+            recurrent_layer = LSTM(output_dim=1, return_sequences=False)
 
-        return merge_function(args, similarity=similarity_function)
-
-    merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=f)
-    model.add(merge_layer)
+        model.add(recurrent_layer)
+    else:
+        raise ValueError("Unknown model name: %s" % model_name)
 
     Xr = np.array([[rel_idx] for (rel_idx, _) in train_sequences])
     Xe = np.array([ent_idxs for (_, ent_idxs) in train_sequences])

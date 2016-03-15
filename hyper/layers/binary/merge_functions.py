@@ -65,7 +65,6 @@ def holographic_merge_function(args, similarity):
     res, _ = theano.scan(lambda s, o: operations.circular_cross_correlation_theano(s, o),
                          sequences=[subj, obj])
 
-    #res = operations.circular_cross_correlation_theano_batch(subj, obj)
     sim = K.reshape(similarity(pred, res), (-1, 1))
     return sim
 
