@@ -62,7 +62,7 @@ def holographic_merge_function(args, similarity):
     pred = relation_embedding[:, 0, :]
     subj, obj = entity_embeddings[:, 0, :], entity_embeddings[:, 1, :]
 
-    res, _ = theano.scan(lambda s, o: operations.circular_cross_correlation_theano(s, o),
+    res, _ = theano.scan(lambda s, o: operations.circular_cross_correlation(s, o),
                          sequences=[subj, obj])
 
     sim = K.reshape(similarity(pred, res), (-1, 1))

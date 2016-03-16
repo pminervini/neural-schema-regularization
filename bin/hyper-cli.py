@@ -70,9 +70,23 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     if dropout_entity_embeddings is not None and dropout_entity_embeddings > .0:
         entity_encoder.add(Dropout(dropout_entity_embeddings))
 
+    if model_name in ['RNN', 'iRNN', 'GRU', 'LSTM']:
+        if model_name == 'RNN':
+            recurrent_layer = SimpleRNN(output_dim=predicate_embedding_size, return_sequences=False)
+        elif model_name == 'iRNN':
+            recurrent_layer = SimpleRNN(output_dim=predicate_embedding_size, return_sequences=False,
+                                        init='normal', inner_init='identity', activation='relu')
+        elif model_name == 'GRU':
+            recurrent_layer = GRU(output_dim=predicate_embedding_size, return_sequences=False)
+        elif model_name == 'LSTM':
+            recurrent_layer = LSTM(output_dim=predicate_embedding_size, return_sequences=False)
+        else:
+            raise ValueError('Unsupported recurrent layer: %s' % model_name)
+        entity_encoder.add(recurrent_layer)
+
     model = Sequential()
 
-    if model_name in ['TransE', 'ScalE']:
+    if model_name in ['TransE', 'ScalE', 'HolE']:
         setattr(core, 'similarity function', similarity_name)
         setattr(core, 'merge function', model_name)
         merge_function = core.latent_distance_merge_function
@@ -80,24 +94,13 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
         merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=merge_function)
         model.add(merge_layer)
     elif model_name in ['RNN', 'iRNN', 'GRU', 'LSTM']:
-        merge_function = core.concatenate_embeddings_merge_function
+        setattr(core, 'similarity function', similarity_name)
+        merge_function = core.similarity_merge_function
 
         merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=merge_function)
         model.add(merge_layer)
-
-        if model_name == 'RNN':
-            recurrent_layer = SimpleRNN(output_dim=1, return_sequences=False)
-        elif model_name == 'iRNN':
-            recurrent_layer = SimpleRNN(output_dim=1, return_sequences=False, init='normal',
-                                        inner_init='identity', activation='relu')
-        elif model_name == 'GRU':
-            recurrent_layer = GRU(output_dim=1, return_sequences=False)
-        elif model_name == 'LSTM':
-            recurrent_layer = LSTM(output_dim=1, return_sequences=False)
-
-        model.add(recurrent_layer)
     else:
-        raise ValueError("Unknown model name: %s" % model_name)
+        raise ValueError('Unknown model name: %s' % model_name)
 
     Xr = np.array([[rel_idx] for (rel_idx, _) in train_sequences])
     Xe = np.array([ent_idxs for (_, ent_idxs) in train_sequences])
@@ -116,8 +119,6 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
     # Creating negative indices..
     candidate_negative_indices = np.arange(1, nb_entities + 1)
-
-    negative_samples_generator = None
 
     if negatives_name == 'corrupt':
         negative_samples_generator = negatives.CorruptedSamplesGenerator(
@@ -400,11 +401,13 @@ def main(argv):
 
     true_triples = np.array([[s, p, o] for (p, [s, o]) in train_sequences + validation_sequences + test_sequences])
 
-    evaluate_model(model, validation_sequences, nb_entities, tag='validation raw')
-    evaluate_model(model, validation_sequences, nb_entities, true_triples=true_triples, tag='validation filtered')
+    if len(validation_sequences) > 0:
+        evaluate_model(model, validation_sequences, nb_entities, tag='validation raw')
+        evaluate_model(model, validation_sequences, nb_entities, true_triples=true_triples, tag='validation filtered')
 
-    evaluate_model(model, test_sequences, nb_entities, tag='test raw')
-    evaluate_model(model, test_sequences, nb_entities, true_triples=true_triples, tag='test filtered')
+    if len(test_sequences) > 0:
+        evaluate_model(model, test_sequences, nb_entities, tag='test raw')
+        evaluate_model(model, test_sequences, nb_entities, true_triples=true_triples, tag='test filtered')
 
     return
 

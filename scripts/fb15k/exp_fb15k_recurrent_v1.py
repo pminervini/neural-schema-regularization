@@ -25,11 +25,12 @@ def to_command(c):
               " --lr %s" \
               " --batches %s" \
               " --model %s" \
+              " --similarity %s" \
               " --margin %s" \
               " --negatives %s" \
               " --entity-embedding-size %s --predicate-embedding-size %s" \
               % (c['epochs'], c['optimizer'], c['lr'], c['batches'],
-                 c['model'], c['margin'], c['negatives'],
+                 c['model'], c['similarity'], c['margin'], c['negatives'],
                  c['embedding_size'], c['embedding_size'])
     return command
 
@@ -45,6 +46,7 @@ hyperparameters_space = dict(
     lr=[.001, .01, .1, 1.],
     batches=[10],
     model=['RNN', 'iRNN', 'GRU', 'LSTM'],
+    similarity=['l1', 'l2', 'dot'],
     margin=[1],
     negatives=['corrupt'],
     embedding_size=[20, 50, 100, 200, 300, 400])

@@ -14,9 +14,13 @@ def circular_cross_correlation_theano_signal(x, y):
     corr_expr = T.signal.conv.conv2d(x.reshape([1, -1]), y[::-1].reshape([1, -1]),
                                      border_mode='full')[0, :]
     diff = corr_expr.shape[-1] - x.shape[0]
-    beginning = corr_expr[:diff + 1]
-    ending = T.concatenate([corr_expr[diff + 1:], T.zeros(1)])
-    return (beginning + ending)[::-1]
+    #beginning = corr_expr[:diff + 1]
+    #ending = T.concatenate([corr_expr[diff + 1:], T.zeros(1)])
+    #ans = (beginning + ending)[::-1]
+    beginning = corr_expr[:diff + 1][::-1]
+    ending = corr_expr[diff + 1:]
+    ans = T.inc_subtensor(beginning[1:], ending[::-1])
+    return ans
 
 
 def circular_cross_correlation_theano_nnet(x, y):
@@ -25,9 +29,13 @@ def circular_cross_correlation_theano_nnet(x, y):
                               border_mode='full',
                               filter_flip=False)[0, 0, 0, :]
     diff = corr_expr.shape[-1] - x.shape[0]
-    beginning = corr_expr[:diff + 1]
-    ending = T.concatenate([corr_expr[diff + 1:], T.zeros(1)])
-    return (beginning + ending)[::-1]
+    #beginning = corr_expr[:diff + 1]
+    #ending = T.concatenate([corr_expr[diff + 1:], T.zeros(1)])
+    #ans = (beginning + ending)[::-1]
+    beginning = corr_expr[:diff + 1][::-1]
+    ending = corr_expr[diff + 1:]
+    ans = T.inc_subtensor(beginning[1:], ending[::-1])
+    return ans
 
 
 def circular_cross_correlation_theano_batch(X, Y):
@@ -38,7 +46,8 @@ def circular_cross_correlation_theano_batch(X, Y):
     diff = corr_expr.shape[-1] - X.shape[1]
     beginning = corr_expr[:, :diff + 1]
     ending = T.concatenate([corr_expr[:, diff + 1:], T.zeros(1)])
-    return (beginning + ending)[:, ::-1]
+    ans = (beginning + ending)[:, ::-1]
+    return ans
 
 
-circular_cross_correlation_theano = circular_cross_correlation_theano_nnet
+circular_cross_correlation = circular_cross_correlation_theano_nnet
