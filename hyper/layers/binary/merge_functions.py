@@ -10,7 +10,7 @@ import sys
 def translating_merge_function(args, similarity):
     """
     Keras Merge function for the Translating Embeddings model described in:
-        A Bordes et al. - Translating Embeddings for Modeling Multi-relational Data - NIPS 201
+        A Bordes et al. - Translating Embeddings for Modeling Multi-relational Data - NIPS 2013
     :param args: List of two arguments: the former containing the relation embedding,
         and the latter containing the two entity embeddings.
     :param similarity: Similarity function.

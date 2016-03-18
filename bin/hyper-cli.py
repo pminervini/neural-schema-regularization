@@ -10,8 +10,6 @@ from keras.layers.embeddings import Embedding
 from keras.layers.core import Dropout, LambdaMerge
 from keras.models import make_batches
 
-from keras.initializations import normal, identity
-
 import hyper.layers.core as core
 
 from hyper.preprocessing import knowledgebase
@@ -55,8 +53,7 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     entity_encoder = Sequential()
 
     predicate_embedding_layer = Embedding(input_dim=nb_predicates + 1, output_dim=predicate_embedding_size,
-                                          input_length=None, init='glorot_uniform',
-                                          W_regularizer=rule_regularizer)
+                                          input_length=None, init='glorot_uniform', W_regularizer=rule_regularizer)
     predicate_encoder.add(predicate_embedding_layer)
 
     if dropout_predicate_embeddings is not None and dropout_predicate_embeddings > .0:
@@ -70,31 +67,33 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
     if dropout_entity_embeddings is not None and dropout_entity_embeddings > .0:
         entity_encoder.add(Dropout(dropout_entity_embeddings))
 
-    if model_name in ['RNN', 'iRNN', 'GRU', 'LSTM']:
-        if model_name == 'RNN':
-            recurrent_layer = SimpleRNN(output_dim=predicate_embedding_size, return_sequences=False)
-        elif model_name == 'iRNN':
-            recurrent_layer = SimpleRNN(output_dim=predicate_embedding_size, return_sequences=False,
-                                        init='normal', inner_init='identity', activation='relu')
-        elif model_name == 'GRU':
-            recurrent_layer = GRU(output_dim=predicate_embedding_size, return_sequences=False)
-        elif model_name == 'LSTM':
-            recurrent_layer = LSTM(output_dim=predicate_embedding_size, return_sequences=False)
-        else:
-            raise ValueError('Unsupported recurrent layer: %s' % model_name)
-        entity_encoder.add(recurrent_layer)
-
     model = Sequential()
 
-    if model_name in ['TransE', 'ScalE', 'HolE']:
-        setattr(core, 'similarity function', similarity_name)
-        setattr(core, 'merge function', model_name)
-        merge_function = core.latent_distance_merge_function
+    setattr(core, 'similarity function', similarity_name)
+    setattr(core, 'merge function', model_name)
 
+    if model_name in ['TransE', 'ScalE', 'HolE']:
+        merge_function = core.latent_distance_binary_merge_function
         merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=merge_function)
         model.add(merge_layer)
+
+    elif model_name in ['rTransE', 'rScalE']:
+        merge_function = core.latent_distance_nary_merge_function
+        merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=merge_function)
+        model.add(merge_layer)
+
     elif model_name in ['RNN', 'iRNN', 'GRU', 'LSTM']:
-        setattr(core, 'similarity function', similarity_name)
+        name_to_layer_class = dict(RNN=SimpleRNN, GRU=GRU, LSTM=LSTM)
+        if model_name == 'iRNN':
+            recurrent_layer = SimpleRNN(output_dim=predicate_embedding_size, return_sequences=False,
+                                        init='normal', inner_init='identity', activation='relu')
+        elif model_name in name_to_layer_class:
+            layer_class = name_to_layer_class[model_name]
+            recurrent_layer = layer_class(output_dim=predicate_embedding_size, return_sequences=False)
+        else:
+            raise ValueError('Unknown recurrent layer: %s' % model_name)
+        entity_encoder.add(recurrent_layer)
+
         merge_function = core.similarity_merge_function
 
         merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=merge_function)

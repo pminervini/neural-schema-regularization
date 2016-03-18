@@ -3,7 +3,7 @@
 from keras import backend as K
 
 
-def latent_distance_merge_function(args):
+def latent_distance_binary_merge_function(args):
     """
     Takes a list args=[Xr, Xe], where Xr is a batch_size x 1 x embedding_size
     Tensor, and Xe is a batch_size x 2 x embedding_size tensor: first it obtains
@@ -16,6 +16,31 @@ def latent_distance_merge_function(args):
     import sys
     import hyper.similarities as similarities
     import hyper.layers.binary.merge_functions as merge_functions
+
+    f_core = sys.modules['hyper.layers.core']
+
+    similarity_function_name = getattr(f_core, 'similarity function')
+    merge_function_name = getattr(f_core, 'merge function')
+
+    similarity_function = similarities.get_function(similarity_function_name)
+    merge_function = merge_functions.get_function(merge_function_name)
+
+    return merge_function(args, similarity=similarity_function)
+
+
+def latent_distance_nary_merge_function(args):
+    """
+    Takes a list args=[Xr, Xe], where Xr is a batch_size x 1 x embedding_size
+    Tensor, and Xe is a batch_size x 2 x embedding_size tensor: first it obtains
+    a batch_size x embedding_size Tensor A from Xe, and then computes the
+    similarities between each column of A and Xr[:, 0, :].
+
+    :param args: List of tensors.
+    :return: batch_size x 1 Tensor of similarity values.
+    """
+    import sys
+    import hyper.similarities as similarities
+    import hyper.layers.nary.merge_functions as merge_functions
 
     f_core = sys.modules['hyper.layers.core']
 

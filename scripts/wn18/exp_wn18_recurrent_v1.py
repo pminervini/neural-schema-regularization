@@ -17,9 +17,9 @@ def summary(configuration):
 
 def to_command(c):
     command = "PYTHONPATH=. ./bin/hyper-cli.py" \
-              " --train data/fb15k/freebase_mtr100_mte100-train.txt" \
-              " --valid data/fb15k/freebase_mtr100_mte100-valid.txt" \
-              " --test data/fb15k/freebase_mtr100_mte100-test.txt" \
+              " --train data/wn18/wordnet-mlj12-train.txt" \
+              " --valid data/wn18/wordnet-mlj12-valid.txt" \
+              " --test data/wn18/wordnet-mlj12-test.txt" \
               " --epochs %s" \
               " --optimizer %s" \
               " --lr %s" \
@@ -36,7 +36,7 @@ def to_command(c):
 
 
 def to_logfile(c, dir):
-    outfile = "%s/exp_fb15k_recurrent_v1.%s.log" % (dir, summary(c))
+    outfile = "%s/exp_wn18_recurrent_v1.%s.log" % (dir, summary(c))
     return outfile
 
 
@@ -53,7 +53,7 @@ hyperparameters_space = dict(
 
 configurations = cartesian_product(hyperparameters_space)
 
-dir = 'logs/exp_fb15k_recurrent_v1/'
+dir = 'logs/exp_wn18_recurrent_v1/'
 
 for c in configurations:
     logfile = to_logfile(c, dir)
