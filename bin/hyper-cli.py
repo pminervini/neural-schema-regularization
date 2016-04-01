@@ -242,6 +242,8 @@ def main(argv):
                            help='JSON document containing the rules extracted from the KG')
     argparser.add_argument('--rules-top-k', action='store', type=int, default=None,
                            help='Top-k rules to consider during the training process')
+    argparser.add_argument('--rules-threshold', action='store', type=float, default=None,
+                           help='Only show the rules with a score above the given threshold')
     argparser.add_argument('--rules-max-length', action='store', type=int, default=None,
                            help='Maximum (body) length for the considered rules')
 
@@ -326,6 +328,7 @@ def main(argv):
     # Rules-related parameters
     rules = args.rules
     rules_top_k = args.rules_top_k
+    rules_threshold = args.rules_threshold
     rules_max_length = args.rules_max_length
 
     sample_facts = args.sample_facts
@@ -344,15 +347,16 @@ def main(argv):
 
         rule_regularizers = []
         for rule_predicate, rule_feature, rule_weight in pfw_triples:
-            if rules_max_length is None or len(rule_feature.hops) <= rules_max_length:
-                head = parser.predicate_index[rule_predicate]
-                tail = [(parser.predicate_index[hop.predicate], hop.is_inverse) for hop in rule_feature.hops]
+            if rules_threshold is None or rule_weight >= rules_threshold:
+                if rules_max_length is None or len(rule_feature.hops) <= rules_max_length:
+                    head = parser.predicate_index[rule_predicate]
+                    tail = [(parser.predicate_index[hop.predicate], hop.is_inverse) for hop in rule_feature.hops]
 
-                if model_name not in model_to_regularizer:
-                    raise ValueError('Rule-based regularizers unsupported for the model: %s' % model_name)
+                    if model_name not in model_to_regularizer:
+                        raise ValueError('Rule-based regularizers unsupported for the model: %s' % model_name)
 
-                Regularizer = model_to_regularizer[model_name]
-                rule_regularizers += [Regularizer(head, tail, l=rules_lambda)]
+                    Regularizer = model_to_regularizer[model_name]
+                    rule_regularizers += [Regularizer(head, tail, l=rules_lambda)]
 
         rule_regularizer = regularizers.GroupRegularizer(regularizers=rule_regularizers) if rule_regularizers else None
 

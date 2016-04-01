@@ -50,16 +50,19 @@ def main(argv):
                     for i in range(len(body)):
                         if hop is None:
                             triple = body[i]
+
                             if triple[0] == source_var_local:
                                 #hop = domain.Hop(triple[1], is_inverse=False)
                                 hop = {"predicate": triple[1], "reverse": False}
                                 source_var_local = triple[2]
                                 del body[i]
+
                             elif triple[2] == source_var_local:
                                 #hop = #domain.Hop(triple[1], is_inverse=True)
                                 hop = {"predicate": triple[1], "reverse": True}
                                 source_var_local = triple[0]
                                 del body[i]
+
                     hops += [hop]
 
                 #feature = domain.Feature(hops)
