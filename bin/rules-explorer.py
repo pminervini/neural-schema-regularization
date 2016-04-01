@@ -15,7 +15,7 @@ def main(argv):
     def formatter(prog):
         return argparse.HelpFormatter(prog, max_help_position=100, width=200)
 
-    argparser = argparse.ArgumentParser('Latent Factor Models for Knowledge Hypergraphs', formatter_class=formatter)
+    argparser = argparse.ArgumentParser('Rules Explorer', formatter_class=formatter)
 
     # Rules-related arguments
     argparser.add_argument('--rules', action='store', type=str, default=None,
