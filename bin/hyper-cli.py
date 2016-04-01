@@ -361,7 +361,7 @@ def main(argv):
         rule_regularizer = regularizers.GroupRegularizer(regularizers=rule_regularizers) if rule_regularizers else None
 
     if sample_facts is not None:
-        nb_train_facts = float(len(train_facts))
+        nb_train_facts = len(train_facts)
         sample_size = int(round(sample_facts * nb_train_facts))
 
         random_state = np.random.RandomState(seed)
