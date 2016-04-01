@@ -17,9 +17,9 @@ def summary(configuration):
 
 def to_command(c):
     command = "PYTHONPATH=. ./bin/hyper-cli.py" \
-              " --train data/music/music-train.txt.gz" \
-              " --valid data/music/music-valid.txt.gz" \
-              " --test data/music/music-test.txt.gz" \
+              " --train data/music/music-train.txt" \
+              " --valid data/music/music-valid.txt" \
+              " --test data/music/music-test.txt" \
               " --epochs %s" \
               " --optimizer %s" \
               " --lr %s" \
