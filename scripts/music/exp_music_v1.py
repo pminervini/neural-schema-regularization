@@ -47,7 +47,7 @@ hyperparameters_space = dict(
     model=['TransE', 'ScalE'],
     similarity=['l1', 'l2', 'dot'],
     margin=[0, 1, 2, 5, 10],
-    embedding_size=[20, 50, 100, 200, 300, 400])
+    embedding_size=[20, 50, 100, 200])
 
 configurations = cartesian_product(hyperparameters_space)
 
