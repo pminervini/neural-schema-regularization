@@ -14,7 +14,8 @@ import hyper.layers.core as core
 
 from hyper.preprocessing import knowledgebase
 from hyper.learning import samples, negatives
-from hyper import ranking_objectives, optimizers, constraints, regularizers
+from hyper import ranking_objectives, optimizers, constraints
+from hyper.regularizers import GroupRegularizer, TranslationRuleRegularizer, ScalingRuleRegularizer
 
 import hyper.learning.util as learning_util
 
@@ -342,8 +343,8 @@ def main(argv):
         pfw_triples = path_ranking_client.request(None, threshold=.0, top_k=rules_top_k)
 
         model_to_regularizer = dict(
-            TransE=regularizers.TranslationRuleRegularize,
-            ScalE=regularizers.ScalingRuleRegularize)
+            TransE=TranslationRuleRegularizer,
+            ScalE=ScalingRuleRegularizer)
 
         rule_regularizers = []
         for rule_predicate, rule_feature, rule_weight in pfw_triples:
@@ -358,7 +359,7 @@ def main(argv):
                     Regularizer = model_to_regularizer[model_name]
                     rule_regularizers += [Regularizer(head, tail, l=rules_lambda)]
 
-        rule_regularizer = regularizers.GroupRegularizer(regularizers=rule_regularizers) if rule_regularizers else None
+        rule_regularizer = GroupRegularizer(regularizers=rule_regularizers) if rule_regularizers else None
 
     if sample_facts is not None:
         nb_train_facts = len(train_facts)
