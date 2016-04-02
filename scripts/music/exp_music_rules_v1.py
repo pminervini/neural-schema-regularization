@@ -55,8 +55,8 @@ hyperparameters_space = dict(
     embedding_size=[20, 50, 100, 200],
 
     rules_threshold=[.2, .5],
-    sample_facts=[.3, .5, .7, .9, 1],
-    rules_lambda=[1., 100., 10000., 1000000.]
+    sample_facts=[.1, .3, .5, 1],
+    rules_lambda=[1., 100., 10000.]
 )
 
 configurations = cartesian_product(hyperparameters_space)
