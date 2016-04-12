@@ -2,17 +2,13 @@
 
 import numpy as np
 
-from keras import backend as K
-
 from keras.models import Sequential
-from keras.layers.core import Flatten, Dense
 from keras.layers.embeddings import Embedding
 
 from hyper import regularizers
 from hyper import constraints
 
 import unittest
-import sys
 
 
 def zero_loss(y_true, y_pred):

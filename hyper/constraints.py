@@ -5,13 +5,16 @@ from keras import backend as K
 
 
 class NormConstraint(Constraint):
-    def __init__(self, norm=1.):
-        self.norm = norm
+    def __init__(self, m=1., axis=0):
+        self.m = m
+        self.axis = axis
 
     def __call__(self, p):
-        p_t = K.transpose(p)
-        unit_norm = K.transpose(p_t / (K.sqrt(K.sum(K.square(p_t), axis=0)) + 1e-7))
-        return unit_norm * self.norm
+        norms = K.sqrt(K.sum(K.square(p), axis=self.axis, keepdims=True))
+        unit_norm = p / (norms + 1e-7)
+        return unit_norm * self.m
 
     def get_config(self):
-        return {'name': self.__class__.__name__, 'norm': self.norm}
+        return {'name': self.__class__.__name__,
+                'm': self.m,
+                'axis': self.axis}

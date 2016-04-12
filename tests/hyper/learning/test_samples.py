@@ -27,7 +27,7 @@ class TestSamples(unittest.TestCase):
 
             vs = np.random.random_integers(0, 8192, 1024)
 
-            eq = ig_a.generate(1024, vs) == ig_b.generate(1024, vs)
+            eq = ig_a(1024, vs) == ig_b(1024, vs)
             self.assertTrue(False not in eq)
 
     def test_imdb(self):

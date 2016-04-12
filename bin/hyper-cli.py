@@ -5,10 +5,10 @@ import math
 import numpy as np
 
 from keras.models import Sequential
-from keras.layers import Reshape, Merge, SimpleRNN, GRU, LSTM
+from keras.layers import Lambda, SimpleRNN, GRU, LSTM
 from keras.layers.embeddings import Embedding
-from keras.layers.core import Dropout, LambdaMerge
-from keras.models import make_batches
+from keras.layers.core import Merge, Dropout
+from keras.engine.training import make_batches
 
 import hyper.layers.core as core
 
@@ -40,8 +40,9 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
                 model_name='TransE', similarity_name='L1', nb_epochs=1000, batch_size=128, nb_batches=None, margin=1.0,
                 loss_name='hinge', negatives_name='corrupt',
 
-                optimizer_name='adagrad', lr=0.1, momentum=0.9, decay=.0, nesterov=False,
-                epsilon=1e-6, rho=0.9, beta_1=0.9, beta_2=0.999,
+                optimizer_name='adagrad',
+                optimizer_lr=0.1, optimizer_momentum=0.9, optimizer_decay=.0, optimizer_nesterov=False,
+                optimizer_epsilon=1e-6, optimizer_rho=0.9, optimizer_beta_1=0.9, optimizer_beta_2=0.999,
                 rule_regularizer=None):
 
     args, _, _, values = inspect.getargvalues(inspect.currentframe())
@@ -62,7 +63,7 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
     entity_embedding_layer = Embedding(input_dim=nb_entities + 1, output_dim=entity_embedding_size,
                                        input_length=None, init='glorot_uniform',
-                                       W_constraint=constraints.NormConstraint(norm=1.))
+                                       W_constraint=constraints.NormConstraint(m=1., axis=1))
     entity_encoder.add(entity_embedding_layer)
 
     if dropout_entity_embeddings is not None and dropout_entity_embeddings > .0:
@@ -75,12 +76,14 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
     if model_name in ['TransE', 'ScalE', 'HolE']:
         merge_function = core.latent_distance_binary_merge_function
-        merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=merge_function)
+
+        merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function, output_shape=lambda _: (None, 1))
         model.add(merge_layer)
 
     elif model_name in ['rTransE', 'rScalE']:
         merge_function = core.latent_distance_nary_merge_function
-        merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=merge_function)
+
+        merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function)
         model.add(merge_layer)
 
     elif model_name in ['RNN', 'iRNN', 'GRU', 'LSTM']:
@@ -97,7 +100,7 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
 
         merge_function = core.similarity_merge_function
 
-        merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=merge_function)
+        merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function)
         model.add(merge_layer)
     else:
         raise ValueError('Unknown model name: %s' % model_name)
@@ -150,8 +153,11 @@ def train_model(train_sequences, nb_entities, nb_predicates, seed=1,
         ranking_loss = getattr(ranking_objectives, loss_name)
         return ranking_loss(**loss_kwargs)
 
-    optimizer = optimizers.make_optimizer(optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
-                                          epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2)
+    optimizer = optimizers.make_optimizer(optimizer_name,
+                                          lr=optimizer_lr, momentum=optimizer_momentum,
+                                          decay=optimizer_decay, nesterov=optimizer_nesterov,
+                                          epsilon=optimizer_epsilon, rho=optimizer_rho,
+                                          beta_1=optimizer_beta_1, beta_2=optimizer_beta_2)
 
     model.compile(loss=loss, optimizer=optimizer)
 
@@ -274,19 +280,20 @@ def main(argv):
 
     argparser.add_argument('--optimizer', action='store', type=str, default='adagrad',
                            help='Optimization algorithm to use - sgd, adagrad, adadelta, rmsprop, adam, adamax')
-    argparser.add_argument('--lr', action='store', type=float, default=0.01, help='Learning rate')
-    argparser.add_argument('--momentum', action='store', type=float, default=0.0,
+    argparser.add_argument('--lr', '--optimizer-lr', action='store', type=float, default=0.01, help='Learning rate')
+    argparser.add_argument('--optimizer-momentum', action='store', type=float, default=0.0,
                            help='Momentum parameter of the SGD optimizer')
-    argparser.add_argument('--decay', action='store', type=float, default=0.0,
+    argparser.add_argument('--optimizer-decay', action='store', type=float, default=0.0,
                            help='Decay parameter of the SGD optimizer')
-    argparser.add_argument('--nesterov', action='store_true', help='Applies Nesterov momentum to the SGD optimizer')
-    argparser.add_argument('--epsilon', action='store', type=float, default=1e-06,
+    argparser.add_argument('--optimizer-nesterov', action='store_true',
+                           help='Applies Nesterov momentum to the SGD optimizer')
+    argparser.add_argument('--optimizer-epsilon', action='store', type=float, default=1e-06,
                            help='Epsilon parameter of the adagrad, adadelta, rmsprop, adam and adamax optimizers')
-    argparser.add_argument('--rho', action='store', type=float, default=0.95,
+    argparser.add_argument('--optimizer-rho', action='store', type=float, default=0.95,
                            help='Rho parameter of the adadelta and rmsprop optimizers')
-    argparser.add_argument('--beta1', action='store', type=float, default=0.9,
+    argparser.add_argument('--optimizer-beta1', action='store', type=float, default=0.9,
                            help='Beta1 parameter for the adam and adamax optimizers')
-    argparser.add_argument('--beta2', action='store', type=float, default=0.999,
+    argparser.add_argument('--optimizer-beta2', action='store', type=float, default=0.999,
                            help='Beta2 parameter for the adam and adamax optimizers')
 
     argparser.add_argument('--save', action='store', type=str, default=None,
@@ -372,14 +379,14 @@ def main(argv):
         train_facts = train_facts_sample
 
     optimizer_name = args.optimizer
-    lr = args.lr
-    momentum = args.momentum
-    decay = args.decay
-    nesterov = args.nesterov
-    epsilon = args.epsilon
-    rho = args.rho
-    beta_1 = args.beta1
-    beta_2 = args.beta2
+    optimizer_lr = args.lr
+    optimizer_momentum = args.optimizer_momentum
+    optimizer_decay = args.optimizer_decay
+    optimizer_nesterov = args.optimizer_nesterov
+    optimizer_epsilon = args.optimizer_epsilon
+    optimizer_rho = args.optimizer_rho
+    optimizer_beta_1 = args.optimizer_beta1
+    optimizer_beta_2 = args.optimizer_beta2
 
     train_sequences = parser.facts_to_sequences(train_facts)
 
@@ -393,8 +400,10 @@ def main(argv):
                         nb_epochs=nb_epochs, batch_size=batch_size, nb_batches=nb_batches, margin=margin,
                         loss_name=loss_name, negatives_name=negatives_name,
 
-                        optimizer_name=optimizer_name, lr=lr, momentum=momentum, decay=decay, nesterov=nesterov,
-                        epsilon=epsilon, rho=rho, beta_1=beta_1, beta_2=beta_2,
+                        optimizer_name=optimizer_name, optimizer_lr=optimizer_lr, optimizer_momentum=optimizer_momentum,
+                        optimizer_decay=optimizer_decay, optimizer_nesterov=optimizer_nesterov,
+                        optimizer_epsilon=optimizer_epsilon, optimizer_rho=optimizer_rho,
+                        optimizer_beta_1=optimizer_beta_1, optimizer_beta_2=optimizer_beta_2,
                         rule_regularizer=rule_regularizer)
 
     if args.save is not None:

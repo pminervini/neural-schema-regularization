@@ -9,8 +9,9 @@ from hyper import similarities
 
 
 class GroupRegularizer(Regularizer):
-    def __init__(self, regularizers):
+    def __init__(self, regularizers, uses_learning_phase=True):
         self.regularizers = regularizers
+        self.uses_learning_phase = uses_learning_phase
 
     def set_param(self, p):
         for regularizer in self.regularizers:
@@ -26,9 +27,10 @@ class GroupRegularizer(Regularizer):
 
 
 class RuleRegularizer(Regularizer):
-    def __init__(self, similarity=similarities.l2sqr, l=0.01):
+    def __init__(self, similarity=similarities.l2sqr, l=0.):
         self.similarity = similarity
-        self.l = l
+        self.l = K.cast_to_floatx(l)
+        self.uses_learning_phase = True
 
     def set_param(self, embeddings):
         self.embeddings = embeddings

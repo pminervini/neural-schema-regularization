@@ -4,7 +4,7 @@ import numpy as np
 
 from keras.models import Sequential
 from keras.layers.embeddings import Embedding
-from keras.layers.core import LambdaMerge
+from keras.layers.core import Merge
 
 import unittest
 
@@ -32,10 +32,10 @@ class TestSequential(unittest.TestCase):
         entity_encoder.add(entity_embedding_layer)
 
         model = Sequential()
-        merge_layer = LambdaMerge([relation_encoder, entity_encoder], function=func)
+        merge_layer = Merge([relation_encoder, entity_encoder], mode=func, output_shape=lambda _: (None, 1))
         model.add(merge_layer)
 
-        model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
+        model.compile(loss='mse', optimizer='rmsprop')
 
         Xr = np.asarray([[0]])
         Xe = np.asarray([[0, 1, 0, 2]])
