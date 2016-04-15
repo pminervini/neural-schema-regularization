@@ -3,7 +3,7 @@
 
 import numpy as np
 
-from hyper.preprocessing import knowledgebase
+from hyper.parsing import knowledgebase
 from hyper import optimizers
 from hyper.regularizers import GroupRegularizer, TranslationRuleRegularizer, ScalingRuleRegularizer
 
@@ -34,10 +34,9 @@ def evaluate_model(model, evaluation_sequences, nb_entities, true_triples=None, 
     else:
         res = metrics.filtered_ranking_score(scoring_function, evaluation_triples,
                                              nb_entities, nb_entities, true_triples)
-    metrics.ranking_summary(res, tag=tag, n=1)
-    metrics.ranking_summary(res, tag=tag, n=3)
-    metrics.ranking_summary(res, tag=tag, n=5)
-    metrics.ranking_summary(res, tag=tag, n=10)
+    for n in [1, 3, 5, 10]:
+        metrics.ranking_summary(res, tag=tag, n=n)
+
     return res
 
 
@@ -122,8 +121,8 @@ def main(argv):
     args = argparser.parse_args(argv)
 
     def to_fact(line):
-        subj, pred, obj = line.split()
-        return knowledgebase.Fact(predicate_name=pred, argument_names=[subj, obj])
+        s, p, o = line.split()
+        return knowledgebase.Fact(predicate_name=p, argument_names=[s, o])
 
     train_facts = [to_fact(line) for line in args.train]
     validation_facts = [to_fact(line) for line in args.validation] if args.validation is not None else []
@@ -168,10 +167,7 @@ def main(argv):
     if rules is not None:
         path_ranking_client = PathRankingClient(url_or_path=rules)
         pfw_triples = path_ranking_client.request(None, threshold=.0, top_k=rules_top_k)
-
-        model_to_regularizer = dict(
-            TransE=TranslationRuleRegularizer,
-            ScalE=ScalingRuleRegularizer)
+        model_to_regularizer = dict(TransE=TranslationRuleRegularizer, ScalE=ScalingRuleRegularizer)
 
         rule_regularizers = []
         for rule_predicate, rule_feature, rule_weight in pfw_triples:

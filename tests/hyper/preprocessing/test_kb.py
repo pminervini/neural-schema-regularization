@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from hyper.preprocessing import knowledgebase
+from hyper.parsing import knowledgebase
 
 
 class TestKnowledgeBaseParser(unittest.TestCase):

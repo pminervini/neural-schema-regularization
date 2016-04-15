@@ -23,8 +23,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
                       entity_embedding_size=100, predicate_embedding_size=100,
                       dropout_entity_embeddings=None, dropout_predicate_embeddings=None,
                       model_name='TransE', similarity_name='L1', nb_epochs=1000, batch_size=128, nb_batches=None,
-                      margin=1.0,
-                      loss_name='hinge', negatives_name='corrupt',
+                      margin=1.0, loss_name='hinge', negatives_name='corrupt',
                       optimizer=None, rule_regularizer=None):
 
     np.random.seed(seed)
@@ -55,7 +54,6 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
 
     if model_name in ['TransE', 'ScalE', 'HolE']:
         merge_function = core.latent_distance_binary_merge_function
-
         merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function, output_shape=lambda _: (None, 1))
         model.add(merge_layer)
 
