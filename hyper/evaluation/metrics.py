@@ -89,16 +89,20 @@ def ranking_summary(res, idxo=None, n=10, tag='raw'):
     dres.update({'microgmedian': np.median(resg)})
     dres.update({'microghits@n': np.mean(np.asarray(resg) <= n) * 100})
 
+    dres.update({'microlmrr': np.mean(1. / res[0])})
+    dres.update({'micrormrr': np.mean(1. / res[1])})
+    dres.update({'microgmrr': np.mean(1. / resg)})
+
     logging.info('### MICRO (%s):' % (tag))
-    logging.info('\t-- left   >> mean: %s, median: %s, hits@%s: %s%%' %
+    logging.info('\t-- left   >> mean: %s, median: %s, mrr: %s, hits@%s: %s%%' %
                  (round(dres['microlmean'], 5), round(dres['microlmedian'], 5),
-                  n, round(dres['microlhits@n'], 3)))
-    logging.info('\t-- right  >> mean: %s, median: %s, hits@%s: %s%%' %
+                  round(dres['microlmrr'], 3), n, round(dres['microlhits@n'], 3)))
+    logging.info('\t-- right  >> mean: %s, median: %s, mrr: %s, hits@%s: %s%%' %
                  (round(dres['micrormean'], 5), round(dres['micrormedian'], 5),
-                  n, round(dres['microrhits@n'], 3)))
-    logging.info('\t-- global >> mean: %s, median: %s, hits@%s: %s%%' %
+                  round(dres['micrormrr'], 3), n, round(dres['microrhits@n'], 3)))
+    logging.info('\t-- global >> mean: %s, median: %s, mrr: %s, hits@%s: %s%%' %
                  (round(dres['microgmean'], 5), round(dres['microgmedian'], 5),
-                  n, round(dres['microghits@n'], 3)))
+                  round(dres['microgmrr'], 3), n, round(dres['microghits@n'], 3)))
 
     if idxo is not None:
         listrel = set(idxo)
