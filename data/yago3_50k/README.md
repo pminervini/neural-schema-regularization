@@ -46,10 +46,10 @@ DEBUG:root:Generating a random permutation of RDF triples ..
 DEBUG:root:Building the training, validation and test sets ..
 DEBUG:root:Saving ..
 $ wc -l *.txt
-    50000 yago3-test.txt
-  5528166 yago3-train.txt
-    50000 yago3-valid.txt
-  5628166 total
+50000 yago3-test.txt
+5528166 yago3-train.txt
+50000 yago3-valid.txt
+5628166 total
 $ mv *.txt ..
 $ cd ..
 $ gzip -9 yago3-*.txt
