@@ -13,11 +13,23 @@ from hyper.evaluation import metrics
 import hyper.learning.core as learning
 
 import sys
+import gzip
 import logging
 import argparse
 
 __author__ = 'pminervini'
 __copyright__ = 'INSIGHT Centre for Data Analytics 2016'
+
+
+def read_triples(path):
+    triples = None
+    if path is not None:
+        logging.info('Acquiring %s ..' % path)
+        my_open = gzip.open if path.endswith('.gz') else open
+        with my_open(path, 'rt') as f:
+            lines = f.readlines()
+        triples = [(s.strip(), p.strip(), o.strip()) for [s, p, o] in [l.split() for l in lines]]
+    return triples
 
 
 def evaluate_model(model, evaluation_sequences, nb_entities, true_triples=None, tag=None):
@@ -46,9 +58,9 @@ def main(argv):
 
     argparser = argparse.ArgumentParser('Latent Factor Models for Knowledge Hypergraphs', formatter_class=formatter)
 
-    argparser.add_argument('--train', required=True, type=argparse.FileType('r'))
-    argparser.add_argument('--validation', required=False, type=argparse.FileType('r'))
-    argparser.add_argument('--test', required=False, type=argparse.FileType('r'))
+    argparser.add_argument('--train', required=True, action='store', type=str, default=None)
+    argparser.add_argument('--validation', required=False, action='store', type=str, default=None)
+    argparser.add_argument('--test', required=False, action='store', type=str, default=None)
 
     argparser.add_argument('--seed', action='store', type=int, default=1, help='Seed for the PRNG')
 
@@ -120,13 +132,14 @@ def main(argv):
 
     args = argparser.parse_args(argv)
 
-    def to_fact(line):
-        s, p, o = line.split()
+    def to_fact(s, p, o):
         return knowledgebase.Fact(predicate_name=p, argument_names=[s, o])
 
-    train_facts = [to_fact(line) for line in args.train]
-    validation_facts = [to_fact(line) for line in args.validation] if args.validation is not None else []
-    test_facts = [to_fact(line) for line in args.test] if args.test is not None else []
+    train_facts = [to_fact(s, p, o) for s, p, o in read_triples(args.train)]
+    validation_facts = [to_fact(s, p, o) for s, p, o in read_triples(args.validation)]\
+        if args.validation is not None else []
+    test_facts = [to_fact(s, p, o) for s, p, o in read_triples(args.test)]\
+        if args.test is not None else []
 
     parser = knowledgebase.KnowledgeBaseParser(train_facts + validation_facts + test_facts)
 

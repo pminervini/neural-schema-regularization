@@ -32,8 +32,8 @@ class RuleRegularizer(Regularizer):
         self.l = K.cast_to_floatx(l)
         self.uses_learning_phase = True
 
-    def set_param(self, embeddings):
-        self.embeddings = embeddings
+    def set_param(self, p):
+        self.p = p
 
     @abc.abstractmethod
     def __call__(self, loss):
@@ -46,24 +46,27 @@ class RuleRegularizer(Regularizer):
 
 class TranslationRuleRegularizer(RuleRegularizer):
     def __init__(self, head, tail, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(TranslationRuleRegularizer, self).__init__(*args, **kwargs)
         self.head, self.tail = head, tail
 
     def __call__(self, loss):
-        head_embedding = self.embeddings[self.head, :]
+        if not hasattr(self, 'p'):
+            raise Exception('Need to call `set_param` on RuleRegularizer instance before calling the instance. ')
+
+        head_embedding = self.p[self.head, :]
         tail_embedding = None
 
         for hop, is_reversed in self.tail:
-            hop_embedding = (- 1.0 if is_reversed is True else 1.0) * self.embeddings[hop, :]
+            hop_embedding = (- 1.0 if is_reversed is True else 1.0) * self.p[hop, :]
             tail_embedding = hop_embedding if tail_embedding is None else (tail_embedding + hop_embedding)
 
         sim = K.reshape(self.similarity(head_embedding, tail_embedding, axis=-1), (1,))[0]
 
-        loss -= sim * self.l
-        return loss
+        regularized_loss = loss - sim * self.l
+        return K.in_train_phase(regularized_loss, loss)
 
     def get_config(self):
-        sc = super().get_config()
+        sc = super(TranslationRuleRegularizer, self).get_config()
         config = {"name": self.__class__.__name__}
         config.update(sc)
         return config
@@ -71,24 +74,27 @@ class TranslationRuleRegularizer(RuleRegularizer):
 
 class ScalingRuleRegularizer(RuleRegularizer):
     def __init__(self, head, tail, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(ScalingRuleRegularizer, self).__init__(*args, **kwargs)
         self.head, self.tail = head, tail
 
     def __call__(self, loss):
-        head_embedding = self.embeddings[self.head, :]
+        if not hasattr(self, 'p'):
+            raise Exception('Need to call `set_param` on RuleRegularizer instance before calling the instance. ')
+
+        head_embedding = self.p[self.head, :]
         tail_embedding = None
 
         for hop, is_reversed in self.tail:
-            hop_embedding = (1. / self.embeddings[hop, :] if is_reversed is True else self.embeddings[hop, :])
+            hop_embedding = (1. / self.p[hop, :] if is_reversed is True else self.embeddings[hop, :])
             tail_embedding = hop_embedding if tail_embedding is None else (tail_embedding * hop_embedding)
 
         sim = K.reshape(self.similarity(head_embedding, tail_embedding, axis=-1), (1,))[0]
 
-        loss -= sim * self.l
-        return loss
+        regularized_loss = loss - sim * self.l
+        return K.in_train_phase(regularized_loss, loss)
 
     def get_config(self):
-        sc = super().get_config()
+        sc = super(ScalingRuleRegularizer, self).get_config()
         config = {"name": self.__class__.__name__}
         config.update(sc)
         return config
