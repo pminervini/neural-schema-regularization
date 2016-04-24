@@ -56,7 +56,7 @@ hyperparameters_space = dict(
 
     rules_threshold=[.2, .5],
     sample_facts=[.1, .3, .5, .7],
-    rules_lambda=[1., 100., 10000.]
+    rules_lambda=[.0, 10, 1000.]
 )
 
 configurations = cartesian_product(hyperparameters_space)

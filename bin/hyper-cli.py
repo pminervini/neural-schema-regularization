@@ -177,7 +177,7 @@ def main(argv):
 
     rule_regularizer = None
 
-    if rules is not None:
+    if rules is not None and rules_lambda is not None and rules_lambda > .0:
         path_ranking_client = PathRankingClient(url_or_path=rules)
         pfw_triples = path_ranking_client.request(None, threshold=.0, top_k=rules_top_k)
         model_to_regularizer = dict(TransE=TranslationRuleRegularizer, ScalE=ScalingRuleRegularizer)
