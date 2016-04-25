@@ -85,7 +85,7 @@ class ScalingRuleRegularizer(RuleRegularizer):
         tail_embedding = None
 
         for hop, is_reversed in self.tail:
-            hop_embedding = (1. / self.p[hop, :] if is_reversed is True else self.embeddings[hop, :])
+            hop_embedding = (1. / self.p[hop, :] if is_reversed is True else self.p[hop, :])
             tail_embedding = hop_embedding if tail_embedding is None else (tail_embedding * hop_embedding)
 
         sim = K.reshape(self.similarity(head_embedding, tail_embedding, axis=-1), (1,))[0]
