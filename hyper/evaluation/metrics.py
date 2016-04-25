@@ -89,9 +89,9 @@ def ranking_summary(res, idxo=None, n=10, tag='raw'):
     dres.update({'microgmedian': np.median(resg)})
     dres.update({'microghits@n': np.mean(np.asarray(resg) <= n) * 100})
 
-    dres.update({'microlmrr': np.mean(1. / np.array(res[0]))})
-    dres.update({'micrormrr': np.mean(1. / np.array(res[1]))})
-    dres.update({'microgmrr': np.mean(1. / resg)})
+    dres.update({'microlmrr': np.mean(1. / np.asarray(res[0]))})
+    dres.update({'micrormrr': np.mean(1. / np.asarray(res[1]))})
+    dres.update({'microgmrr': np.mean(1. / np.asarray(resg))})
 
     logging.info('### MICRO (%s):' % (tag))
     logging.info('\t-- left   >> mean: %s, median: %s, mrr: %s, hits@%s: %s%%' %
