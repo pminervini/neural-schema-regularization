@@ -127,10 +127,19 @@ def main(argv):
     argparser.add_argument('--optimizer-beta2', action='store', type=float, default=0.999,
                            help='Beta2 parameter for the adam and adamax optimizers')
 
+    argparser.add_argument('--tensorflow', '--tf', action='store_true', help='Uses TensorFlow')
+
     argparser.add_argument('--save', action='store', type=str, default=None,
                            help='Where to save the trained model')
 
     args = argparser.parse_args(argv)
+
+    if args.tensorflow is True:
+        from keras import backend as K
+        import tensorflow as tf
+
+        sess = tf.Session()
+        K.set_session(sess)
 
     def to_fact(s, p, o):
         return knowledgebase.Fact(predicate_name=p, argument_names=[s, o])
