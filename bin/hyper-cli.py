@@ -198,6 +198,8 @@ def main(argv):
                     head = parser.predicate_index[rule_predicate]
                     tail = [(parser.predicate_index[hop.predicate], hop.is_inverse) for hop in rule_feature.hops]
 
+                    logging.info('[Rules] Adding Head: %s, Tail: %s' % (str(head), str(tail)))
+
                     if model_name not in model_to_regularizer:
                         raise ValueError('Rule-based regularizers unsupported for the model: %s' % model_name)
 
