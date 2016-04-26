@@ -60,7 +60,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
     elif model_name in ['rTransE', 'rScalE']:
         merge_function = core.latent_distance_nary_merge_function
 
-        merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function)
+        merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function, output_shape=lambda _: (None, 1))
         model.add(merge_layer)
 
     elif model_name in ['RNN', 'iRNN', 'GRU', 'LSTM']:
@@ -77,7 +77,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
 
         merge_function = core.similarity_merge_function
 
-        merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function)
+        merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function, output_shape=lambda _: (None, 1))
         model.add(merge_layer)
     else:
         raise ValueError('Unknown model name: %s' % model_name)
