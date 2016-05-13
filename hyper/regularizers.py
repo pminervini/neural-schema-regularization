@@ -8,6 +8,86 @@ from keras import backend as K
 from hyper import similarities
 
 
+class L1(Regularizer):
+    def __init__(self, l1=0.):
+        self.l1 = K.cast_to_floatx(l1)
+        self.uses_learning_phase = True
+
+    def set_param(self, p):
+        self.p = p
+
+    def __call__(self, loss):
+        if not hasattr(self, 'p'):
+            raise Exception('Need to call `set_param` before calling the instance.')
+        regularized_loss = loss + K.sum(K.abs(self.p)) * self.l1
+        return K.in_train_phase(regularized_loss, loss)
+
+    def get_config(self):
+        return {'name': self.__class__.__name__, 'l1': self.l1}
+
+
+class L2(Regularizer):
+    def __init__(self, l2=0.):
+        self.l2 = K.cast_to_floatx(l2)
+        self.uses_learning_phase = True
+
+    def set_param(self, p):
+        self.p = p
+
+    def __call__(self, loss):
+        if not hasattr(self, 'p'):
+            raise Exception('Need to call `set_param` before calling the instance.')
+        regularized_loss = loss + K.sum(K.square(self.p)) * self.l2
+        return K.in_train_phase(regularized_loss, loss)
+
+    def get_config(self):
+        return {'name': self.__class__.__name__, 'l2': self.l2}
+
+
+class ActivityL1(Regularizer):
+    def __init__(self, l1=0., axis=0):
+        self.l1 = K.cast_to_floatx(l1)
+        self.axis = axis
+        self.uses_learning_phase = True
+
+    def set_layer(self, layer):
+        self.layer = layer
+
+    def __call__(self, loss):
+        if not hasattr(self, 'layer'):
+            raise Exception('Need to call `set_layer` before calling the instance.')
+        regularized_loss = loss
+        for i in range(len(self.layer.inbound_nodes)):
+            output = self.layer.get_output_at(i)
+            regularized_loss += self.l1 * K.sum(K.mean(K.abs(output), axis=self.axis))
+        return K.in_train_phase(regularized_loss, loss)
+
+    def get_config(self):
+        return {'name': self.__class__.__name__, 'l1': self.l1}
+
+
+class ActivityL2(Regularizer):
+    def __init__(self, l2=0., axis=0):
+        self.l2 = K.cast_to_floatx(l2)
+        self.axis = axis
+        self.uses_learning_phase = True
+
+    def set_layer(self, layer):
+        self.layer = layer
+
+    def __call__(self, loss):
+        if not hasattr(self, 'layer'):
+            raise Exception('Need to call `set_layer` before calling the instance.')
+        regularized_loss = loss
+        for i in range(len(self.layer.inbound_nodes)):
+            output = self.layer.get_output_at(i)
+            regularized_loss += self.l2 * K.sum(K.mean(K.square(output), axis=self.axis))
+        return K.in_train_phase(regularized_loss, loss)
+
+    def get_config(self):
+        return {'name': self.__class__.__name__, 'l2': self.l2}
+
+
 class GroupRegularizer(Regularizer):
     def __init__(self, regularizers, uses_learning_phase=True):
         self.regularizers = regularizers
@@ -51,7 +131,7 @@ class TranslationRuleRegularizer(RuleRegularizer):
 
     def __call__(self, loss):
         if not hasattr(self, 'p'):
-            raise Exception('Need to call `set_param` on RuleRegularizer instance before calling the instance. ')
+            raise Exception('Need to call `set_param` on RuleRegularizer instance before calling the instance.')
 
         head_embedding = self.p[self.head, :]
         tail_embedding = None
@@ -79,7 +159,7 @@ class ScalingRuleRegularizer(RuleRegularizer):
 
     def __call__(self, loss):
         if not hasattr(self, 'p'):
-            raise Exception('Need to call `set_param` on RuleRegularizer instance before calling the instance. ')
+            raise Exception('Need to call `set_param` on RuleRegularizer instance before calling the instance.')
 
         head_embedding = self.p[self.head, :]
         tail_embedding = None

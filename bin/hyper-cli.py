@@ -5,7 +5,7 @@ import numpy as np
 
 from hyper.parsing import knowledgebase
 from hyper import optimizers
-from hyper.regularizers import GroupRegularizer, TranslationRuleRegularizer, ScalingRuleRegularizer
+from hyper.regularizers import L1, L2, GroupRegularizer, TranslationRuleRegularizer, ScalingRuleRegularizer
 
 from hyper.pathranking.api import PathRankingClient
 from hyper.evaluation import metrics
@@ -109,6 +109,11 @@ def main(argv):
     argparser.add_argument('--negatives', action='store', type=str, default='corrupt',
                            help='Method for generating the negative examples (e.g. corrupt, lcwa, schema, bernoulli)')
 
+    argparser.add_argument('--predicate-l1', action='store', type=float, default=None,
+                           help='L1 Regularizer on the Predicate Embeddings')
+    argparser.add_argument('--predicate-l2', action='store', type=float, default=None,
+                           help='L2 Regularizer on the Predicate Embeddings')
+
     argparser.add_argument('--optimizer', action='store', type=str, default='adagrad',
                            help='Optimization algorithm to use - sgd, adagrad, adadelta, rmsprop, adam, adamax')
     argparser.add_argument('--lr', '--optimizer-lr', action='store', type=float, default=0.01, help='Learning rate')
@@ -170,6 +175,9 @@ def main(argv):
     loss_name = args.loss
     negatives_name = args.negatives
 
+    predicate_l1 = args.predicate_l1
+    predicate_l2 = args.predicate_l2
+
     # Dropout-related parameters
     dropout_entity_embeddings = args.dropout_entity_embeddings
     dropout_predicate_embeddings = args.dropout_predicate_embeddings
@@ -183,15 +191,21 @@ def main(argv):
     sample_facts = args.sample_facts
 
     rules_lambda = args.rules_lambda
+    regularizers = []
 
-    rule_regularizer = None
+    if predicate_l1 is not None:
+        logging.info('Weight of the L1 Regularizer: %s' % predicate_l1)
+        regularizers += [L1(l1=predicate_l1)]
+
+    if predicate_l2 is not None:
+        logging.info('Weight of the L2 Regularizer: %s' % predicate_l2)
+        regularizers += [L2(l2=predicate_l2)]
 
     if rules is not None and rules_lambda is not None and rules_lambda > .0:
         path_ranking_client = PathRankingClient(url_or_path=rules)
         pfw_triples = path_ranking_client.request(None, threshold=.0, top_k=rules_top_k)
         model_to_regularizer = dict(TransE=TranslationRuleRegularizer, ScalE=ScalingRuleRegularizer)
 
-        rule_regularizers = []
         for rule_predicate, rule_feature, rule_weight in pfw_triples:
             if rules_threshold is None or rule_weight >= rules_threshold:
                 if rules_max_length is None or len(rule_feature.hops) <= rules_max_length:
@@ -204,9 +218,13 @@ def main(argv):
                         raise ValueError('Rule-based regularizers unsupported for the model: %s' % model_name)
 
                     Regularizer = model_to_regularizer[model_name]
-                    rule_regularizers += [Regularizer(head, tail, l=rules_lambda)]
+                    regularizers += [Regularizer(head, tail, l=rules_lambda)]
 
-        rule_regularizer = GroupRegularizer(regularizers=rule_regularizers) if rule_regularizers else None
+    regularizer = None
+    if len(regularizers) == 1:
+        regularizer = regularizers[0]
+    elif len(regularizers) > 1:
+        regularizer = GroupRegularizer(regularizers=regularizers)
 
     if sample_facts is not None and (sample_facts < 1):
         nb_train_facts = len(train_facts)
@@ -247,7 +265,7 @@ def main(argv):
                                        nb_epochs=nb_epochs, batch_size=batch_size, nb_batches=nb_batches, margin=margin,
                                        loss_name=loss_name, negatives_name=negatives_name,
 
-                                       optimizer=optimizer, rule_regularizer=rule_regularizer)
+                                       optimizer=optimizer, regularizer=regularizer)
 
     if args.save is not None:
         pass

@@ -24,7 +24,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
                       dropout_entity_embeddings=None, dropout_predicate_embeddings=None,
                       model_name='TransE', similarity_name='L1', nb_epochs=1000, batch_size=128, nb_batches=None,
                       margin=1.0, loss_name='hinge', negatives_name='corrupt',
-                      optimizer=None, rule_regularizer=None):
+                      optimizer=None, regularizer=None):
 
     np.random.seed(seed)
     random_state = np.random.RandomState(seed=seed)
@@ -33,7 +33,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
     entity_encoder = Sequential()
 
     predicate_embedding_layer = Embedding(input_dim=nb_predicates + 1, output_dim=predicate_embedding_size,
-                                          input_length=None, init='glorot_uniform', W_regularizer=rule_regularizer)
+                                          input_length=None, init='glorot_uniform', W_regularizer=regularizer)
     predicate_encoder.add(predicate_embedding_layer)
 
     if dropout_predicate_embeddings is not None and dropout_predicate_embeddings > .0:

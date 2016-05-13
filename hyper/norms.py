@@ -17,7 +17,7 @@ def l1_norm(x, axis=1):
     return K.sum(K.abs(x), axis=axis)
 
 
-def l2_norm(x, y, axis=1):
+def l2_norm(x, axis=1):
     """
     L2 Norm.
 
@@ -30,9 +30,23 @@ def l2_norm(x, y, axis=1):
     return K.sqrt(K.sum(K.square(x), axis=axis))
 
 
+def square_l2_norm(x, axis=1):
+    """
+    L2 Norm.
+
+    .. math:: \\sum_i (x_i)^2
+
+    :param x: First term.
+    :param axis: Axis.
+    :return: Norm Value.
+    """
+    return K.sum(K.square(x), axis=axis)
+
+
 # aliases
 l1 = L1 = l1_norm
 l2 = L2 = l2_norm
+square_l2 = SQR_L2 = square_l2_norm
 
 
 def get_function(function_name):
