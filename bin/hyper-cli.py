@@ -8,6 +8,8 @@ from hyper import optimizers
 from hyper.regularizers import L1, L2, GroupRegularizer, TranslationRuleRegularizer, ScalingRuleRegularizer,\
     DiagonalAffineRuleRegularizer
 
+from keras.constraints import nonneg
+
 from hyper.pathranking.api import PathRankingClient
 from hyper.evaluation import metrics
 
@@ -114,6 +116,8 @@ def main(argv):
                            help='L1 Regularizer on the Predicate Embeddings')
     argparser.add_argument('--predicate-l2', action='store', type=float, default=None,
                            help='L2 Regularizer on the Predicate Embeddings')
+    argparser.add_argument('--predicate-nonnegative', action='store_true',
+                           help='Enforce a non-negativity constraint on the predicate embeddings')
 
     argparser.add_argument('--optimizer', action='store', type=str, default='adagrad',
                            help='Optimization algorithm to use - sgd, adagrad, adadelta, rmsprop, adam, adamax')
@@ -178,6 +182,7 @@ def main(argv):
 
     predicate_l1 = args.predicate_l1
     predicate_l2 = args.predicate_l2
+    predicate_nonnegative = args.predicate_nonnegative
 
     # Dropout-related parameters
     dropout_entity_embeddings = args.dropout_entity_embeddings
@@ -232,6 +237,10 @@ def main(argv):
     elif len(regularizers) > 1:
         regularizer = GroupRegularizer(regularizers=regularizers)
 
+    predicate_constraint = None
+    if predicate_nonnegative is True:
+        predicate_constraint = nonneg()
+
     if sample_facts is not None and (sample_facts < 1):
         nb_train_facts = len(train_facts)
         sample_size = int(round(sample_facts * nb_train_facts))
@@ -271,7 +280,8 @@ def main(argv):
                                        nb_epochs=nb_epochs, batch_size=batch_size, nb_batches=nb_batches, margin=margin,
                                        loss_name=loss_name, negatives_name=negatives_name,
 
-                                       optimizer=optimizer, regularizer=regularizer)
+                                       optimizer=optimizer, regularizer=regularizer,
+                                       predicate_constraint=predicate_constraint)
 
     if args.save is not None:
         pass
