@@ -62,10 +62,51 @@ def holographic_merge_function(args, similarity):
     pred = relation_embedding[:, 0, :]
     subj, obj = entity_embeddings[:, 0, :], entity_embeddings[:, 1, :]
 
-    res, _ = theano.scan(lambda s, o: operations.circular_cross_correlation(s, o),
-                         sequences=[subj, obj])
+    res, _ = theano.scan(lambda s, o: operations.circular_cross_correlation(s, o), sequences=[subj, obj])
 
     sim = K.reshape(similarity(pred, res), (-1, 1))
+    return sim
+
+
+def diagonal_affine_merge_function(args, similarity):
+    """
+    Keras Merge function for the Diagonal Affine Embeddings model
+    :param args: List of two arguments: the former containing the relation embedding,
+        and the latter containing the two entity embeddings.
+    :param similarity: Similarity function.
+    :return: The similarity between the translated subject embedding, and the object embedding.
+    """
+    relation_embedding, entity_embeddings = args[0], args[1]
+
+    pred = relation_embedding[:, 0, :]
+    subj, obj = entity_embeddings[:, 0, :], entity_embeddings[:, 1, :]
+
+    N = subj.shape[1]
+
+    affine_transformation = (subj * pred[:, :N]) + pred[:, N:]
+    sim = K.reshape(similarity(affine_transformation, obj), (-1, 1))
+
+    return sim
+
+
+def concatenate_merge_function(args, similarity):
+    """
+    Keras Merge function for the Diagonal Affine Embeddings model
+    :param args: List of two arguments: the former containing the relation embedding,
+        and the latter containing the two entity embeddings.
+    :param similarity: Similarity function.
+    :return: The similarity between the translated subject embedding, and the object embedding.
+    """
+    relation_embedding, entity_embeddings = args[0], args[1]
+
+    pred = relation_embedding[:, 0, :]
+    subj, obj = entity_embeddings[:, 0, :], entity_embeddings[:, 1, :]
+
+    N = subj.shape[1]
+
+    concatenation = K.concatenate([subj, obj], axis=1)
+    sim = K.reshape(similarity(concatenation, pred), (-1, 1))
+
     return sim
 
 
@@ -73,6 +114,9 @@ def holographic_merge_function(args, similarity):
 TransE = TranslatingEmbeddings = translating_merge_function
 ScalE = ScalingEmbeddings = scaling_merge_function
 HolE = HolographicEmbeddings = holographic_merge_function
+
+DAffinE = DiagonalAffineEmbeddings = diagonal_affine_merge_function
+ConcatE = ConcatenatingEmbeddings = concatenate_merge_function
 
 
 def get_function(function_name):

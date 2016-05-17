@@ -5,7 +5,8 @@ import numpy as np
 
 from hyper.parsing import knowledgebase
 from hyper import optimizers
-from hyper.regularizers import L1, L2, GroupRegularizer, TranslationRuleRegularizer, ScalingRuleRegularizer
+from hyper.regularizers import L1, L2, GroupRegularizer, TranslationRuleRegularizer, ScalingRuleRegularizer,\
+    DiagonalAffineRuleRegularizer
 
 from hyper.pathranking.api import PathRankingClient
 from hyper.evaluation import metrics
@@ -66,7 +67,7 @@ def main(argv):
 
     argparser.add_argument('--entity-embedding-size', action='store', type=int, default=100,
                            help='Size of entity embeddings')
-    argparser.add_argument('--predicate-embedding-size', action='store', type=int, default=100,
+    argparser.add_argument('--predicate-embedding-size', action='store', type=int, default=None,
                            help='Size of predicate embeddings')
 
     # Dropout-related arguments
@@ -204,7 +205,11 @@ def main(argv):
     if rules is not None and rules_lambda is not None and rules_lambda > .0:
         path_ranking_client = PathRankingClient(url_or_path=rules)
         pfw_triples = path_ranking_client.request(None, threshold=.0, top_k=rules_top_k)
-        model_to_regularizer = dict(TransE=TranslationRuleRegularizer, ScalE=ScalingRuleRegularizer)
+
+        model_to_regularizer = dict(
+            TransE=TranslationRuleRegularizer,
+            ScalE=ScalingRuleRegularizer,
+            DAffinE=DiagonalAffineRuleRegularizer)
 
         for rule_predicate, rule_feature, rule_weight in pfw_triples:
             if rules_threshold is None or rule_weight >= rules_threshold:
@@ -218,7 +223,8 @@ def main(argv):
                         raise ValueError('Rule-based regularizers unsupported for the model: %s' % model_name)
 
                     Regularizer = model_to_regularizer[model_name]
-                    regularizers += [Regularizer(head, tail, l=rules_lambda)]
+                    _regularizer = Regularizer(head, tail, l=rules_lambda, entity_embedding_size=entity_embedding_size)
+                    regularizers += [_regularizer]
 
     regularizer = None
     if len(regularizers) == 1:
@@ -230,7 +236,7 @@ def main(argv):
         nb_train_facts = len(train_facts)
         sample_size = int(round(sample_facts * nb_train_facts))
 
-        random_state = np.random.RandomState(seed)
+        random_state = np.random.RandomState(seed=seed)
         sample_indices = random_state.choice(nb_train_facts, sample_size, replace=False)
         train_facts_sample = [train_facts[i] for i in sample_indices]
 

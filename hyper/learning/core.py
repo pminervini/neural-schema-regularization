@@ -20,7 +20,7 @@ import logging
 
 
 def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
-                      entity_embedding_size=100, predicate_embedding_size=100,
+                      entity_embedding_size=100, predicate_embedding_size=None,
                       dropout_entity_embeddings=None, dropout_predicate_embeddings=None,
                       model_name='TransE', similarity_name='L1', nb_epochs=1000, batch_size=128, nb_batches=None,
                       margin=1.0, loss_name='hinge', negatives_name='corrupt',
@@ -31,6 +31,11 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
 
     predicate_encoder = Sequential()
     entity_encoder = Sequential()
+
+    if predicate_embedding_size is None:
+        predicate_embedding_size = entity_embedding_size
+        if model_name in ['DAffinE', 'ConcatE']:
+            predicate_embedding_size = entity_embedding_size * 2
 
     predicate_embedding_layer = Embedding(input_dim=nb_predicates + 1, output_dim=predicate_embedding_size,
                                           input_length=None, init='glorot_uniform', W_regularizer=regularizer)
@@ -52,7 +57,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
     setattr(core, 'similarity function', similarity_name)
     setattr(core, 'merge function', model_name)
 
-    if model_name in ['TransE', 'ScalE', 'HolE']:
+    if model_name in ['TransE', 'ScalE', 'DAffinE', 'ConcatE', 'HolE']:
         merge_function = core.latent_distance_binary_merge_function
         merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function, output_shape=lambda _: (None, 1))
         model.add(merge_layer)

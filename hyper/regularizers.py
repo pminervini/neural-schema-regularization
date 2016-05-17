@@ -107,7 +107,7 @@ class GroupRegularizer(Regularizer):
 
 
 class RuleRegularizer(Regularizer):
-    def __init__(self, similarity=similarities.l2sqr, l=0.):
+    def __init__(self, similarity=similarities.l2sqr, l=0., *args, **kwargs):
         self.similarity = similarity
         self.l = K.cast_to_floatx(l)
         self.uses_learning_phase = True
@@ -175,6 +175,44 @@ class ScalingRuleRegularizer(RuleRegularizer):
 
     def get_config(self):
         sc = super(ScalingRuleRegularizer, self).get_config()
+        config = {"name": self.__class__.__name__}
+        config.update(sc)
+        return config
+
+
+class DiagonalAffineRuleRegularizer(RuleRegularizer):
+    def __init__(self, head, tail, entity_embedding_size=None, *args, **kwargs):
+        super(DiagonalAffineRuleRegularizer, self).__init__(*args, **kwargs)
+        self.head, self.tail = head, tail
+        self.entity_embedding_size = entity_embedding_size
+
+    def __call__(self, loss):
+        if not hasattr(self, 'p'):
+            raise Exception('Need to call `set_param` on RuleRegularizer instance before calling the instance.')
+
+        head_embedding = self.p[self.head, :]
+        tail_embedding = None
+
+        for hop, is_reversed in self.tail:
+            _scaling_hop = self.p[hop, self.entity_embedding_size:]
+            _translation_hop = self.p[hop, :self.entity_embedding_size]
+
+            scaling_hop = (1. / _scaling_hop) if is_reversed is True else _scaling_hop
+            translation_hop = (- _translation_hop) if is_reversed is True else _translation_hop
+
+            if tail_embedding is None:
+                tail_embedding = K.concatenate([scaling_hop, translation_hop], axis=0)
+            else:
+                tail_embedding[self.entity_embedding_size:] *= scaling_hop
+                tail_embedding[self.entity_embedding_size:] += translation_hop
+
+        sim = K.reshape(self.similarity(head_embedding, tail_embedding, axis=-1), (1,))[0]
+
+        regularized_loss = loss - sim * self.l
+        return K.in_train_phase(regularized_loss, loss)
+
+    def get_config(self):
+        sc = super(DiagonalAffineRuleRegularizer, self).get_config()
         config = {"name": self.__class__.__name__}
         config.update(sc)
         return config
