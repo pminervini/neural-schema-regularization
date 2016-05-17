@@ -2,11 +2,11 @@
 
 import numpy as np
 
-from keras import backend as K
+#from keras import backend as K
 
 from keras.models import Graph
 from keras.layers.embeddings import Embedding
-from keras.layers.core import Lambda, Merge
+#from keras.layers.core import Lambda, Merge
 
 import unittest
 
