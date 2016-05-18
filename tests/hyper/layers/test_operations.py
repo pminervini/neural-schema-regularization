@@ -19,7 +19,7 @@ class TestOperations(unittest.TestCase):
         x, y = T.vector(), T.vector()
         f = theano.function([x, y], operations.circular_cross_correlation(x, y))
 
-        a, b = np.array([63, 23, 12, 27]), np.array([84, 24, 66, 32])
+        a, b = np.array([63, 23, 12, 27], dtype=np.float32), np.array([84, 24, 66, 32], dtype=np.float32)
 
         th_value = f(a, b)
         np_value = operations.circular_cross_correlation_numpy(a, b)
@@ -35,8 +35,8 @@ class TestOperations(unittest.TestCase):
 
         f = theano.function([ss, os], res)
 
-        _ss = np.array([[63, 23, 12, 27], [63, 23, 12, 27]])
-        _os = np.array([[84, 24, 66, 32], [84, 24, 66, 32]])
+        _ss = np.array([[63, 23, 12, 27], [63, 23, 12, 27]], dtype=np.float32)
+        _os = np.array([[84, 24, 66, 32], [84, 24, 66, 32]], dtype=np.float32)
 
         _res = f(_ss, _os)
 
