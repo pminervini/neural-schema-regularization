@@ -53,20 +53,6 @@ def latent_distance_nary_merge_function(args):
     return merge_function(args, similarity=similarity_function)
 
 
-def concatenate_embeddings_merge_function(args):
-    """
-    Takes a list args=[Xr, Xe], where Xr is a batch_size x 1 x embedding_size
-    Tensor, and Xe is a batch_size x 2 x embedding_size tensor, a concatenates
-    them on the first dimension, obtaining a batch_size x 3 x embedding_size
-    tensor.
-
-    :param args: List of tensors.
-    :return: batch_size x 3 x embedding_size Tensor.
-    """
-    relation_embedding, entity_embeddings = args[0], args[1]
-    return K.concatenate([relation_embedding, entity_embeddings], axis=1)
-
-
 def similarity_merge_function(args):
     """
     Takes a list args=[Xr, Xe], where Xr is a batch_size x 1 x embedding_size

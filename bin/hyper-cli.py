@@ -119,6 +119,9 @@ def main(argv):
     argparser.add_argument('--predicate-nonnegative', action='store_true',
                            help='Enforce a non-negativity constraint on the predicate embeddings')
 
+    argparser.add_argument('--raw', action='store_true', help='Evaluate the model in the raw setting')
+    argparser.add_argument('--filtered', action='store_true', help='Evaluate the model in the filtered setting')
+
     argparser.add_argument('--optimizer', action='store', type=str, default='adagrad',
                            help='Optimization algorithm to use - sgd, adagrad, adadelta, rmsprop, adam, adamax')
     argparser.add_argument('--lr', '--optimizer-lr', action='store', type=float, default=0.01, help='Learning rate')
@@ -183,6 +186,9 @@ def main(argv):
     predicate_l1 = args.predicate_l1
     predicate_l2 = args.predicate_l2
     predicate_nonnegative = args.predicate_nonnegative
+
+    is_raw = args.raw
+    is_filtered = args.filtered
 
     # Dropout-related parameters
     dropout_entity_embeddings = args.dropout_entity_embeddings
@@ -291,13 +297,20 @@ def main(argv):
 
     true_triples = np.array([[s, p, o] for (p, [s, o]) in train_sequences + validation_sequences + test_sequences])
 
+    if (is_raw is False) and (is_filtered is False):
+        is_raw, is_filtered = True, True
+
     if len(validation_sequences) > 0:
-        evaluate_model(model, validation_sequences, nb_entities, tag='validation raw')
-        evaluate_model(model, validation_sequences, nb_entities, true_triples=true_triples, tag='validation filtered')
+        if is_raw is True:
+            evaluate_model(model, validation_sequences, nb_entities, tag='validation raw')
+        if is_filtered is True:
+            evaluate_model(model, validation_sequences, nb_entities, true_triples=true_triples, tag='validation filtered')
 
     if len(test_sequences) > 0:
-        evaluate_model(model, test_sequences, nb_entities, tag='test raw')
-        evaluate_model(model, test_sequences, nb_entities, true_triples=true_triples, tag='test filtered')
+        if is_raw is True:
+            evaluate_model(model, test_sequences, nb_entities, tag='test raw')
+        if is_filtered is True:
+            evaluate_model(model, test_sequences, nb_entities, true_triples=true_triples, tag='test filtered')
 
     return
 

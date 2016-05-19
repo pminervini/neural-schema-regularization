@@ -34,8 +34,20 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
 
     if predicate_embedding_size is None:
         predicate_embedding_size = entity_embedding_size
-        if model_name in ['DAffinE', 'ConcatE']:
+        if model_name in ['ManifoldESphere']:
+            predicate_embedding_size = entity_embedding_size + 1
+        if model_name in ['DAffinE', 'ConcatE', 'DualTransE', 'DualScalE']:
             predicate_embedding_size = entity_embedding_size * 2
+        if model_name in ['ManifoldEHyperplane']:
+            predicate_embedding_size = (entity_embedding_size * 2) + 1
+        elif model_name in ['BilinearE', 'RESCAL']:
+            predicate_embedding_size = entity_embedding_size ** 2
+        elif model_name in ['DualBilinearE', 'DualRESCAL']:
+            predicate_embedding_size = (entity_embedding_size ** 2) * 2
+        elif model_name in ['AffinE']:
+            predicate_embedding_size = (entity_embedding_size ** 2) + entity_embedding_size
+        elif model_name in ['DualAffinE']:
+            predicate_embedding_size = ((entity_embedding_size ** 2) + entity_embedding_size) * 2
 
     predicate_embedding_layer = Embedding(input_dim=nb_predicates + 1, output_dim=predicate_embedding_size,
                                           input_length=None, init='glorot_uniform', W_regularizer=regularizer,
@@ -58,7 +70,9 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
     setattr(core, 'similarity function', similarity_name)
     setattr(core, 'merge function', model_name)
 
-    if model_name in ['TransE', 'ScalE', 'DAffinE', 'ConcatE', 'HolE']:
+    if model_name in ['TransE', 'DualTransE', 'ScalE', 'DualScalE', 'DAffinE', 'DualDAffinE',
+                      'ConcatE', 'HolE', 'ManifoldESphere', 'ManifoldEHyperplane',
+                      'BilinearE', 'DualBilinearE', 'RESCAL', 'DualRESCAL', 'AffinE', 'DualAffinE']:
         merge_function = core.latent_distance_binary_merge_function
         merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function, output_shape=lambda _: (None, 1))
         model.add(merge_layer)
