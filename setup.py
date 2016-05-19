@@ -16,6 +16,7 @@ setup(name='hyper',
           'keras>=1.0',
           'requests>=2.8.1',
           'terminaltables>=2.1.0',
-          'termcolor>=1.1.0'
+          'colorclass>=2.2.0',
+          'matplotlib>=1.5.1'
       ],
       packages=find_packages())
