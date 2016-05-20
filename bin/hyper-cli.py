@@ -121,6 +121,7 @@ def main(argv):
 
     argparser.add_argument('--raw', action='store_true', help='Evaluate the model in the raw setting')
     argparser.add_argument('--filtered', action='store_true', help='Evaluate the model in the filtered setting')
+    argparser.add_argument('--visualize', action='store_true', help='Visualize the embeddings')
 
     argparser.add_argument('--optimizer', action='store', type=str, default='adagrad',
                            help='Optimization algorithm to use - sgd, adagrad, adadelta, rmsprop, adam, adamax')
@@ -189,6 +190,7 @@ def main(argv):
 
     is_raw = args.raw
     is_filtered = args.filtered
+    is_visualize = args.visualize
 
     # Dropout-related parameters
     dropout_entity_embeddings = args.dropout_entity_embeddings
@@ -287,7 +289,8 @@ def main(argv):
                                        loss_name=loss_name, negatives_name=negatives_name,
 
                                        optimizer=optimizer, regularizer=regularizer,
-                                       predicate_constraint=predicate_constraint)
+                                       predicate_constraint=predicate_constraint,
+                                       visualize=is_visualize)
 
     if args.save is not None:
         pass

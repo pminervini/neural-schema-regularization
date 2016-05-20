@@ -15,6 +15,7 @@ from hyper.learning import samples, negatives
 from hyper import ranking_objectives, constraints
 
 import hyper.learning.util as learning_util
+import hyper.visualization.visualization as visualization
 
 import logging
 
@@ -24,7 +25,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
                       dropout_entity_embeddings=None, dropout_predicate_embeddings=None,
                       model_name='TransE', similarity_name='L1', nb_epochs=1000, batch_size=128, nb_batches=None,
                       margin=1.0, loss_name='hinge', negatives_name='corrupt',
-                      optimizer=None, regularizer=None, predicate_constraint=None):
+                      optimizer=None, regularizer=None, predicate_constraint=None, visualize=False):
 
     np.random.seed(seed)
     random_state = np.random.RandomState(seed=seed)
@@ -184,6 +185,12 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
                              shuffle=False, verbose=0)
 
             losses += [hist.history['loss'][0] / float(train_Xr_batch.shape[0])]
+
+        if visualize is True:
+            hinton_diagram = visualization.HintonDiagram()
+            W_emb = predicate_embedding_layer.trainable_weights[0].get_value()
+            print('Embedding dimensions: %s' % str(W_emb.shape))
+            print(hinton_diagram(W_emb))
 
         logging.info('Loss: %s +/- %s' % (round(np.mean(losses), 4), round(np.std(losses), 4)))
 

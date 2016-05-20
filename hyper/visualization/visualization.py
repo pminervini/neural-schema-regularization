@@ -21,6 +21,6 @@ import numpy as np
 
 if __name__ == '__main__':
     data = np.random.randn(50, 100)
-    hd = HintonDiagram()
+    hd = HintonDiagram(is_terminal=False)
     print(hd(data))
 

@@ -60,6 +60,20 @@ def dot_product(x, y, axis=1):
     return K.sum(x * y, axis=axis)
 
 
+def absolute_dot_product(x, y, axis=1):
+    """
+    Dot Product.
+
+    .. math:: L = \\sum_i x_i y_i
+
+    :param x: First term.
+    :param y: Second term.
+    :param axis: Axis.
+    :return: Similarity Value.
+    """
+    return K.sum(K.abs(x) * K.abs(y), axis=axis)
+
+
 def cosine_similarity(x, y, axis=1):
     """
     Cosine Similarity
@@ -81,6 +95,7 @@ l1 = L1 = negative_l1_distance
 l2 = L2 = negative_l2_distance
 l2sqr = L2SQR = negative_square_l2_distance
 dot = DOT = dot_product
+absdot = ABSDOT = absolute_dot_product
 cosine = COSINE = cosine_similarity
 
 
