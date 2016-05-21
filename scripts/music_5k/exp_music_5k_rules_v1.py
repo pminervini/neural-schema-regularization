@@ -27,14 +27,14 @@ def to_command(c):
               " --model %s" \
               " --similarity %s" \
               " --margin %s" \
-              " --entity-embedding-size %s --predicate-embedding-size %s" \
+              " --entity-embedding-size %s" \
               " --rules ./data/music_5k/rules/music_5k-rules.json.gz" \
               " --rules-threshold %s" \
               " --sample-facts %s" \
               " --rules-lambda %s" \
               % (c['epochs'], c['optimizer'], c['lr'], c['batches'],
                  c['model'], c['similarity'], c['margin'],
-                 c['embedding_size'], c['embedding_size'],
+                 c['embedding_size'],
                  c['rules_threshold'], c['sample_facts'], c['rules_lambda'])
     return command
 
