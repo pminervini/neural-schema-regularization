@@ -1,0 +1,79 @@
+Using Theano backend.
+INFO:root:Acquiring data/wn18/wordnet-mlj12-train.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-valid.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-test.txt ..
+INFO:root:Samples: 141442, no. batches: 10 -> batch size: 14145
+INFO:root:Epoch no. 1 of 500 (samples: 141442)
+INFO:root:Loss: 1.3276 +/- 0.0053
+INFO:root:Epoch no. 2 of 500 (samples: 141442)
+INFO:root:Loss: 1.2459 +/- 0.022
+INFO:root:Epoch no. 3 of 500 (samples: 141442)
+INFO:root:Loss: 1.1102 +/- 0.0342
+INFO:root:Epoch no. 4 of 500 (samples: 141442)
+INFO:root:Loss: 0.9357 +/- 0.0403
+INFO:root:Epoch no. 5 of 500 (samples: 141442)
+INFO:root:Loss: 0.7452 +/- 0.041
+INFO:root:Epoch no. 6 of 500 (samples: 141442)
+INFO:root:Loss: 0.5685 +/- 0.0311
+INFO:root:Epoch no. 7 of 500 (samples: 141442)
+INFO:root:Loss: 0.428 +/- 0.0233
+INFO:root:Epoch no. 8 of 500 (samples: 141442)
+INFO:root:Loss: 0.3236 +/- 0.0151
+INFO:root:Epoch no. 9 of 500 (samples: 141442)
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function_module.py", line 859, in __call__
+    outputs = self.fn()
+MemoryError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "./bin/hyper-cli.py", line 324, in <module>
+    main(sys.argv[1:])
+  File "./bin/hyper-cli.py", line 293, in main
+    visualize=is_visualize)
+  File "/home/insight/.local/lib/python3.4/site-packages/hyper-0.0.1-py3.4.egg/hyper/learning/core.py", line 185, in pairwise_training
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/models.py", line 409, in fit
+    sample_weight=sample_weight)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/training.py", line 1052, in fit
+    callback_metrics=callback_metrics)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/training.py", line 790, in _fit_loop
+    outs = f(ins_batch)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/backend/theano_backend.py", line 518, in __call__
+    return self.function(*inputs)
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function_module.py", line 871, in __call__
+    storage_map=getattr(self.fn, 'storage_map', None))
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/link.py", line 314, in raise_with_op
+    reraise(exc_type, exc_value, exc_trace)
+  File "/usr/local/lib/python3.4/dist-packages/six.py", line 685, in reraise
+    raise value.with_traceback(tb)
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function_module.py", line 859, in __call__
+    outputs = self.fn()
+MemoryError: 
+Apply node that caused the error: Elemwise{mul,no_inplace}(Reshape{3}.0, Reshape{3}.0)
+Toposort index: 55
+Inputs types: [TensorType(float32, (False, False, True)), TensorType(float32, 3D)]
+Inputs shapes: [(42411, 200, 1), (42411, 200, 200)]
+Inputs strides: [(1600, 4, 4), (160000, 800, 4)]
+Inputs values: ['not shown', 'not shown']
+Outputs clients: [[Sum{axis=[1], acc_dtype=float64}(Elemwise{mul,no_inplace}.0)]]
+
+Backtrace when the node is created(use Theano flag traceback.limit=N to make it longer):
+  File "./bin/hyper-cli.py", line 293, in main
+    visualize=is_visualize)
+  File "/home/insight/.local/lib/python3.4/site-packages/hyper-0.0.1-py3.4.egg/hyper/learning/core.py", line 78, in pairwise_training
+    merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function, output_shape=lambda _: (None, 1))
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/topology.py", line 1116, in __init__
+    self.add_inbound_node(layers, node_indices, tensor_indices)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/topology.py", line 543, in add_inbound_node
+    Node.create_node(self, inbound_layers, node_indices, tensor_indices)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/topology.py", line 153, in create_node
+    output_tensors = to_list(outbound_layer.call(input_tensors, mask=input_masks))
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/topology.py", line 1193, in call
+    return self.mode(inputs, **arguments)
+  File "/home/insight/.local/lib/python3.4/site-packages/hyper-0.0.1-py3.4.egg/hyper/layers/core.py", line 28, in latent_distance_binary_merge_function
+    return merge_function(args, similarity=similarity_function)
+  File "/home/insight/.local/lib/python3.4/site-packages/hyper-0.0.1-py3.4.egg/hyper/layers/binary/merge_functions.py", line 186, in bilinear_merge_function
+    bilinear_transformation = (rx * rW).sum(1)
+
+HINT: Use the Theano flag 'exception_verbosity=high' for a debugprint and storage map footprint of this apply node.

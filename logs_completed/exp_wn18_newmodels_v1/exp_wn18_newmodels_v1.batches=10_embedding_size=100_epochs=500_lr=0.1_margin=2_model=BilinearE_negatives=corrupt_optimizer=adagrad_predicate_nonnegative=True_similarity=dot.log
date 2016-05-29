@@ -1,0 +1,129 @@
+Using Theano backend.
+INFO:root:Acquiring data/wn18/wordnet-mlj12-train.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-valid.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-test.txt ..
+INFO:root:Samples: 141442, no. batches: 10 -> batch size: 14145
+INFO:root:Epoch no. 1 of 500 (samples: 141442)
+INFO:root:Loss: 1.3265 +/- 0.0494
+INFO:root:Epoch no. 2 of 500 (samples: 141442)
+INFO:root:Loss: 1.0275 +/- 0.0806
+INFO:root:Epoch no. 3 of 500 (samples: 141442)
+INFO:root:Loss: 0.6739 +/- 0.0291
+INFO:root:Epoch no. 4 of 500 (samples: 141442)
+INFO:root:Loss: 0.4524 +/- 0.0142
+INFO:root:Epoch no. 5 of 500 (samples: 141442)
+INFO:root:Loss: 0.3074 +/- 0.0113
+INFO:root:Epoch no. 6 of 500 (samples: 141442)
+INFO:root:Loss: 0.2095 +/- 0.0051
+INFO:root:Epoch no. 7 of 500 (samples: 141442)
+INFO:root:Loss: 0.1484 +/- 0.003
+INFO:root:Epoch no. 8 of 500 (samples: 141442)
+INFO:root:Loss: 0.1095 +/- 0.0016
+INFO:root:Epoch no. 9 of 500 (samples: 141442)
+INFO:root:Loss: 0.084 +/- 0.0023
+INFO:root:Epoch no. 10 of 500 (samples: 141442)
+INFO:root:Loss: 0.0682 +/- 0.0015
+INFO:root:Epoch no. 11 of 500 (samples: 141442)
+INFO:root:Loss: 0.056 +/- 0.0008
+INFO:root:Epoch no. 12 of 500 (samples: 141442)
+INFO:root:Loss: 0.0477 +/- 0.0006
+INFO:root:Epoch no. 13 of 500 (samples: 141442)
+INFO:root:Loss: 0.0403 +/- 0.001
+INFO:root:Epoch no. 14 of 500 (samples: 141442)
+INFO:root:Loss: 0.0352 +/- 0.0008
+INFO:root:Epoch no. 15 of 500 (samples: 141442)
+INFO:root:Loss: 0.0323 +/- 0.0012
+INFO:root:Epoch no. 16 of 500 (samples: 141442)
+INFO:root:Loss: 0.0286 +/- 0.0014
+INFO:root:Epoch no. 17 of 500 (samples: 141442)
+INFO:root:Loss: 0.0258 +/- 0.0012
+INFO:root:Epoch no. 18 of 500 (samples: 141442)
+INFO:root:Loss: 0.0243 +/- 0.0008
+INFO:root:Epoch no. 19 of 500 (samples: 141442)
+INFO:root:Loss: 0.0221 +/- 0.0007
+INFO:root:Epoch no. 20 of 500 (samples: 141442)
+INFO:root:Loss: 0.0208 +/- 0.0007
+INFO:root:Epoch no. 21 of 500 (samples: 141442)
+INFO:root:Loss: 0.0192 +/- 0.0011
+INFO:root:Epoch no. 22 of 500 (samples: 141442)
+INFO:root:Loss: 0.0183 +/- 0.001
+INFO:root:Epoch no. 23 of 500 (samples: 141442)
+INFO:root:Loss: 0.0174 +/- 0.0009
+INFO:root:Epoch no. 24 of 500 (samples: 141442)
+INFO:root:Loss: 0.0159 +/- 0.0007
+INFO:root:Epoch no. 25 of 500 (samples: 141442)
+INFO:root:Loss: 0.0153 +/- 0.0007
+INFO:root:Epoch no. 26 of 500 (samples: 141442)
+INFO:root:Loss: 0.0144 +/- 0.0007
+INFO:root:Epoch no. 27 of 500 (samples: 141442)
+INFO:root:Loss: 0.0142 +/- 0.0008
+INFO:root:Epoch no. 28 of 500 (samples: 141442)
+INFO:root:Loss: 0.0137 +/- 0.0004
+INFO:root:Epoch no. 29 of 500 (samples: 141442)
+INFO:root:Loss: 0.0132 +/- 0.0006
+INFO:root:Epoch no. 30 of 500 (samples: 141442)
+INFO:root:Loss: 0.0125 +/- 0.0008
+INFO:root:Epoch no. 31 of 500 (samples: 141442)
+INFO:root:Loss: 0.0115 +/- 0.0003
+INFO:root:Epoch no. 32 of 500 (samples: 141442)
+INFO:root:Loss: 0.0115 +/- 0.0006
+INFO:root:Epoch no. 33 of 500 (samples: 141442)
+INFO:root:Loss: 0.0111 +/- 0.0003
+INFO:root:Epoch no. 34 of 500 (samples: 141442)
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function_module.py", line 859, in __call__
+    outputs = self.fn()
+MemoryError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "./bin/hyper-cli.py", line 324, in <module>
+    main(sys.argv[1:])
+  File "./bin/hyper-cli.py", line 293, in main
+    visualize=is_visualize)
+  File "/home/insight/.local/lib/python3.4/site-packages/hyper-0.0.1-py3.4.egg/hyper/learning/core.py", line 185, in pairwise_training
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/models.py", line 409, in fit
+    sample_weight=sample_weight)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/training.py", line 1052, in fit
+    callback_metrics=callback_metrics)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/training.py", line 790, in _fit_loop
+    outs = f(ins_batch)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/backend/theano_backend.py", line 518, in __call__
+    return self.function(*inputs)
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function_module.py", line 871, in __call__
+    storage_map=getattr(self.fn, 'storage_map', None))
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/link.py", line 314, in raise_with_op
+    reraise(exc_type, exc_value, exc_trace)
+  File "/usr/local/lib/python3.4/dist-packages/six.py", line 685, in reraise
+    raise value.with_traceback(tb)
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function_module.py", line 859, in __call__
+    outputs = self.fn()
+MemoryError: 
+Apply node that caused the error: AdvancedSubtensor1(embedding_1_W, Reshape{1}.0)
+Toposort index: 19
+Inputs types: [TensorType(float32, matrix), TensorType(int32, vector)]
+Inputs shapes: [(19, 10000), (42435,)]
+Inputs strides: [(40000, 4), (4,)]
+Inputs values: ['not shown', 'not shown']
+Outputs clients: [[Reshape{3}(AdvancedSubtensor1.0, MakeVector{dtype='int64'}.0)]]
+
+Backtrace when the node is created(use Theano flag traceback.limit=N to make it longer):
+  File "/home/insight/.local/lib/python3.4/site-packages/hyper-0.0.1-py3.4.egg/hyper/learning/core.py", line 56, in pairwise_training
+    predicate_encoder.add(predicate_embedding_layer)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/models.py", line 114, in add
+    layer.create_input_layer(batch_input_shape, input_dtype)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/topology.py", line 341, in create_input_layer
+    self(x)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/topology.py", line 485, in __call__
+    self.add_inbound_node(inbound_layers, node_indices, tensor_indices)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/topology.py", line 543, in add_inbound_node
+    Node.create_node(self, inbound_layers, node_indices, tensor_indices)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/topology.py", line 148, in create_node
+    output_tensors = to_list(outbound_layer.call(input_tensors[0], mask=input_masks[0]))
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/layers/embeddings.py", line 135, in call
+    out = K.gather(W, x)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/backend/theano_backend.py", line 166, in gather
+    return reference[indices]
+
+HINT: Use the Theano flag 'exception_verbosity=high' for a debugprint and storage map footprint of this apply node.

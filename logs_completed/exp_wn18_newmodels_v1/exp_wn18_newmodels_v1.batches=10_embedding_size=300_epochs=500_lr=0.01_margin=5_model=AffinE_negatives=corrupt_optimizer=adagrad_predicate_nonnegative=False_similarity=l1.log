@@ -1,0 +1,53 @@
+Using Theano backend.
+INFO:root:Acquiring data/wn18/wordnet-mlj12-train.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-valid.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-test.txt ..
+INFO:root:Samples: 141442, no. batches: 10 -> batch size: 14145
+INFO:root:Epoch no. 1 of 500 (samples: 141442)
+Traceback (most recent call last):
+  File "./bin/hyper-cli.py", line 324, in <module>
+    main(sys.argv[1:])
+  File "./bin/hyper-cli.py", line 293, in main
+    visualize=is_visualize)
+  File "/home/insight/.local/lib/python3.4/site-packages/hyper-0.0.1-py3.4.egg/hyper/learning/core.py", line 185, in pairwise_training
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/models.py", line 409, in fit
+    sample_weight=sample_weight)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/training.py", line 1037, in fit
+    self._make_train_function()
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/training.py", line 670, in _make_train_function
+    **self._function_kwargs)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/backend/theano_backend.py", line 528, in function
+    return Function(inputs, outputs, updates=updates, **kwargs)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/backend/theano_backend.py", line 514, in __init__
+    **kwargs)
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function.py", line 320, in function
+    output_keys=output_keys)
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/pfunc.py", line 479, in pfunc
+    output_keys=output_keys)
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function_module.py", line 1777, in orig_function
+    defaults)
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function_module.py", line 1641, in create
+    input_storage=input_storage_lists, storage_map=storage_map)
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/link.py", line 690, in make_thunk
+    storage_map=storage_map)[:3]
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/vm.py", line 1003, in make_all
+    no_recycling))
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/op.py", line 970, in make_thunk
+    no_recycling)
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/op.py", line 879, in make_c_thunk
+    output_storage=node_output_storage)
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/cc.py", line 1200, in make_thunk
+    keep_lock=keep_lock)
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/cc.py", line 1143, in __compile__
+    keep_lock=keep_lock)
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/cc.py", line 1595, in cthunk_factory
+    key=key, lnk=self, keep_lock=keep_lock)
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/cmodule.py", line 1101, in module_from_key
+    module = self._get_from_key(key)
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/cmodule.py", line 1000, in _get_from_key
+    return self._get_module(name)
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/cmodule.py", line 674, in _get_module
+    self.module_from_name[name] = dlimport(name)
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/cmodule.py", line 299, in dlimport
+    rval = __import__(module_name, {}, {}, [module_name])
+ImportError: /home/insight/.theano/compiledir_Linux-3.13--generic-x86_64-with-Ubuntu-14.04-trusty-x86_64-3.4.3-64/tmp699aqb04/mefff5d42314f3c67a9469e7b9833fc50.so: failed to map segment from shared object: Cannot allocate memory

@@ -1,0 +1,46 @@
+Using Theano backend.
+INFO:root:Acquiring data/wn18/wordnet-mlj12-train.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-valid.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-test.txt ..
+INFO:root:Samples: 141442, no. batches: 10 -> batch size: 14145
+INFO:root:Epoch no. 1 of 500 (samples: 141442)
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function_module.py", line 859, in __call__
+    outputs = self.fn()
+MemoryError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "./bin/hyper-cli.py", line 324, in <module>
+    main(sys.argv[1:])
+  File "./bin/hyper-cli.py", line 293, in main
+    visualize=is_visualize)
+  File "/home/insight/.local/lib/python3.4/site-packages/hyper-0.0.1-py3.4.egg/hyper/learning/core.py", line 185, in pairwise_training
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/models.py", line 409, in fit
+    sample_weight=sample_weight)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/training.py", line 1052, in fit
+    callback_metrics=callback_metrics)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/training.py", line 790, in _fit_loop
+    outs = f(ins_batch)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/backend/theano_backend.py", line 518, in __call__
+    return self.function(*inputs)
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function_module.py", line 871, in __call__
+    storage_map=getattr(self.fn, 'storage_map', None))
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/link.py", line 314, in raise_with_op
+    reraise(exc_type, exc_value, exc_trace)
+  File "/usr/local/lib/python3.4/dist-packages/six.py", line 685, in reraise
+    raise value.with_traceback(tb)
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function_module.py", line 859, in __call__
+    outputs = self.fn()
+MemoryError: 
+Apply node that caused the error: Elemwise{mul}(InplaceDimShuffle{0,x,1}.0, Reshape{3}.0)
+Toposort index: 113
+Inputs types: [TensorType(float32, (False, True, False)), TensorType(float32, (False, False, True))]
+Inputs shapes: [(42435, 1, 50), (42435, 50, 1)]
+Inputs strides: [(200, 200, 4), (400, 4, 4)]
+Inputs values: ['not shown', 'not shown']
+Outputs clients: [[Reshape{2}(Elemwise{mul}.0, MakeVector{dtype='int64'}.0)]]
+
+HINT: Re-running with most Theano optimization disabled could give you a back-trace of when this node was created. This can be done with by setting the Theano flag 'optimizer=fast_compile'. If that does not work, Theano optimizations can be disabled with 'optimizer=None'.
+HINT: Use the Theano flag 'exception_verbosity=high' for a debugprint and storage map footprint of this apply node.

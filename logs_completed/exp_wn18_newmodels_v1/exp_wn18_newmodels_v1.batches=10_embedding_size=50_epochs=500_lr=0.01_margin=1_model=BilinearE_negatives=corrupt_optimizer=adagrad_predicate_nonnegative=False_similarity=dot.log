@@ -1,0 +1,131 @@
+Using Theano backend.
+INFO:root:Acquiring data/wn18/wordnet-mlj12-train.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-valid.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-test.txt ..
+INFO:root:Samples: 141442, no. batches: 10 -> batch size: 14145
+INFO:root:Epoch no. 1 of 500 (samples: 141442)
+INFO:root:Loss: 0.6638 +/- 0.0023
+INFO:root:Epoch no. 2 of 500 (samples: 141442)
+INFO:root:Loss: 0.633 +/- 0.0057
+INFO:root:Epoch no. 3 of 500 (samples: 141442)
+INFO:root:Loss: 0.6006 +/- 0.0073
+INFO:root:Epoch no. 4 of 500 (samples: 141442)
+INFO:root:Loss: 0.5626 +/- 0.0081
+INFO:root:Epoch no. 5 of 500 (samples: 141442)
+INFO:root:Loss: 0.5211 +/- 0.0091
+INFO:root:Epoch no. 6 of 500 (samples: 141442)
+INFO:root:Loss: 0.4766 +/- 0.0092
+INFO:root:Epoch no. 7 of 500 (samples: 141442)
+INFO:root:Loss: 0.4307 +/- 0.0099
+INFO:root:Epoch no. 8 of 500 (samples: 141442)
+INFO:root:Loss: 0.386 +/- 0.0096
+INFO:root:Epoch no. 9 of 500 (samples: 141442)
+INFO:root:Loss: 0.3442 +/- 0.0081
+INFO:root:Epoch no. 10 of 500 (samples: 141442)
+INFO:root:Loss: 0.3055 +/- 0.0075
+INFO:root:Epoch no. 11 of 500 (samples: 141442)
+INFO:root:Loss: 0.2718 +/- 0.0056
+INFO:root:Epoch no. 12 of 500 (samples: 141442)
+INFO:root:Loss: 0.2424 +/- 0.0051
+INFO:root:Epoch no. 13 of 500 (samples: 141442)
+INFO:root:Loss: 0.2173 +/- 0.0049
+INFO:root:Epoch no. 14 of 500 (samples: 141442)
+INFO:root:Loss: 0.1955 +/- 0.0039
+INFO:root:Epoch no. 15 of 500 (samples: 141442)
+INFO:root:Loss: 0.1764 +/- 0.0037
+INFO:root:Epoch no. 16 of 500 (samples: 141442)
+INFO:root:Loss: 0.1607 +/- 0.0033
+INFO:root:Epoch no. 17 of 500 (samples: 141442)
+INFO:root:Loss: 0.1466 +/- 0.0021
+INFO:root:Epoch no. 18 of 500 (samples: 141442)
+INFO:root:Loss: 0.1345 +/- 0.0024
+INFO:root:Epoch no. 19 of 500 (samples: 141442)
+INFO:root:Loss: 0.1237 +/- 0.0018
+INFO:root:Epoch no. 20 of 500 (samples: 141442)
+INFO:root:Loss: 0.1143 +/- 0.002
+INFO:root:Epoch no. 21 of 500 (samples: 141442)
+INFO:root:Loss: 0.1058 +/- 0.0011
+INFO:root:Epoch no. 22 of 500 (samples: 141442)
+INFO:root:Loss: 0.0984 +/- 0.0013
+INFO:root:Epoch no. 23 of 500 (samples: 141442)
+INFO:root:Loss: 0.0919 +/- 0.0011
+INFO:root:Epoch no. 24 of 500 (samples: 141442)
+INFO:root:Loss: 0.0864 +/- 0.001
+INFO:root:Epoch no. 25 of 500 (samples: 141442)
+INFO:root:Loss: 0.0806 +/- 0.001
+INFO:root:Epoch no. 26 of 500 (samples: 141442)
+INFO:root:Loss: 0.0764 +/- 0.0009
+INFO:root:Epoch no. 27 of 500 (samples: 141442)
+INFO:root:Loss: 0.072 +/- 0.0011
+INFO:root:Epoch no. 28 of 500 (samples: 141442)
+INFO:root:Loss: 0.0681 +/- 0.0011
+INFO:root:Epoch no. 29 of 500 (samples: 141442)
+INFO:root:Loss: 0.0649 +/- 0.0011
+INFO:root:Epoch no. 30 of 500 (samples: 141442)
+INFO:root:Loss: 0.0615 +/- 0.0011
+INFO:root:Epoch no. 31 of 500 (samples: 141442)
+INFO:root:Loss: 0.0585 +/- 0.0009
+INFO:root:Epoch no. 32 of 500 (samples: 141442)
+INFO:root:Loss: 0.056 +/- 0.0009
+INFO:root:Epoch no. 33 of 500 (samples: 141442)
+INFO:root:Loss: 0.0532 +/- 0.001
+INFO:root:Epoch no. 34 of 500 (samples: 141442)
+INFO:root:Loss: 0.0509 +/- 0.001
+INFO:root:Epoch no. 35 of 500 (samples: 141442)
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function_module.py", line 859, in __call__
+    outputs = self.fn()
+MemoryError: alloc failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "./bin/hyper-cli.py", line 324, in <module>
+    main(sys.argv[1:])
+  File "./bin/hyper-cli.py", line 293, in main
+    visualize=is_visualize)
+  File "/home/insight/.local/lib/python3.4/site-packages/hyper-0.0.1-py3.4.egg/hyper/learning/core.py", line 185, in pairwise_training
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/models.py", line 409, in fit
+    sample_weight=sample_weight)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/training.py", line 1052, in fit
+    callback_metrics=callback_metrics)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/engine/training.py", line 790, in _fit_loop
+    outs = f(ins_batch)
+  File "/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.3-py3.4.egg/keras/backend/theano_backend.py", line 518, in __call__
+    return self.function(*inputs)
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function_module.py", line 871, in __call__
+    storage_map=getattr(self.fn, 'storage_map', None))
+  File "/usr/local/lib/python3.4/dist-packages/theano/gof/link.py", line 314, in raise_with_op
+    reraise(exc_type, exc_value, exc_trace)
+  File "/usr/local/lib/python3.4/dist-packages/six.py", line 685, in reraise
+    raise value.with_traceback(tb)
+  File "/usr/local/lib/python3.4/dist-packages/theano/compile/function_module.py", line 859, in __call__
+    outputs = self.fn()
+MemoryError: alloc failed
+Apply node that caused the error: Alloc(TensorConstant{(1, 1, 1) of 0.0}, Elemwise{Composite{Switch(EQ(i0, i1), i2, i0)}}[(0, 2)].0, Elemwise{Composite{Switch(EQ(i0, i1), ((i2 * i3 * i0) // (-(i3 * i0 * i2))), i0)}}.0, Elemwise{Composite{Switch(EQ(i0, i1), i2, i0)}}.0)
+Toposort index: 41
+Inputs types: [TensorType(float32, (True, True, True)), TensorType(int64, scalar), TensorType(int64, scalar), TensorType(int64, scalar)]
+Inputs shapes: [(1, 1, 1), (), (), ()]
+Inputs strides: [(4, 4, 4), (), (), ()]
+Inputs values: [array([[[ 0.]]], dtype=float32), array(42435), array(1), array(2500)]
+Outputs clients: [[IncSubtensor{InplaceInc;::, int64, ::}(Alloc.0, Reshape{2}.0, Constant{0})]]
+
+Backtrace when the node is created(use Theano flag traceback.limit=N to make it longer):
+  File "/usr/local/lib/python3.4/dist-packages/theano/gradient.py", line 1279, in access_grad_cache
+    term = access_term_cache(node)[idx]
+  File "/usr/local/lib/python3.4/dist-packages/theano/gradient.py", line 973, in access_term_cache
+    output_grads = [access_grad_cache(var) for var in node.outputs]
+  File "/usr/local/lib/python3.4/dist-packages/theano/gradient.py", line 973, in <listcomp>
+    output_grads = [access_grad_cache(var) for var in node.outputs]
+  File "/usr/local/lib/python3.4/dist-packages/theano/gradient.py", line 1279, in access_grad_cache
+    term = access_term_cache(node)[idx]
+  File "/usr/local/lib/python3.4/dist-packages/theano/gradient.py", line 973, in access_term_cache
+    output_grads = [access_grad_cache(var) for var in node.outputs]
+  File "/usr/local/lib/python3.4/dist-packages/theano/gradient.py", line 973, in <listcomp>
+    output_grads = [access_grad_cache(var) for var in node.outputs]
+  File "/usr/local/lib/python3.4/dist-packages/theano/gradient.py", line 1279, in access_grad_cache
+    term = access_term_cache(node)[idx]
+  File "/usr/local/lib/python3.4/dist-packages/theano/gradient.py", line 1113, in access_term_cache
+    input_grads = node.op.grad(inputs, new_output_grads)
+
+HINT: Use the Theano flag 'exception_verbosity=high' for a debugprint and storage map footprint of this apply node.
