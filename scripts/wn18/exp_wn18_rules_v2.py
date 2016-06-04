@@ -27,15 +27,13 @@ def to_command(c):
               " --model %s" \
               " --similarity %s" \
               " --margin %s" \
-              " --entity-embedding-size %s --predicate-embedding-size %s" \
+              " --entity-embedding-size %s" \
               " --rules ./data/wn18/rules/wn18-rules.json.gz" \
               " --rules-top %s" \
               " --sample-facts %s" \
               " --rules-lambda %s" \
-              % (c['epochs'], c['optimizer'], c['lr'], c['batches'],
-                 c['model'], c['similarity'], c['margin'],
-                 c['embedding_size'], c['embedding_size'],
-                 c['rules_top'], c['sample_facts'], c['rules_lambda'])
+              % (c['epochs'], c['optimizer'], c['lr'], c['batches'], c['model'], c['similarity'], c['margin'],
+                 c['embedding_size'], c['rules_top'], c['sample_facts'], c['rules_lambda'])
     return command
 
 
@@ -49,7 +47,7 @@ hyperparameters_space = dict(
     optimizer=['adagrad'],
     lr=[.1],
     batches=[10],
-    model=['TransE', 'ScalE'],
+    model=['TransE', 'ScalE', 'ScalTransE'],
     similarity=['l1', 'l2', 'dot'],
     margin=[1],
     embedding_size=[20, 50, 100, 200],

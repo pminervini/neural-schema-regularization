@@ -14,6 +14,9 @@ setup(name='hyper',
       license='MIT',
       install_requires=[
           'keras>=1.0',
+          'h5py>=2.6.0',
+          'scikit-learn>=0.16.0',
+
           'requests>=2.8.1',
           'terminaltables>=2.1.0',
           'colorclass>=2.2.0',

@@ -37,7 +37,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
         predicate_embedding_size = entity_embedding_size
         if model_name in ['ManifoldESphere']:
             predicate_embedding_size = entity_embedding_size + 1
-        if model_name in ['DAffinE', 'ConcatE', 'DualTransE', 'DualScalE']:
+        if model_name in ['DAffinE', 'ConcatE', 'DualTransE', 'DualScalE', 'ScalTransE']:
             predicate_embedding_size = entity_embedding_size * 2
         if model_name in ['ManifoldEHyperplane']:
             predicate_embedding_size = (entity_embedding_size * 2) + 1
@@ -71,7 +71,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
     setattr(core, 'similarity function', similarity_name)
     setattr(core, 'merge function', model_name)
 
-    if model_name in ['TransE', 'DualTransE', 'ScalE', 'DualScalE', 'DAffinE', 'DualDAffinE',
+    if model_name in ['TransE', 'DualTransE', 'ScalE', 'DualScalE', 'DAffinE', 'DualDAffinE', 'ScalTransE',
                       'ConcatE', 'HolE', 'ManifoldESphere', 'ManifoldEHyperplane',
                       'BilinearE', 'DualBilinearE', 'RESCAL', 'DualRESCAL', 'AffinE', 'DualAffinE']:
         merge_function = core.latent_distance_binary_merge_function
@@ -143,11 +143,8 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
 
     nb_sample_sets = negative_samples_generator.nb_sample_sets + 1
 
-    def loss(y_true, y_pred):
-        loss_kwargs = dict(
-            y_true=y_true, y_pred=y_pred,
-            nb_sample_sets=nb_sample_sets,
-            margin=margin)
+    def loss(y_true, y_predicted):
+        loss_kwargs = dict(y_true=y_true, y_pred=y_predicted, nb_sample_sets=nb_sample_sets, margin=margin)
         ranking_loss = getattr(ranking_objectives, loss_name)
         return ranking_loss(**loss_kwargs)
 
@@ -189,7 +186,8 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
         if visualize is True:
             hinton_diagram = visualization.HintonDiagram()
             W_emb = predicate_embedding_layer.trainable_weights[0].get_value()
-            print('Embedding dimensions: %s' % str(W_emb.shape))
+            print('Embedding dimensions: %s - Max value: %s, Min value: %s'
+                  % (str(W_emb.shape), np.max(W_emb), np.min(W_emb)))
             print(hinton_diagram(W_emb))
 
         logging.info('Loss: %s +/- %s' % (round(np.mean(losses), 4), round(np.std(losses), 4)))

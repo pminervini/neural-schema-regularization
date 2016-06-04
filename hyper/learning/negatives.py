@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from abc import ABCMeta, abstractmethod, abstractproperty
-
 import numpy as np
-
 from hyper.learning import util
 
+import sys
 import logging
 
 
@@ -225,3 +224,12 @@ class BernoulliNegativeSamplesGenerator(NegativeSamplesGenerator):
     @property
     def nb_sample_sets(self):
         return self._nb_sample_sets
+
+
+def get_function(function_name):
+    this_module = sys.modules[__name__]
+    if hasattr(this_module, function_name):
+        function = getattr(this_module, function_name)
+    else:
+        raise ValueError("Unknown negative sampling function: %s" % function_name)
+    return function

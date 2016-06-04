@@ -15,9 +15,10 @@ def loss(a, b, f):
 
 class TestObjectives(unittest.TestCase):
     nb_samples = 100
+    rs = None
 
     def setUp(self):
-        pass
+        self.rs = np.random.RandomState(0)
 
     def test_objectives(self):
         for loss_f in [objectives.MSE, objectives.RMSE, objectives.MAE, objectives.MAPE, objectives.MSLE,
@@ -35,8 +36,8 @@ class TestObjectives(unittest.TestCase):
                 self.assertTrue(d > s)
 
     def test_mse(self):
-        p_values = np.random.rand(1024)
-        t_values = np.random.randint(0, 2, 1024)
+        p_values = self.rs.rand(1024)
+        t_values = self.rs.randint(0, 2, 1024)
 
         loss_f = objectives.MSE
 
@@ -47,8 +48,8 @@ class TestObjectives(unittest.TestCase):
             self.assertTrue(abs(function([[t], [p]])[0] - ((t - p) ** 2)) < 1e-6)
 
     def test_rmse(self):
-        p_values = np.random.rand(1024)
-        t_values = np.random.randint(0, 2, 1024)
+        p_values = self.rs.rand(1024)
+        t_values = self.rs.randint(0, 2, 1024)
 
         loss_f = objectives.RMSE
 
@@ -59,8 +60,8 @@ class TestObjectives(unittest.TestCase):
             self.assertTrue(abs(function([[t], [p]])[0] - math.sqrt((t - p) ** 2)) < 1e-6)
 
     def test_mae(self):
-        p_values = np.random.rand(1024)
-        t_values = np.random.randint(0, 2, 1024)
+        p_values = self.rs.rand(1024)
+        t_values = self.rs.randint(0, 2, 1024)
 
         loss_f = objectives.RMSE
 
@@ -71,8 +72,8 @@ class TestObjectives(unittest.TestCase):
             self.assertTrue(abs(function([[t], [p]])[0] - abs(t - p)) < 1e-6)
 
     def test_bc(self):
-        p_values = np.random.rand(1024)
-        t_values = np.random.randint(0, 2, 1024)
+        p_values = self.rs.rand(1024)
+        t_values = self.rs.randint(0, 2, 1024)
 
         loss_f = objectives.BC
 
@@ -82,7 +83,7 @@ class TestObjectives(unittest.TestCase):
         for p, t in zip(p_values, t_values):
             cp = np.clip(p, 10e-8, 1.0 - 10e-8)
             bc = - (t * math.log(cp) + (1. - t) * math.log(1. - cp))
-            self.assertTrue(abs(function([[t], [p]])[0] - bc) < 1e-4)
+            self.assertTrue(abs(function([[t], [p]])[0] - bc) < 1e-2)
 
 if __name__ == '__main__':
     unittest.main()

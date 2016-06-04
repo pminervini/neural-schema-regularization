@@ -5,8 +5,9 @@ import numpy as np
 
 from hyper.parsing import knowledgebase
 from hyper import optimizers
-from hyper.regularizers import L1, L2, GroupRegularizer, TranslationRuleRegularizer, ScalingRuleRegularizer,\
-    DiagonalAffineRuleRegularizer
+
+from hyper.regularizers import L1, L2, GroupRegularizer, TranslationRuleRegularizer, DualTranslationRuleRegularizer,\
+    ScalingRuleRegularizer, DualScalingRuleRegularizer, ScalingTranslationRuleRegularizer, DiagonalAffineRuleRegularizer
 
 from keras.constraints import nonneg
 
@@ -141,7 +142,7 @@ def main(argv):
     argparser.add_argument('--optimizer-beta2', action='store', type=float, default=0.999,
                            help='Beta2 parameter for the adam and adamax optimizers')
 
-    argparser.add_argument('--tensorflow', '--tf', action='store_true', help='Uses TensorFlow')
+    argparser.add_argument('--tensorflow', '--tf', action='store_true', help='Use TensorFlow')
 
     argparser.add_argument('--save', action='store', type=str, default=None,
                            help='Where to save the trained model')
@@ -219,10 +220,9 @@ def main(argv):
         path_ranking_client = PathRankingClient(url_or_path=rules)
         pfw_triples = path_ranking_client.request(None, threshold=.0, top_k=rules_top_k)
 
-        model_to_regularizer = dict(
-            TransE=TranslationRuleRegularizer,
-            ScalE=ScalingRuleRegularizer,
-            DAffinE=DiagonalAffineRuleRegularizer)
+        model_to_regularizer = dict( TransE=TranslationRuleRegularizer, DualTransE=DualTranslationRuleRegularizer,
+            ScalE=ScalingRuleRegularizer, DualScalE=DualScalingRuleRegularizer, DAffinE=DiagonalAffineRuleRegularizer,
+            ScalTransE=ScalingTranslationRuleRegularizer)
 
         for rule_predicate, rule_feature, rule_weight in pfw_triples:
             if rules_threshold is None or rule_weight >= rules_threshold:
@@ -293,7 +293,17 @@ def main(argv):
                                        visualize=is_visualize)
 
     if args.save is not None:
-        pass
+        prefix = args.save
+
+        # Saving the weights of the model
+        model_path = '%s_weights.h5' % prefix
+        model.save_weights(model_path, overwrite=True)
+
+        # Saving the parser
+        import pickle
+        parser_path = '%s_parser.p' % prefix
+        with open(parser_path, 'wb') as f:
+            pickle.dump(parser, f)
 
     validation_sequences = parser.facts_to_sequences(validation_facts)
     test_sequences = parser.facts_to_sequences(test_facts)

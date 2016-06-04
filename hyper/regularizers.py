@@ -107,10 +107,19 @@ class GroupRegularizer(Regularizer):
 
 
 class RuleRegularizer(Regularizer):
-    def __init__(self, similarity=similarities.l2sqr, l=0., *args, **kwargs):
+    def __init__(self, similarity=similarities.l2sqr, l=0., entity_embedding_size=None, *args, **kwargs):
         self.similarity = similarity
         self.l = K.cast_to_floatx(l)
+        self.entity_embedding_size = entity_embedding_size
         self.uses_learning_phase = True
+
+    @property
+    def entity_embedding_size(self):
+        return self._entity_embedding_size
+
+    @entity_embedding_size.setter
+    def entity_embedding_size(self, entity_embedding_size):
+        self._entity_embedding_size = entity_embedding_size
 
     def set_param(self, p):
         self.p = p
@@ -121,7 +130,9 @@ class RuleRegularizer(Regularizer):
             yield None
 
     def get_config(self):
-        return {"similarity": self.similarity.__name__, "l": self.l}
+        return {"similarity": self.similarity.__name__,
+                "entity_embedding_size": self.entity_embedding_size,
+                "l": self.l}
 
 
 class TranslationRuleRegularizer(RuleRegularizer):
@@ -152,6 +163,9 @@ class TranslationRuleRegularizer(RuleRegularizer):
         return config
 
 
+DualTranslationRuleRegularizer = TranslationRuleRegularizer
+
+
 class ScalingRuleRegularizer(RuleRegularizer):
     def __init__(self, head, tail, *args, **kwargs):
         super(ScalingRuleRegularizer, self).__init__(*args, **kwargs)
@@ -165,7 +179,7 @@ class ScalingRuleRegularizer(RuleRegularizer):
         tail_embedding = None
 
         for hop, is_reversed in self.tail:
-            hop_embedding = (1. / self.p[hop, :] if is_reversed is True else self.p[hop, :])
+            hop_embedding = (1. / self.p[hop, :]) if is_reversed is True else self.p[hop, :]
             tail_embedding = hop_embedding if tail_embedding is None else (tail_embedding * hop_embedding)
 
         sim = K.reshape(self.similarity(head_embedding, tail_embedding, axis=-1), (1,))[0]
@@ -180,11 +194,47 @@ class ScalingRuleRegularizer(RuleRegularizer):
         return config
 
 
+DualScalingRuleRegularizer = ScalingRuleRegularizer
+
+
+class ScalingTranslationRuleRegularizer(RuleRegularizer):
+    def __init__(self, head, tail, *args, **kwargs):
+        super(ScalingTranslationRuleRegularizer, self).__init__(*args, **kwargs)
+        self.head, self.tail = head, tail
+
+    def __call__(self, loss):
+        if not hasattr(self, 'p'):
+            raise Exception('Need to call `set_param` on RuleRegularizer instance before calling the instance.')
+
+        head_embedding = self.p[self.head, :]
+        tail_embedding = None
+
+        N = self.entity_embedding_size
+
+        for hop, is_reversed in self.tail:
+            hop_embedding_scaling = (1. / self.p[hop, :N]) if is_reversed is True else self.p[hop, :N]
+            hop_embedding_translation = (- self.p[hop, N:]) if is_reversed is True else self.p[hop, N:]
+
+            hop_embedding = K.concatenate([hop_embedding_scaling, hop_embedding_translation], axis=0)
+
+            tail_embedding = hop_embedding if tail_embedding is None else (tail_embedding * hop_embedding)
+
+        sim = K.reshape(self.similarity(head_embedding, tail_embedding, axis=-1), (1,))[0]
+
+        regularized_loss = loss - sim * self.l
+        return K.in_train_phase(regularized_loss, loss)
+
+    def get_config(self):
+        sc = super(ScalingTranslationRuleRegularizer, self).get_config()
+        config = {"name": self.__class__.__name__}
+        config.update(sc)
+        return config
+
+
 class DiagonalAffineRuleRegularizer(RuleRegularizer):
     def __init__(self, head, tail, entity_embedding_size=None, *args, **kwargs):
         super(DiagonalAffineRuleRegularizer, self).__init__(*args, **kwargs)
         self.head, self.tail = head, tail
-        self.entity_embedding_size = entity_embedding_size
 
     def __call__(self, loss):
         if not hasattr(self, 'p'):

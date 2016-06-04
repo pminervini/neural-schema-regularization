@@ -28,7 +28,6 @@ def translating_merge_function(args, similarity):
 
     translation = subj + pred
     sim = K.reshape(similarity(translation, obj), (-1, 1))
-
     return sim
 
 
@@ -50,7 +49,6 @@ def dual_translating_merge_function(args, similarity):
     translation_obj = obj + pred_obj
 
     sim = K.reshape(similarity(translation_subj, translation_obj), (-1, 1))
-
     return sim
 
 
@@ -67,7 +65,6 @@ def scaling_merge_function(args, similarity):
 
     scaling = subj * pred
     sim = K.reshape(similarity(scaling, obj), (-1, 1))
-
     return sim
 
 
@@ -89,7 +86,26 @@ def dual_scaling_merge_function(args, similarity):
     scaling_obj = obj * pred_obj
 
     sim = K.reshape(similarity(scaling_subj, scaling_obj), (-1, 1))
+    return sim
 
+
+def scaling_translating_merge_function(args, similarity):
+    """
+    Keras Merge function for the Dual Scaling Embeddings model
+    :param args: List of two arguments: the former containing the relation embedding,
+        and the latter containing the two entity embeddings.
+    :param similarity: Similarity function.
+    :return: The similarity between the translated subject embedding, and the object embedding.
+    """
+    subj, pred, obj = to_triples(args)
+
+    n = subj.shape[1]
+    scaling = pred[:, :n]
+    translation = pred[:, n:]
+
+    transformation = (subj * scaling) + translation
+
+    sim = K.reshape(similarity(transformation, obj), (-1, 1))
     return sim
 
 
@@ -125,7 +141,6 @@ def diagonal_affine_merge_function(args, similarity):
 
     affine_transformation = (subj * pred[:, :n]) + pred[:, n:]
     sim = K.reshape(similarity(affine_transformation, obj), (-1, 1))
-
     return sim
 
 
@@ -147,7 +162,6 @@ def dual_diagonal_affine_merge_function(args, similarity):
     affine_transformation_obj = (subj * pred_obj[:, :n]) + pred_obj[:, n:]
 
     sim = K.reshape(similarity(affine_transformation_subj, affine_transformation_obj), (-1, 1))
-
     return sim
 
 
@@ -163,7 +177,6 @@ def concatenate_merge_function(args, similarity):
 
     concatenation = K.concatenate([subj, obj], axis=1)
     sim = K.reshape(similarity(concatenation, pred), (-1, 1))
-
     return sim
 
 
@@ -186,7 +199,6 @@ def bilinear_merge_function(args, similarity):
     bilinear_transformation = (rx * rW).sum(1)
 
     sim = K.reshape(similarity(bilinear_transformation, obj), (-1, 1))
-
     return sim
 
 
@@ -217,7 +229,6 @@ def dual_bilinear_merge_function(args, similarity):
     bilinear_transformation_obj = (rx_obj * rW_obj).sum(1)
 
     sim = K.reshape(similarity(bilinear_transformation_subj, bilinear_transformation_obj), (-1, 1))
-
     return sim
 
 
@@ -243,7 +254,6 @@ def affine_merge_function(args, similarity):
     affine_transformation = (rx * rW).sum(1) + pred_b
 
     sim = K.reshape(similarity(affine_transformation, obj), (-1, 1))
-
     return sim
 
 
@@ -280,7 +290,6 @@ def dual_affine_merge_function(args, similarity):
     affine_transformation_obj = (rx_obj * rW_obj).sum(1) + pred_b_obj
 
     sim = K.reshape(similarity(affine_transformation_subj, affine_transformation_obj), (-1, 1))
-
     return sim
 
 
@@ -336,6 +345,7 @@ DualTransE = DualTranslatingEmbeddings = dual_translating_merge_function
 
 ScalE = ScalingEmbeddings = scaling_merge_function
 DualScalE = DualScalingEmbeddings = dual_scaling_merge_function
+ScalTransE = ScalingTranslatingEmbeddings = scaling_translating_merge_function
 
 HolE = HolographicEmbeddings = holographic_merge_function
 

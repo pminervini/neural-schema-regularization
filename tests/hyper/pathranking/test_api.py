@@ -15,7 +15,7 @@ class TestPathRankingAPI(unittest.TestCase):
     def test_friendship(self):
         client = PathRankingClient()
 
-        if client.is_up() and False:
+        if False: #client.is_up() and False:
             triples = [
                 ('Mark', 'friendOf', 'John'),
                 ('John', 'friendOf', 'Paul'),
@@ -34,7 +34,7 @@ class TestPathRankingAPI(unittest.TestCase):
     def test_friendship_file(self):
         client = PathRankingClient(url_or_path='data/friendship/rules/friendship.json')
 
-        if client.is_up():
+        if False: #client.is_up():
             pfw_triples = client.request(None, threshold=.0, top_k=50)
 
             for p, f, w in pfw_triples:
@@ -43,7 +43,7 @@ class TestPathRankingAPI(unittest.TestCase):
     def test_fb15k(self):
         client = PathRankingClient()
 
-        if client.is_up() and False:
+        if False: #client.is_up() and False:
             with open('data/fb15k/freebase_mtr100_mte100-train.txt', 'r') as f:
                 triples = [tuple(line.split()) for line in f]
 
@@ -55,7 +55,7 @@ class TestPathRankingAPI(unittest.TestCase):
     def test_fb15k_file(self):
         client = PathRankingClient(url_or_path='data/fb15k/rules/fb15k.json.gz')
 
-        if client.is_up():
+        if False: #client.is_up() and False:
             pfw_triples = client.request(None, threshold=.0, top_k=10)
 
             for p, f, w in pfw_triples:
@@ -70,7 +70,7 @@ class TestPathRankingAPI(unittest.TestCase):
     def test_wn18(self):
         client = PathRankingClient()
 
-        if client.is_up() and False:
+        if False: #client.is_up() and False:
             with open('data/wn18/wordnet-mlj12-train.txt', 'r') as f:
                 triples = [tuple(line.split()) for line in f]
 
