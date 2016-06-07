@@ -49,13 +49,13 @@ hyperparameters_space = dict(
     optimizer=['adagrad'],
     lr=[.1],
     batches=[10],
-    model=['TransE', 'ScalE', 'DAffinE'],
+    model=['TransE', 'ScalE', 'ScalTransE'],
     similarity=['l1', 'l2', 'dot'],
     margin=[1],
     embedding_size=[20, 50, 100, 200],
 
     rules_threshold=[.2, .5],
-    sample_facts=[.1, .3, .5, .7],
+    sample_facts=[.1, .3, .5, .7, .9, 1],
     rules_lambda=[.0, 10, 1000.]
 )
 
