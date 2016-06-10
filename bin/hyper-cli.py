@@ -7,7 +7,8 @@ from hyper.parsing import knowledgebase
 from hyper import optimizers
 
 from hyper.regularizers import L1, L2, GroupRegularizer, TranslationRuleRegularizer, DualTranslationRuleRegularizer,\
-    ScalingRuleRegularizer, DualScalingRuleRegularizer, ScalingTranslationRuleRegularizer, DiagonalAffineRuleRegularizer
+    ScalingRuleRegularizer, DualScalingRuleRegularizer, ScalingTranslationRuleRegularizer, ScalingEQRuleRegularizer,\
+    DiagonalAffineRuleRegularizer
 
 from keras.constraints import nonneg
 
@@ -220,8 +221,13 @@ def main(argv):
         path_ranking_client = PathRankingClient(url_or_path=rules)
         pfw_triples = path_ranking_client.request(None, threshold=.0, top_k=rules_top_k)
 
-        model_to_regularizer = dict( TransE=TranslationRuleRegularizer, DualTransE=DualTranslationRuleRegularizer,
-            ScalE=ScalingRuleRegularizer, DualScalE=DualScalingRuleRegularizer, DAffinE=DiagonalAffineRuleRegularizer,
+        model_to_regularizer = dict(
+            TransE=TranslationRuleRegularizer,
+            DualTransE=DualTranslationRuleRegularizer,
+            ScalE=ScalingRuleRegularizer,
+            ScalEQ=ScalingEQRuleRegularizer,
+            DualScalE=DualScalingRuleRegularizer,
+            DAffinE=DiagonalAffineRuleRegularizer,
             ScalTransE=ScalingTranslationRuleRegularizer)
 
         for rule_predicate, rule_feature, rule_weight in pfw_triples:

@@ -71,7 +71,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
     setattr(core, 'similarity function', similarity_name)
     setattr(core, 'merge function', model_name)
 
-    if model_name in ['TransE', 'DualTransE', 'ScalE', 'DualScalE', 'DAffinE', 'DualDAffinE', 'ScalTransE',
+    if model_name in ['TransE', 'DualTransE', 'ScalE', 'ScalEQ', 'DualScalE', 'DAffinE', 'DualDAffinE', 'ScalTransE',
                       'ConcatE', 'HolE', 'ManifoldESphere', 'ManifoldEHyperplane',
                       'BilinearE', 'DualBilinearE', 'RESCAL', 'DualRESCAL', 'AffinE', 'DualAffinE']:
         merge_function = core.latent_distance_binary_merge_function

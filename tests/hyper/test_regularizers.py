@@ -25,13 +25,13 @@ class TestRegularizers(unittest.TestCase):
         r = regularizers.TranslationRuleRegularizer([0], [(1, False), (2, False)], l=1.)
 
         model = Sequential()
-        embedding_layer = Embedding(input_dim=3, output_dim=10, input_length=3,
+        embedding_layer = Embedding(input_dim=3, output_dim=10, input_length=None,
                                     W_regularizer=r, W_constraint=constraints.NormConstraint(1.))
         model.add(embedding_layer)
 
         model.compile(loss=zero_loss, optimizer='adagrad')
 
-        X, y = np.zeros((32, 3)), np.zeros((32, 1, 1))
+        X, y = np.zeros((32, 3)), np.zeros((32, 1, 10))
         model.fit(X, y, batch_size=32, nb_epoch=10000, verbose=0)
 
         W = embedding_layer.trainable_weights[0].get_value()
@@ -53,7 +53,7 @@ class TestRegularizers(unittest.TestCase):
 
         model.compile(loss=zero_loss, optimizer='adagrad')
 
-        X, y = np.zeros((32, 3)), np.zeros((32, 1, 1))
+        X, y = np.zeros((32, 3)), np.zeros((32, 1, 10))
         model.fit(X, y, batch_size=32, nb_epoch=10000, verbose=0)
 
         W = embedding_layer.trainable_weights[0].get_value()
@@ -76,7 +76,7 @@ class TestRegularizers(unittest.TestCase):
 
         model.compile(loss=zero_loss, optimizer='adagrad')
 
-        X, y = np.zeros((32, 3)), np.zeros((32, 1, 1))
+        X, y = np.zeros((32, 3)), np.zeros((32, 1, 10))
         model.fit(X, y, batch_size=32, nb_epoch=100000, verbose=0)
 
         W = embedding_layer.trainable_weights[0].get_value()

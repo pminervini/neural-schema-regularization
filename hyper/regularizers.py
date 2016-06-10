@@ -194,6 +194,35 @@ class ScalingRuleRegularizer(RuleRegularizer):
         return config
 
 
+class ScalingEQRuleRegularizer(RuleRegularizer):
+    def __init__(self, head, tail, *args, **kwargs):
+        super(ScalingEQRuleRegularizer, self).__init__(*args, **kwargs)
+        self.head, self.tail = head, tail
+
+    def __call__(self, loss):
+        if not hasattr(self, 'p'):
+            raise Exception('Need to call `set_param` on RuleRegularizer instance before calling the instance.')
+
+        head_embedding = self.p[self.head, :]
+        tail_embedding = None
+
+        for hop, is_reversed in self.tail:
+            # hop_embedding = (1. / self.p[hop, :]) if is_reversed is True else self.p[hop, :]
+            hop_embedding = self.p[hop, :]
+            tail_embedding = hop_embedding if tail_embedding is None else (tail_embedding * hop_embedding)
+
+        sim = K.reshape(self.similarity(head_embedding, tail_embedding, axis=-1), (1,))[0]
+
+        regularized_loss = loss - sim * self.l
+        return K.in_train_phase(regularized_loss, loss)
+
+    def get_config(self):
+        sc = super(ScalingEQRuleRegularizer, self).get_config()
+        config = {"name": self.__class__.__name__}
+        config.update(sc)
+        return config
+
+
 DualScalingRuleRegularizer = ScalingRuleRegularizer
 
 
@@ -214,9 +243,7 @@ class ScalingTranslationRuleRegularizer(RuleRegularizer):
         for hop, is_reversed in self.tail:
             hop_embedding_scaling = (1. / self.p[hop, :N]) if is_reversed is True else self.p[hop, :N]
             hop_embedding_translation = (- self.p[hop, N:]) if is_reversed is True else self.p[hop, N:]
-
             hop_embedding = K.concatenate([hop_embedding_scaling, hop_embedding_translation], axis=0)
-
             tail_embedding = hop_embedding if tail_embedding is None else (tail_embedding * hop_embedding)
 
         sim = K.reshape(self.similarity(head_embedding, tail_embedding, axis=-1), (1,))[0]
@@ -232,7 +259,7 @@ class ScalingTranslationRuleRegularizer(RuleRegularizer):
 
 
 class DiagonalAffineRuleRegularizer(RuleRegularizer):
-    def __init__(self, head, tail, entity_embedding_size=None, *args, **kwargs):
+    def __init__(self, head, tail, *args, **kwargs):
         super(DiagonalAffineRuleRegularizer, self).__init__(*args, **kwargs)
         self.head, self.tail = head, tail
 
@@ -243,18 +270,28 @@ class DiagonalAffineRuleRegularizer(RuleRegularizer):
         head_embedding = self.p[self.head, :]
         tail_embedding = None
 
-        for hop, is_reversed in self.tail:
-            _scaling_hop = self.p[hop, self.entity_embedding_size:]
-            _translation_hop = self.p[hop, :self.entity_embedding_size]
+        N = self.entity_embedding_size
 
-            scaling_hop = (1. / _scaling_hop) if is_reversed is True else _scaling_hop
-            translation_hop = (- _translation_hop) if is_reversed is True else _translation_hop
+        for hop, is_reversed in self.tail:
+            # q(p(x)) =
+            #  = W_q (W_p x + b_p) + b_q
+            #  = (W_q W_p) x + (W_q b_p + b_q)
+
+            # W_q
+            hop_embedding_scaling = (1. / self.p[hop, :N]) if is_reversed is True else self.p[hop, :N]
+            # b_q
+            hop_embedding_translation = (- self.p[hop, N:]) if is_reversed is True else self.p[hop, N:]
 
             if tail_embedding is None:
-                tail_embedding = K.concatenate([scaling_hop, translation_hop], axis=0)
+                hop_embedding = K.concatenate([hop_embedding_scaling, hop_embedding_translation], axis=0)
+                tail_embedding = hop_embedding
             else:
-                tail_embedding[self.entity_embedding_size:] *= scaling_hop
-                tail_embedding[self.entity_embedding_size:] += translation_hop
+                # W_q W_p
+                tail_embedding_scaling = hop_embedding_scaling * tail_embedding[:N]
+                # W_q b_p + b_q
+                tail_embedding_translation = hop_embedding_scaling * tail_embedding[N:] + hop_embedding_translation
+
+                tail_embedding = K.concatenate([tail_embedding_scaling, tail_embedding_translation], axis=0)
 
         sim = K.reshape(self.similarity(head_embedding, tail_embedding, axis=-1), (1,))[0]
 
