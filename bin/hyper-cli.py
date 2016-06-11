@@ -16,6 +16,7 @@ from hyper.pathranking.api import PathRankingClient
 from hyper.evaluation import metrics
 
 import hyper.learning.core as learning
+import hyper.learning.robust as robust
 
 import sys
 import gzip
@@ -89,12 +90,13 @@ def main(argv):
                            help='Only show the rules with a score above the given threshold')
     argparser.add_argument('--rules-max-length', action='store', type=int, default=None,
                            help='Maximum (body) length for the considered rules')
-
     argparser.add_argument('--sample-facts', action='store', type=float, default=None,
                            help='Fraction of (randomly sampled) facts to use during training')
-
     argparser.add_argument('--rules-lambda', action='store', type=float, default=None,
                            help='Weight of the Rules-related regularization term')
+
+    # Robust ranking-related arguments
+    argparser.add_argument('--robust', action='store_true', help='Robust Ranking')
 
     argparser.add_argument('--model', action='store', type=str, default=None,
                            help='Name of the model to use')
@@ -283,20 +285,24 @@ def main(argv):
 
     train_sequences = parser.facts_to_sequences(train_facts)
 
-    model = learning.pairwise_training(train_sequences, nb_entities, nb_predicates, seed=seed,
-                                       entity_embedding_size=entity_embedding_size,
-                                       predicate_embedding_size=predicate_embedding_size,
+    pairwise_training = learning.pairwise_training
+    if args.robust is True:
+        pairwise_training = robust.pairwise_training
 
-                                       dropout_entity_embeddings=dropout_entity_embeddings,
-                                       dropout_predicate_embeddings=dropout_predicate_embeddings,
+    model = pairwise_training(train_sequences, nb_entities, nb_predicates, seed=seed,
+                              entity_embedding_size=entity_embedding_size,
+                              predicate_embedding_size=predicate_embedding_size,
 
-                                       model_name=model_name, similarity_name=similarity_name,
-                                       nb_epochs=nb_epochs, batch_size=batch_size, nb_batches=nb_batches, margin=margin,
-                                       loss_name=loss_name, negatives_name=negatives_name,
+                              dropout_entity_embeddings=dropout_entity_embeddings,
+                              dropout_predicate_embeddings=dropout_predicate_embeddings,
 
-                                       optimizer=optimizer, regularizer=regularizer,
-                                       predicate_constraint=predicate_constraint,
-                                       visualize=is_visualize)
+                              model_name=model_name, similarity_name=similarity_name,
+                              nb_epochs=nb_epochs, batch_size=batch_size, nb_batches=nb_batches, margin=margin,
+                              loss_name=loss_name, negatives_name=negatives_name,
+
+                              optimizer=optimizer, regularizer=regularizer,
+                              predicate_constraint=predicate_constraint,
+                              visualize=is_visualize)
 
     if args.save is not None:
         prefix = args.save

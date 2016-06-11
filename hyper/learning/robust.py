@@ -4,7 +4,6 @@ import math
 import numpy as np
 
 from keras.models import Sequential
-from keras.layers import SimpleRNN, GRU, LSTM
 from keras.layers.embeddings import Embedding
 from keras.layers.core import Merge, Dropout
 from keras.engine.training import make_batches
@@ -35,20 +34,6 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
 
     if predicate_embedding_size is None:
         predicate_embedding_size = entity_embedding_size
-        if model_name in ['ManifoldESphere']:
-            predicate_embedding_size = entity_embedding_size + 1
-        if model_name in ['DAffinE', 'ConcatE', 'DualTransE', 'DualScalE', 'ScalTransE']:
-            predicate_embedding_size = entity_embedding_size * 2
-        if model_name in ['ManifoldEHyperplane']:
-            predicate_embedding_size = (entity_embedding_size * 2) + 1
-        elif model_name in ['BilinearE', 'RESCAL']:
-            predicate_embedding_size = entity_embedding_size ** 2
-        elif model_name in ['DualBilinearE', 'DualRESCAL']:
-            predicate_embedding_size = (entity_embedding_size ** 2) * 2
-        elif model_name in ['AffinE']:
-            predicate_embedding_size = (entity_embedding_size ** 2) + entity_embedding_size
-        elif model_name in ['DualAffinE']:
-            predicate_embedding_size = ((entity_embedding_size ** 2) + entity_embedding_size) * 2
 
     predicate_embedding_layer = Embedding(input_dim=nb_predicates + 1, output_dim=predicate_embedding_size,
                                           input_length=None, init='glorot_uniform', W_regularizer=regularizer,
@@ -71,35 +56,11 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
     setattr(core, 'similarity function', similarity_name)
     setattr(core, 'merge function', model_name)
 
-    if model_name in ['TransE', 'DualTransE', 'ScalE', 'ScalEQ', 'DualScalE', 'DAffinE', 'DualDAffinE', 'ScalTransE',
-                      'ConcatE', 'HolE', 'ManifoldESphere', 'ManifoldEHyperplane',
-                      'BilinearE', 'DualBilinearE', 'RESCAL', 'DualRESCAL', 'AffinE', 'DualAffinE']:
+    if model_name in ['TransE', 'ScalE']:
         merge_function = core.latent_distance_binary_merge_function
         merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function, output_shape=lambda _: (None, 1))
         model.add(merge_layer)
 
-    elif model_name in ['rTransE', 'rScalE']:
-        merge_function = core.latent_distance_nary_merge_function
-
-        merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function, output_shape=lambda _: (None, 1))
-        model.add(merge_layer)
-
-    elif model_name in ['RNN', 'iRNN', 'GRU', 'LSTM']:
-        name_to_layer_class = dict(RNN=SimpleRNN, GRU=GRU, LSTM=LSTM)
-        if model_name == 'iRNN':
-            recurrent_layer = SimpleRNN(output_dim=predicate_embedding_size, return_sequences=False,
-                                        init='normal', inner_init='identity', activation='relu')
-        elif model_name in name_to_layer_class:
-            layer_class = name_to_layer_class[model_name]
-            recurrent_layer = layer_class(output_dim=predicate_embedding_size, return_sequences=False)
-        else:
-            raise ValueError('Unknown recurrent layer: %s' % model_name)
-        entity_encoder.add(recurrent_layer)
-
-        merge_function = core.similarity_merge_function
-
-        merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function, output_shape=lambda _: (None, 1))
-        model.add(merge_layer)
     else:
         raise ValueError('Unknown model name: %s' % model_name)
 
@@ -176,10 +137,12 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
                 train_Xr_batch[i::nb_sample_sets, :] = _Xr[batch_start:batch_end, :]
                 train_Xe_batch[i::nb_sample_sets, :] = _Xe[batch_start:batch_end, :]
 
+            print(train_Xr_batch[0::nb_sample_sets, :].shape)
+
             y_batch = np.zeros(train_Xr_batch.shape[0])
 
-            hist = model.fit([train_Xr_batch, train_Xe_batch], y_batch, nb_epoch=1, batch_size=train_Xr_batch.shape[0],
-                             shuffle=False, verbose=0)
+            hist = model.fit([train_Xr_batch, train_Xe_batch], y_batch, nb_epoch=1,
+                             batch_size=train_Xr_batch.shape[0], shuffle=False, verbose=0)
 
             losses += [hist.history['loss'][0] / float(train_Xr_batch.shape[0])]
 
