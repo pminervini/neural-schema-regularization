@@ -73,8 +73,7 @@ class TestModels(unittest.TestCase):
             #merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=f)
             #model.add(merge_layer)
 
-            merge_layer = Merge([predicate_encoder, entity_encoder], mode=f,
-                                output_shape=lambda _: (None, 1))
+            merge_layer = Merge([predicate_encoder, entity_encoder], mode=f, output_shape=lambda _: (None, 1))
             model.add(merge_layer)
 
             model.compile(loss='binary_crossentropy', optimizer='adagrad')
@@ -160,7 +159,7 @@ class TestModels(unittest.TestCase):
 
             unitnorm_instance = FixedNorm(m=x, axis=0)
             normalized = unitnorm_instance(K.variable(example_array))
-            norm_of_normalized = np.sqrt(np.sum(K.eval(normalized)**2, axis=0))
+            norm_of_normalized = np.sqrt(np.sum(K.eval(normalized) ** 2, axis=0))
 
             # in the unit norm constraint, it should be equal to x
             difference = norm_of_normalized - x

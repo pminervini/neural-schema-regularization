@@ -5,7 +5,7 @@ import numpy as np
 
 from keras.models import Sequential
 from keras.layers.embeddings import Embedding
-from keras.layers.core import Merge, Dropout
+from keras.layers.core import Merge, Dropout, Flatten
 from keras.engine.training import make_batches
 
 import hyper.layers.core as core
@@ -16,7 +16,33 @@ from hyper import ranking_objectives, constraints
 import hyper.learning.util as learning_util
 import hyper.visualization.visualization as visualization
 
+from keras import backend as K
+from hyper import objectives
+
 import logging
+
+
+def custom_loss(y_true, y_pred, nb_sample_sets=3, *args, **kwargs):
+    #y_pred = y_pred[:, 0].reshape((y_pred.shape[0], 1))
+    NP = y_pred[0::nb_sample_sets].shape[0]
+
+    positive_scores = y_pred[0::nb_sample_sets, 0].reshape((NP, 1))
+    positive_etas = y_pred[0::nb_sample_sets, 1].reshape((NP, 1))
+
+    target = y_true[0::nb_sample_sets, 0]
+    loss = .0
+
+    for j in range(1, nb_sample_sets):
+        negative_scores = y_pred[j::nb_sample_sets, 0].reshape((NP, 1))
+
+        # loss = max{margin - 1 (positive_scores - negative_scores), 0}
+        diff = positive_scores - negative_scores
+
+        loss += K.sum(objectives.hinge_loss(1, diff, *args, **kwargs))
+
+    tmp = K.sum(K.sum(positive_etas))
+
+    return loss + (0. * tmp) + K.sum(target)
 
 
 def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
@@ -26,11 +52,14 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
                       margin=1.0, loss_name='hinge', negatives_name='corrupt',
                       optimizer=None, regularizer=None, predicate_constraint=None, visualize=False):
 
+    nb_triples = len(train_sequences)
+
     np.random.seed(seed)
     random_state = np.random.RandomState(seed=seed)
 
     predicate_encoder = Sequential()
     entity_encoder = Sequential()
+    eta_encoder = Sequential()
 
     if predicate_embedding_size is None:
         predicate_embedding_size = entity_embedding_size
@@ -51,21 +80,33 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
     if dropout_entity_embeddings is not None and dropout_entity_embeddings > .0:
         entity_encoder.add(Dropout(dropout_entity_embeddings))
 
-    model = Sequential()
+    eta_embedding_layer = Embedding(input_dim=nb_triples + 1, output_dim=1, input_length=1, init='zero')
+    eta_encoder.add(eta_embedding_layer)
+    eta_encoder.add(Flatten())
+
+    _model = Sequential()
 
     setattr(core, 'similarity function', similarity_name)
     setattr(core, 'merge function', model_name)
 
     if model_name in ['TransE', 'ScalE']:
         merge_function = core.latent_distance_binary_merge_function
-        merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function, output_shape=lambda _: (None, 1))
-        model.add(merge_layer)
-
+        _merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function, output_shape=lambda _: (None, 1))
+        _model.add(_merge_layer)
     else:
         raise ValueError('Unknown model name: %s' % model_name)
 
+    model = Sequential()
+    merge_layer = Merge([_model, eta_encoder], mode='concat', concat_axis=-1)
+    #merge_layer = Merge([_model, _model], mode='concat', concat_axis=-1)
+    model.add(merge_layer)
+    #model = _model
+
     Xr = np.array([[rel_idx] for (rel_idx, _) in train_sequences])
     Xe = np.array([ent_idxs for (_, ent_idxs) in train_sequences])
+    Xeta = np.arange(1, nb_triples + 1).reshape((nb_triples, 1))
+
+    print(Xr.shape, Xe.shape, Xeta.shape)
 
     # Let's make the training set unwriteable (immutable), just in case
     Xr.flags.writeable, Xe.flags.writeable = False, False
@@ -106,17 +147,27 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
 
     def loss(y_true, y_predicted):
         loss_kwargs = dict(y_true=y_true, y_pred=y_predicted, nb_sample_sets=nb_sample_sets, margin=margin)
-        ranking_loss = getattr(ranking_objectives, loss_name)
+        ranking_loss = custom_loss  # getattr(ranking_objectives, loss_name)
         return ranking_loss(**loss_kwargs)
 
     model.compile(loss=loss, optimizer=optimizer)
 
     for epoch_no in range(1, nb_epochs + 1):
+
+        _y = model.predict(x=[np.ones((3, 1)), np.ones((3, 2)), np.ones((3, 1))])
+        # _y = model.predict(x=[np.ones((3, 1)), np.ones((3, 2))])
+        print(_y, _y.shape)
+
+        #print(model.summary())
+        #print(model.get_weights())
+        print(model.trainable_weights)
+
         logging.info('Epoch no. %d of %d (samples: %d)' % (epoch_no, nb_epochs, nb_samples))
 
         # Shuffling training (positive) triples..
         order = random_state.permutation(nb_samples)
         Xr_shuffled, Xe_shuffled = Xr[order, :], Xe[order, :]
+        Xeta_shuffled = Xeta[order, :]
 
         negative_samples = negative_samples_generator(Xr_shuffled, Xe_shuffled)
         positive_negative_samples = [(Xr_shuffled, Xe_shuffled)] + negative_samples
@@ -131,18 +182,19 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
 
             train_Xr_batch = np.zeros((current_batch_size * nb_sample_sets, Xr_shuffled.shape[1]))
             train_Xe_batch = np.zeros((current_batch_size * nb_sample_sets, Xe_shuffled.shape[1]))
+            train_Xeta_batch = np.zeros((current_batch_size * nb_sample_sets, Xeta_shuffled.shape[1]))
 
             for i, samples_set in enumerate(positive_negative_samples):
                 (_Xr, _Xe) = samples_set
                 train_Xr_batch[i::nb_sample_sets, :] = _Xr[batch_start:batch_end, :]
                 train_Xe_batch[i::nb_sample_sets, :] = _Xe[batch_start:batch_end, :]
 
-            print(train_Xr_batch[0::nb_sample_sets, :].shape)
+            train_Xeta_batch[0::nb_sample_sets, :] = Xeta_shuffled[batch_start:batch_end, :]
 
-            y_batch = np.zeros(train_Xr_batch.shape[0])
-
-            hist = model.fit([train_Xr_batch, train_Xe_batch], y_batch, nb_epoch=1,
-                             batch_size=train_Xr_batch.shape[0], shuffle=False, verbose=0)
+            x = [train_Xr_batch, train_Xe_batch, train_Xeta_batch]
+            # x = [train_Xr_batch, train_Xe_batch]
+            y = np.zeros((train_Xr_batch.shape[0], 2))
+            hist = model.fit(x=x, y=y, nb_epoch=1, batch_size=train_Xr_batch.shape[0], shuffle=False, verbose=0)
 
             losses += [hist.history['loss'][0] / float(train_Xr_batch.shape[0])]
 
