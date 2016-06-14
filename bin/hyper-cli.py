@@ -97,6 +97,10 @@ def main(argv):
 
     # Robust ranking-related arguments
     argparser.add_argument('--robust', action='store_true', help='Robust Ranking')
+    argparser.add_argument('--robust-alpha', action='store', type=float, default=1.0,
+                           help='Robust Ranking, Alpha parameter')
+    argparser.add_argument('--robust-beta', action='store', type=float, default=1.0,
+                           help='Robust Ranking, Beta parameter')
 
     argparser.add_argument('--model', action='store', type=str, default=None,
                            help='Name of the model to use')
@@ -289,20 +293,21 @@ def main(argv):
     if args.robust is True:
         pairwise_training = robust.pairwise_training
 
-    model = pairwise_training(train_sequences, nb_entities, nb_predicates, seed=seed,
-                              entity_embedding_size=entity_embedding_size,
-                              predicate_embedding_size=predicate_embedding_size,
+    kwargs = dict(train_sequences=train_sequences,
+                  nb_entities=nb_entities, nb_predicates=nb_predicates, seed=seed,
+                  entity_embedding_size=entity_embedding_size, predicate_embedding_size=predicate_embedding_size,
+                  dropout_entity_embeddings=dropout_entity_embeddings,
+                  dropout_predicate_embeddings=dropout_predicate_embeddings,
+                  model_name=model_name, similarity_name=similarity_name,
+                  nb_epochs=nb_epochs, batch_size=batch_size, nb_batches=nb_batches, margin=margin,
+                  loss_name=loss_name, negatives_name=negatives_name, optimizer=optimizer, regularizer=regularizer,
+                  predicate_constraint=predicate_constraint, visualize=is_visualize)
 
-                              dropout_entity_embeddings=dropout_entity_embeddings,
-                              dropout_predicate_embeddings=dropout_predicate_embeddings,
-
-                              model_name=model_name, similarity_name=similarity_name,
-                              nb_epochs=nb_epochs, batch_size=batch_size, nb_batches=nb_batches, margin=margin,
-                              loss_name=loss_name, negatives_name=negatives_name,
-
-                              optimizer=optimizer, regularizer=regularizer,
-                              predicate_constraint=predicate_constraint,
-                              visualize=is_visualize)
+    if args.robust is True:
+        robust_alpha, robust_beta = args.robust_alpha, args.robust_beta
+        model = robust.pairwise_training(**kwargs, robust_alpha=robust_alpha, robust_beta=robust_beta)
+    else:
+        model = pairwise_training(**kwargs)
 
     if args.save is not None:
         prefix = args.save

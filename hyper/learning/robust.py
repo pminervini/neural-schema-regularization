@@ -22,27 +22,30 @@ from hyper import objectives
 import logging
 
 
-def custom_loss(y_true, y_pred, nb_sample_sets=3, *args, **kwargs):
-    #y_pred = y_pred[:, 0].reshape((y_pred.shape[0], 1))
+def custom_loss(y_true, y_pred, nb_sample_sets=3, alpha=1.0, beta=1.0, nb_entities=0, margin=1.0, *args, **kwargs):
     NP = y_pred[0::nb_sample_sets].shape[0]
 
     positive_scores = y_pred[0::nb_sample_sets, 0].reshape((NP, 1))
-    positive_etas = y_pred[0::nb_sample_sets, 1].reshape((NP, 1))
+    etas = y_pred[0::nb_sample_sets, 1].reshape((NP, 1))
 
     target = y_true[0::nb_sample_sets, 0]
     loss = .0
 
+    def p(x):
+        return x # K.log(1 + x)
+
+    def gp(x):
+        return 1 # 2 / (x + 1)
+
     for j in range(1, nb_sample_sets):
         negative_scores = y_pred[j::nb_sample_sets, 0].reshape((NP, 1))
 
-        # loss = max{margin - 1 (positive_scores - negative_scores), 0}
-        diff = positive_scores - negative_scores
+        loss_value = K.mean(K.maximum(margin - positive_scores + negative_scores, 0.), axis=-1)
+        small = (p(etas) + gp(etas) * ((beta / alpha) - etas)) / (nb_entities - 1)
 
-        loss += K.sum(objectives.hinge_loss(1, diff, *args, **kwargs))
+        loss += K.sum(small + (1 / alpha) * gp(etas) * loss_value).reshape((1, 1))
 
-    tmp = K.sum(K.sum(positive_etas))
-
-    return loss + (0. * tmp) + K.sum(target)
+    return loss + K.sum(target)
 
 
 def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
@@ -50,7 +53,8 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
                       dropout_entity_embeddings=None, dropout_predicate_embeddings=None,
                       model_name='TransE', similarity_name='L1', nb_epochs=1000, batch_size=128, nb_batches=None,
                       margin=1.0, loss_name='hinge', negatives_name='corrupt',
-                      optimizer=None, regularizer=None, predicate_constraint=None, visualize=False):
+                      optimizer=None, regularizer=None, predicate_constraint=None, visualize=False,
+                      robust_alpha=1.0, robust_beta=1.0):
 
     nb_triples = len(train_sequences)
 
@@ -98,9 +102,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
 
     model = Sequential()
     merge_layer = Merge([_model, eta_encoder], mode='concat', concat_axis=-1)
-    #merge_layer = Merge([_model, _model], mode='concat', concat_axis=-1)
     model.add(merge_layer)
-    #model = _model
 
     Xr = np.array([[rel_idx] for (rel_idx, _) in train_sequences])
     Xe = np.array([ent_idxs for (_, ent_idxs) in train_sequences])
@@ -146,7 +148,8 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
     nb_sample_sets = negative_samples_generator.nb_sample_sets + 1
 
     def loss(y_true, y_predicted):
-        loss_kwargs = dict(y_true=y_true, y_pred=y_predicted, nb_sample_sets=nb_sample_sets, margin=margin)
+        loss_kwargs = dict(y_true=y_true, y_pred=y_predicted, nb_sample_sets=nb_sample_sets,
+                           alpha=robust_alpha, beta=robust_beta, nb_entities=nb_entities, margin=margin)
         ranking_loss = custom_loss  # getattr(ranking_objectives, loss_name)
         return ranking_loss(**loss_kwargs)
 
@@ -155,12 +158,9 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
     for epoch_no in range(1, nb_epochs + 1):
 
         _y = model.predict(x=[np.ones((3, 1)), np.ones((3, 2)), np.ones((3, 1))])
-        # _y = model.predict(x=[np.ones((3, 1)), np.ones((3, 2))])
         print(_y, _y.shape)
 
-        #print(model.summary())
-        #print(model.get_weights())
-        print(model.trainable_weights)
+        model.summary()
 
         logging.info('Epoch no. %d of %d (samples: %d)' % (epoch_no, nb_epochs, nb_samples))
 
@@ -192,7 +192,6 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
             train_Xeta_batch[0::nb_sample_sets, :] = Xeta_shuffled[batch_start:batch_end, :]
 
             x = [train_Xr_batch, train_Xe_batch, train_Xeta_batch]
-            # x = [train_Xr_batch, train_Xe_batch]
             y = np.zeros((train_Xr_batch.shape[0], 2))
             hist = model.fit(x=x, y=y, nb_epoch=1, batch_size=train_Xr_batch.shape[0], shuffle=False, verbose=0)
 
