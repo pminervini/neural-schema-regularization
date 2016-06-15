@@ -305,7 +305,7 @@ def main(argv):
 
     if args.robust is True:
         robust_alpha, robust_beta = args.robust_alpha, args.robust_beta
-        model = robust.pairwise_training(**kwargs, robust_alpha=robust_alpha, robust_beta=robust_beta)
+        model = robust.pairwise_training(robust_alpha=robust_alpha, robust_beta=robust_beta, **kwargs)
     else:
         model = pairwise_training(**kwargs)
 
