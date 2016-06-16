@@ -4,30 +4,13 @@ import numpy as np
 
 from keras.models import Sequential
 from keras.layers.embeddings import Embedding
-from keras.constraints import Constraint, MaxNorm
 from keras.layers.core import Merge
-from keras import backend as K
+
 import hyper.layers.core
+from hyper.constraints import norm
 
 import sys
 import unittest
-import logging
-
-
-class FixedNorm(Constraint):
-    def __init__(self, m=1., axis=0):
-        self.m = m
-        self.axis = axis
-
-    def __call__(self, p):
-        norms = K.sqrt(K.sum(K.square(p), axis=self.axis, keepdims=True))
-        unit_norm = p / (norms + 1e-7)
-        return unit_norm * self.m
-
-    def get_config(self):
-        return {'name': self.__class__.__name__,
-                'm': self.m,
-                'axis': self.axis}
 
 
 class TestModels(unittest.TestCase):
@@ -70,9 +53,6 @@ class TestModels(unittest.TestCase):
 
                 return merge_function(args, similarity=similarity_function)
 
-            #merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=f)
-            #model.add(merge_layer)
-
             merge_layer = Merge([predicate_encoder, entity_encoder], mode=f, output_shape=lambda _: (None, 1))
             model.add(merge_layer)
 
@@ -98,10 +78,9 @@ class TestModels(unittest.TestCase):
             predicate_layer = Embedding(input_dim=3, output_dim=10, input_length=None, weights=[W_pred])
             predicate_encoder.add(predicate_layer)
 
-            norm_constraint = FixedNorm(m=1.5, axis=1)
+            norm_constraint = norm(m=1.5, axis=1)
             entity_layer = Embedding(input_dim=3, output_dim=10, input_length=None, weights=[W_emb],
                                      W_constraint=norm_constraint)
-            #print(len(entity_layer.constraints))
 
             entity_encoder.add(entity_layer)
 
@@ -125,9 +104,6 @@ class TestModels(unittest.TestCase):
 
                 return merge_function(args, similarity=similarity_function)
 
-            #merge_layer = LambdaMerge([predicate_encoder, entity_encoder], function=f)
-            #model.add(merge_layer)
-
             merge_layer = Merge([predicate_encoder, entity_encoder], mode=f, output_shape=lambda _: (None, 1))
             model.add(merge_layer)
 
@@ -139,33 +115,11 @@ class TestModels(unittest.TestCase):
 
             model.fit([Xr, Xe], y, batch_size=1, nb_epoch=10, verbose=0)
 
-            #print(entity_layer.constraints, type(entity_layer.constraints))
             normalized_embeddings = entity_layer.trainable_weights[0].get_value()
-
-            #print(np.linalg.norm(normalized_embeddings[0, :]))
 
             self.assertTrue(abs(np.linalg.norm(normalized_embeddings[0, :]) - 1.5) < 1e-6)
             self.assertTrue(abs(np.linalg.norm(normalized_embeddings[1, :]) - 1.5) < 1e-6)
             self.assertTrue(abs(np.linalg.norm(normalized_embeddings[2, :]) - 1.5) < 1e-6)
-
-    def test_unitnorm(self):
-        rs = np.random.RandomState(1)
-
-        for _ in range(2):
-            x = rs.rand()
-
-            example_array = np.random.random((100, 100)) * 100. - 50.
-            example_array[0, 0] = 0.
-
-            unitnorm_instance = FixedNorm(m=x, axis=0)
-            normalized = unitnorm_instance(K.variable(example_array))
-            norm_of_normalized = np.sqrt(np.sum(K.eval(normalized) ** 2, axis=0))
-
-            # in the unit norm constraint, it should be equal to x
-            difference = norm_of_normalized - x
-
-            largest_difference = np.max(np.abs(difference))
-            self.assertTrue(np.abs(largest_difference) < 10e-5)
 
 
 if __name__ == '__main__':

@@ -3,6 +3,8 @@
 from keras.constraints import Constraint
 from keras import backend as K
 
+from keras.utils.generic_utils import get_from_module
+
 
 class NormConstraint(Constraint):
     def __init__(self, m=1., axis=0):
@@ -18,3 +20,10 @@ class NormConstraint(Constraint):
         return {'name': self.__class__.__name__,
                 'm': self.m,
                 'axis': self.axis}
+
+
+norm = Norm = NormConstraint
+
+
+def get(identifier, kwargs=None):
+    return get_from_module(identifier, globals(), 'constraint', instantiate=True, kwargs=kwargs)

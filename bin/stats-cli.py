@@ -29,17 +29,18 @@ def summary(triples):
     entities = [s for (s, _, _) in triples] + [o for (_, _, o) in triples]
     predicates = [p for (_, p, _) in triples]
 
-    entity_counts = sorted(Counter(entities).items(), key=lambda item: item[1])
-    graph = Pyasciigraph()
-    for line in graph.graph('Entity Counts', entity_counts):
-        print(line)
+    for sequence in [entities, predicates]:
+        item_counts = sorted(Counter(sequence).items(), key=lambda item: item[1])
+        graph = Pyasciigraph()
+        for line in graph.graph('Counts', item_counts):
+            print(line)
 
 
 def main(argv):
     def formatter(prog):
         return argparse.HelpFormatter(prog, max_help_position=100, width=200)
 
-    argparser = argparse.ArgumentParser('Show stats on a Knowledge Graphs (entity and predicate frequencies)', formatter_class=formatter)
+    argparser = argparse.ArgumentParser('Show stats on a Knowledge Graphs', formatter_class=formatter)
     argparser.add_argument('triples', nargs='+', help='TSV Files containing triples')
     args = argparser.parse_args(argv)
 
