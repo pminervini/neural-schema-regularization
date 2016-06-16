@@ -14,10 +14,12 @@ class TestConstraints(unittest.TestCase):
         self.rs = np.random.RandomState(1)
 
     def test_unitnorm(self):
-        for _ in range(2):
+        for _ in range(64):
+            M, N = 32, 32
+
             x = self.rs.rand()
 
-            example_array = np.random.random((100, 100)) * 100. - 50.
+            example_array = self.rs.rand(M, N) * 100. - 50.
             example_array[0, 0] = 0.
 
             unitnorm_instance = norm(m=x, axis=0)
@@ -31,24 +33,22 @@ class TestConstraints(unittest.TestCase):
             self.assertTrue(np.abs(largest_difference) < 1e-5)
 
     def test_mask(self):
-        x = self.rs.rand()
+        for _ in range(64):
+            M, N, S, R = 32, 32, 16, 4
 
-        M, N, S = 10, 10, 5
-        R = 4
+            example_array = self.rs.rand(M, N) * 100. - 50.
+            example_array[0, 0] = 0.
 
-        example_array = np.random.random((M, N)) * 100. - 50.
-        example_array[0, 0] = 0.
+            mask_value = np.zeros((M, N))
+            mask_value[R, :S] = 1
 
-        mask_value = np.zeros((M, N))
-        mask_value[R, :S] = 1
+            mask_instance = mask(mask=mask_value)
+            masked = mask_instance(K.variable(example_array))
 
-        mask_instance = mask(mask=mask_value)
-        masked = mask_instance(K.variable(example_array))
+            masked_value = K.eval(masked)
 
-        masked_value = K.eval(masked)
-
-        for i in range(S):
-            self.assertTrue(abs(masked_value[R, i]) > masked_value[R, S + i])
+            for i in range(S):
+                self.assertTrue(abs(masked_value[R, i]) > masked_value[R, S + i])
 
 
 if __name__ == '__main__':
