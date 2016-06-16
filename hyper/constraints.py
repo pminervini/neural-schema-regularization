@@ -19,9 +19,7 @@ class NormConstraint(Constraint):
         return unit_norm * self.m
 
     def get_config(self):
-        return {'name': self.__class__.__name__,
-                'm': self.m,
-                'axis': self.axis}
+        return {'name': self.__class__.__name__, 'm': self.m, 'axis': self.axis}
 
 
 class MaskConstraint(Constraint):
@@ -30,6 +28,9 @@ class MaskConstraint(Constraint):
 
     def __call__(self, p):
         return p * self.mask
+
+    def get_config(self):
+        return {'name': self.__class__.__name__, 'mask': self.mask}
 
 
 class GroupConstraint(Constraint):
@@ -41,9 +42,13 @@ class GroupConstraint(Constraint):
             p = constraint(p)
         return p
 
+    def get_config(self):
+        return {'name': self.__class__.__name__}
+
 
 norm = Norm = NormConstraint
 mask = Mask = MaskConstraint
+group = Group = GroupConstraint
 
 
 def get(identifier, kwargs=None):
