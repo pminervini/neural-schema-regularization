@@ -25,11 +25,21 @@ class NormConstraint(Constraint):
 
 
 class MaskConstraint(Constraint):
-    def __init__(self, mask=None):
+    def __init__(self, mask):
         self.mask = mask
 
     def __call__(self, p):
         return p * self.mask
+
+
+class GroupConstraint(Constraint):
+    def __init__(self, constraints=[]):
+        self.constraints = constraints
+
+    def __call__(self, p):
+        for constraint in self.constraints:
+            p = constraint(p)
+        return p
 
 
 norm = Norm = NormConstraint

@@ -24,7 +24,9 @@ class TestConstraints(unittest.TestCase):
 
             unitnorm_instance = norm(m=x, axis=0)
             normalized = unitnorm_instance(K.variable(example_array))
-            norm_of_normalized = np.sqrt(np.sum(K.eval(normalized) ** 2, axis=0))
+            normalized_value = K.eval(normalized)
+
+            norm_of_normalized = np.sqrt(np.sum(normalized_value ** 2, axis=0))
 
             # in the unit norm constraint, it should be equal to x
             difference = norm_of_normalized - x
@@ -49,7 +51,6 @@ class TestConstraints(unittest.TestCase):
 
             for i in range(S):
                 self.assertTrue(abs(masked_value[R, i]) > masked_value[R, S + i])
-
 
 if __name__ == '__main__':
     unittest.main()
