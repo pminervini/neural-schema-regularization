@@ -35,7 +35,6 @@ def summary(triples):
         print(line)
 
 
-
 def main(argv):
     def formatter(prog):
         return argparse.HelpFormatter(prog, max_help_position=100, width=200)
