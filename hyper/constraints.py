@@ -5,6 +5,8 @@ from keras import backend as K
 
 from keras.utils.generic_utils import get_from_module
 
+import logging
+
 
 class NormConstraint(Constraint):
     def __init__(self, m=1., axis=0):
@@ -22,7 +24,16 @@ class NormConstraint(Constraint):
                 'axis': self.axis}
 
 
+class MaskConstraint(Constraint):
+    def __init__(self, mask=None):
+        self.mask = mask
+
+    def __call__(self, p):
+        return p * self.mask
+
+
 norm = Norm = NormConstraint
+mask = Mask = MaskConstraint
 
 
 def get(identifier, kwargs=None):
