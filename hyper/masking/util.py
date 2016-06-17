@@ -30,13 +30,3 @@ def get_embedding_lengths(triples, cutpoints, embedding_lengths):
         entity_lengths[entity] = embedding_lengths[idx - 1]
 
     return entity_lengths
-
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
-
-    triples = [
-        ('a', 'p', 'a'),
-        ('a', 'p', 'b'),
-        ('b', 'p', 'c')]
-
-    print(get_embedding_lengths(triples, [1, 2, 3], [4, 5, 6]))
