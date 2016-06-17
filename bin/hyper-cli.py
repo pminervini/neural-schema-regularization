@@ -18,6 +18,9 @@ from hyper.evaluation import metrics
 import hyper.learning.core as learning
 import hyper.learning.robust as robust
 
+import hyper.masking.util as mask_util
+from hyper.constraints import MaskConstraint
+
 import sys
 import gzip
 import logging
@@ -102,6 +105,12 @@ def main(argv):
     argparser.add_argument('--robust-beta', action='store', type=float, default=1.0,
                            help='Robust Ranking, Beta parameter')
 
+    # Frequency-based embedding size
+    argparser.add_argument('--frequency-embedding-lengths', action='store', type=int, default=None,
+                           help='Frequency based embedding lengths')
+    argparser.add_argument('--frequency-cutoffs', action='store', type=int, default=None,
+                           help='Frequency cutoffs')
+
     argparser.add_argument('--model', action='store', type=str, default=None,
                            help='Name of the model to use')
     argparser.add_argument('--similarity', action='store', type=str, default=None,
@@ -182,6 +191,11 @@ def main(argv):
     entity_embedding_size = args.entity_embedding_size
     predicate_embedding_size = args.predicate_embedding_size
 
+    frequency_embedding_lengths = args.frequency_embedding_lengths
+    frequency_cutoffs = args.frequency_cutoffs
+    assert (frequency_embedding_lengths is None and frequency_embedding_lengths is None) or \
+           (len(frequency_embedding_lengths) == len(frequency_cutoffs) + 1)
+
     model_name = args.model
     similarity_name = args.similarity
     nb_epochs = args.epochs
@@ -247,8 +261,8 @@ def main(argv):
                     if model_name not in model_to_regularizer:
                         raise ValueError('Rule-based regularizers unsupported for the model: %s' % model_name)
 
-                    Regularizer = model_to_regularizer[model_name]
-                    _regularizer = Regularizer(head, tail, l=rules_lambda, entity_embedding_size=entity_embedding_size)
+                    regularizer_class = model_to_regularizer[model_name]
+                    _regularizer = regularizer_class(head, tail, l=rules_lambda, entity_embedding_size=entity_embedding_size)
                     regularizers += [_regularizer]
 
     regularizer = None
@@ -256,6 +270,11 @@ def main(argv):
         regularizer = regularizers[0]
     elif len(regularizers) > 1:
         regularizer = GroupRegularizer(regularizers=regularizers)
+
+    entity_constraint = None
+    if frequency_embedding_lengths is not None and frequency_embedding_lengths is not None:
+        mask = mask_util.create_mask(nb_entities, entity_embedding_size, frequency_embedding_lengths)
+        entity_constraint = MaskConstraint(mask=mask)
 
     predicate_constraint = None
     if predicate_nonnegative is True:
@@ -289,10 +308,6 @@ def main(argv):
 
     train_sequences = parser.facts_to_sequences(train_facts)
 
-    pairwise_training = learning.pairwise_training
-    if args.robust is True:
-        pairwise_training = robust.pairwise_training
-
     kwargs = dict(train_sequences=train_sequences,
                   nb_entities=nb_entities, nb_predicates=nb_predicates, seed=seed,
                   entity_embedding_size=entity_embedding_size, predicate_embedding_size=predicate_embedding_size,
@@ -307,7 +322,9 @@ def main(argv):
         robust_alpha, robust_beta = args.robust_alpha, args.robust_beta
         model = robust.pairwise_training(robust_alpha=robust_alpha, robust_beta=robust_beta, **kwargs)
     else:
-        model = pairwise_training(**kwargs)
+        kwargs['entity_constraint'] = entity_constraint
+
+        model = learning.pairwise_training(**kwargs)
 
     if args.save is not None:
         prefix = args.save
@@ -342,7 +359,7 @@ def main(argv):
         if is_filtered is True:
             evaluate_model(model, test_sequences, nb_entities, true_triples=true_triples, tag='test filtered')
 
-    return
+    return model
 
 
 if __name__ == '__main__':

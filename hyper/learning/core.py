@@ -24,8 +24,8 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
                       entity_embedding_size=100, predicate_embedding_size=None,
                       dropout_entity_embeddings=None, dropout_predicate_embeddings=None,
                       model_name='TransE', similarity_name='L1', nb_epochs=1000, batch_size=128, nb_batches=None,
-                      margin=1.0, loss_name='hinge', negatives_name='corrupt',
-                      optimizer=None, regularizer=None, predicate_constraint=None, visualize=False):
+                      margin=1.0, loss_name='hinge', negatives_name='corrupt', optimizer=None, regularizer=None,
+                      entity_constraint=None, predicate_constraint=None, visualize=False):
 
     np.random.seed(seed)
     random_state = np.random.RandomState(seed=seed)
@@ -58,9 +58,14 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
     if dropout_predicate_embeddings is not None and dropout_predicate_embeddings > .0:
         predicate_encoder.add(Dropout(dropout_predicate_embeddings))
 
+    entity_constraints, norm_constraint = None, constraints.NormConstraint(m=1., axis=1)
+    if entity_constraint is None:
+        entity_constraints = norm_constraint
+    else:
+        entity_constraints = constraints.GroupConstraint(constraints=[norm_constraint, entity_constraint])
+
     entity_embedding_layer = Embedding(input_dim=nb_entities + 1, output_dim=entity_embedding_size,
-                                       input_length=None, init='glorot_uniform',
-                                       W_constraint=constraints.NormConstraint(m=1., axis=1))
+                                       input_length=None, init='glorot_uniform', W_constraint=entity_constraints)
     entity_encoder.add(entity_embedding_layer)
 
     if dropout_entity_embeddings is not None and dropout_entity_embeddings > .0:

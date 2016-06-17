@@ -5,8 +5,6 @@ from keras import backend as K
 
 from keras.utils.generic_utils import get_from_module
 
-import logging
-
 
 class NormConstraint(Constraint):
     def __init__(self, m=1., axis=0):
