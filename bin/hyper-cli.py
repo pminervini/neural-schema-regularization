@@ -315,8 +315,7 @@ def main(argv):
     if predicate_nonnegative is True:
         predicate_constraint = nonneg()
 
-    kwargs = dict(train_sequences=train_sequences,
-                  nb_entities=nb_entities, nb_predicates=nb_predicates, seed=seed,
+    kwargs = dict(train_sequences=train_sequences, nb_entities=nb_entities, nb_predicates=nb_predicates, seed=seed,
                   entity_embedding_size=entity_embedding_size, predicate_embedding_size=predicate_embedding_size,
                   dropout_entity_embeddings=dropout_entity_embeddings,
                   dropout_predicate_embeddings=dropout_predicate_embeddings,
@@ -358,13 +357,15 @@ def main(argv):
         if is_raw is True:
             evaluate_model(model, validation_sequences, nb_entities, tag='validation raw')
         if is_filtered is True:
-            evaluate_model(model, validation_sequences, nb_entities, true_triples=true_triples, tag='validation filtered')
+            evaluate_model(model, validation_sequences, nb_entities,
+                           true_triples=true_triples, tag='validation filtered')
 
     if len(test_sequences) > 0:
         if is_raw is True:
             evaluate_model(model, test_sequences, nb_entities, tag='test raw')
         if is_filtered is True:
-            evaluate_model(model, test_sequences, nb_entities, true_triples=true_triples, tag='test filtered')
+            evaluate_model(model, test_sequences, nb_entities,
+                           true_triples=true_triples, tag='test filtered')
 
     return model
 
