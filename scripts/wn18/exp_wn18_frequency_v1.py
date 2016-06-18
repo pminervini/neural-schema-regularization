@@ -31,7 +31,7 @@ def to_command(c):
               " --frequency-cutoffs %s --frequency-embedding-lengths %s %s" \
               % (c['epochs'], c['optimizer'], c['lr'], c['batches'],
                  c['model'], c['similarity'], c['margin'], c['embedding_size'], c['embedding_size'],
-                 c['frequency_cutoffs'], c['freq_emb_len_one'], c['freq_emb_len_two'])
+                 c['freq_cutoffs'], c['freq_emb_len_one'], c['freq_emb_len_two'])
     return command
 
 
@@ -59,14 +59,15 @@ configurations = cartesian_product(hyperparameters_space)
 dir = 'logs/exp_wn18_frequency_v1/'
 
 for c in configurations:
-    logfile = to_logfile(c, dir)
+    if c['freq_emb_len_one'] <= c['embedding_size'] and c['freq_emb_len_two'] <= c['embedding_size']:
+        logfile = to_logfile(c, dir)
 
-    completed = False
-    if os.path.isfile(logfile):
-        with open(logfile, 'r') as f:
-            content = f.read()
-            completed = ('### MICRO (test filtered)' in content) or ('### COMPLETED' in content)
+        completed = False
+        if os.path.isfile(logfile):
+            with open(logfile, 'r') as f:
+                content = f.read()
+                completed = ('### MICRO (test filtered)' in content) or ('### COMPLETED' in content)
 
-    if not completed:
-        line = '%s >> %s 2>&1' % (to_command(c), logfile)
-        print(line)
+        if not completed:
+            line = '%s >> %s 2>&1' % (to_command(c), logfile)
+            print(line)
