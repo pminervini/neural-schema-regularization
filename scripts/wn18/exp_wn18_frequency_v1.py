@@ -16,7 +16,7 @@ def summary(configuration):
 
 
 def to_command(c):
-    command = "PYTHONPATH=. ./bin/hyper-cli.py" \
+    command = "PYTHONPATH=. ./bin/hyper-cli.py --filtered" \
               " --train data/wn18/wordnet-mlj12-train.txt" \
               " --valid data/wn18/wordnet-mlj12-valid.txt" \
               " --test data/wn18/wordnet-mlj12-test.txt" \
