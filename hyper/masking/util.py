@@ -3,13 +3,15 @@
 import numpy as np
 from collections import Counter
 
+from keras import backend as K
+
 import logging
 
 
 def create_mask(nb_items, embedding_size, embedding_lengths):
     assert nb_items == len(embedding_lengths)
 
-    mask = np.zeros((nb_items, embedding_size))
+    mask = np.zeros((nb_items, embedding_size), dtype=K.floatx())
 
     for item_idx, embedding_length in enumerate(embedding_lengths):
         mask[item_idx, :embedding_length] = 1
