@@ -18,9 +18,6 @@ from hyper.evaluation import metrics
 import hyper.learning.core as learning
 import hyper.learning.robust as robust
 
-import hyper.masking.util as mask_util
-from hyper.constraints import MaskConstraint
-
 import sys
 import gzip
 import logging
@@ -106,9 +103,9 @@ def main(argv):
                            help='Robust Ranking, Beta parameter')
 
     # Frequency-based embedding size
-    argparser.add_argument('--frequency-embedding-lengths', action='store', type=int, default=None,
+    argparser.add_argument('--frequency-embedding-lengths', action='store', nargs='+', type=int, default=None,
                            help='Frequency based embedding lengths')
-    argparser.add_argument('--frequency-cutoffs', action='store', type=int, default=None,
+    argparser.add_argument('--frequency-cutoffs', action='store', nargs='+', type=int, default=None,
                            help='Frequency cutoffs')
 
     argparser.add_argument('--model', action='store', type=str, default=None,
@@ -271,15 +268,6 @@ def main(argv):
     elif len(regularizers) > 1:
         regularizer = GroupRegularizer(regularizers=regularizers)
 
-    entity_constraint = None
-    if frequency_embedding_lengths is not None and frequency_embedding_lengths is not None:
-        mask = mask_util.create_mask(nb_entities, entity_embedding_size, frequency_embedding_lengths)
-        entity_constraint = MaskConstraint(mask=mask)
-
-    predicate_constraint = None
-    if predicate_nonnegative is True:
-        predicate_constraint = nonneg()
-
     if sample_facts is not None and (sample_facts < 1):
         nb_train_facts = len(train_facts)
         sample_size = int(round(sample_facts * nb_train_facts))
@@ -307,6 +295,25 @@ def main(argv):
                                           beta_1=optimizer_beta_1, beta_2=optimizer_beta_2)
 
     train_sequences = parser.facts_to_sequences(train_facts)
+
+    # Constraints on the entity embeddings
+    entity_constraint = None
+    if frequency_embedding_lengths is not None and frequency_cutoffs is not None:
+        import hyper.masking.util as mask_util
+        from hyper.constraints import MaskConstraint
+
+        embedding_lengths = mask_util.get_embedding_lengths([(s, p, o) for [p, [s, o]] in train_sequences],
+                                                            frequency_cutoffs, frequency_embedding_lengths)
+
+        embedding_lengths = [0] + [embedding_lengths[idx] for idx in range(1, nb_entities + 1)]
+
+        mask = mask_util.create_mask(nb_entities + 1, entity_embedding_size, embedding_lengths)
+        entity_constraint = MaskConstraint(mask=mask)
+
+    # Constraints on the predicate embeddings
+    predicate_constraint = None
+    if predicate_nonnegative is True:
+        predicate_constraint = nonneg()
 
     kwargs = dict(train_sequences=train_sequences,
                   nb_entities=nb_entities, nb_predicates=nb_predicates, seed=seed,
