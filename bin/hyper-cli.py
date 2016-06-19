@@ -107,7 +107,7 @@ def main(argv):
                            help='Frequency-based embedding lengths')
     argparser.add_argument('--frequency-cutoffs', action='store', nargs='+', type=int, default=None,
                            help='Frequency cutoffs')
-    argparser.add_argument('--frequency-mask-type', action='store', type=int, default=1,
+    argparser.add_argument('--frequency-mask-type', action='store', type=int, default=1, choices=[1, 2],
                            help='Frequency-based embedding lengths - Mask type')
 
     argparser.add_argument('--model', action='store', type=str, default=None,
@@ -312,15 +312,22 @@ def main(argv):
 
         entity_bins = mask_util.get_entity_bins([(s, p, o) for [p, [s, o]] in train_sequences], frequency_cutoffs)
 
-        mask_ranges = None
-        if frequency_mask_type == 1:
-            mask_ranges = np.zeros((nb_entities + 1, 2), dtype='int8')
-            for idx in range(1, nb_entities + 1):
-                mask_ranges[idx, 0], mask_ranges[idx, 1] = 0, frequency_embedding_lengths[entity_bins[idx]]
-        elif frequency_mask_type == 2:
-            pass
-        else:
-            raise ValueError('Unsupported frequency mask type: %s' % frequency_mask_type)
+        mask_ranges = np.zeros((nb_entities + 1, 2), dtype='int8')
+
+        for entity_idx in range(1, nb_entities + 1):
+            entity_bin = entity_bins[entity_idx]
+            embedding_length = frequency_embedding_lengths[entity_bin]
+
+            if frequency_mask_type == 1:
+                mask_ranges[entity_idx, :] = [0, embedding_length]
+
+            elif frequency_mask_type == 2:
+                embedding_start = sum(frequency_embedding_lengths[:entity_bin])
+                embedding_end = embedding_start + embedding_length
+
+                mask_ranges[entity_idx, :] = [embedding_start, embedding_end]
+            else:
+                raise ValueError('Unsupported frequency mask type: %s' % frequency_mask_type)
 
         mask = mask_util.create_mask(nb_items=nb_entities + 1, embedding_size=entity_embedding_size,
                                      mask_ranges=mask_ranges)
