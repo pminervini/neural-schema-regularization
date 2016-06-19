@@ -80,6 +80,5 @@ class TestMasking(unittest.TestCase):
         for a, b in zip(l, [entity_lengths[i] for i in range(NE)]):
             self.assertTrue(a == b)
 
-
 if __name__ == '__main__':
     unittest.main()

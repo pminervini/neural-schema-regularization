@@ -336,17 +336,10 @@ def main(argv):
         model = learning.pairwise_training(**kwargs)
 
     if args.save is not None:
+        from hyper.serialization.util import serialize
+
         prefix = args.save
-
-        # Saving the weights of the model
-        model_path = '%s_weights.h5' % prefix
-        model.save_weights(model_path, overwrite=True)
-
-        # Saving the parser
-        import pickle
-        parser_path = '%s_parser.p' % prefix
-        with open(parser_path, 'wb') as f:
-            pickle.dump(parser, f)
+        serialize(prefix, model, parser)
 
     validation_sequences = parser.facts_to_sequences(validation_facts)
     test_sequences = parser.facts_to_sequences(test_facts)
