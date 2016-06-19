@@ -22,7 +22,7 @@ class NormConstraint(Constraint):
 
 class MaskConstraint(Constraint):
     def __init__(self, mask):
-        self.mask = mask
+        self.mask = K.variable(value=mask, dtype=K.floatx())
 
     def __call__(self, p):
         return p * self.mask
