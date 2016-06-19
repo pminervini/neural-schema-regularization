@@ -305,9 +305,12 @@ def main(argv):
         embedding_lengths = mask_util.get_embedding_lengths([(s, p, o) for [p, [s, o]] in train_sequences],
                                                             frequency_cutoffs, frequency_embedding_lengths)
 
-        embedding_lengths = [0] + [embedding_lengths[idx] for idx in range(1, nb_entities + 1)]
+        mask_ranges = np.zeros((nb_entities + 1, 2), dtype='int8')
+        for idx in range(1, nb_entities + 1):
+            mask_ranges[idx, 0], mask_ranges[idx, 1] = 0, embedding_lengths[idx]
 
-        mask = mask_util.create_mask(nb_entities + 1, entity_embedding_size, embedding_lengths)
+        mask = mask_util.create_mask(nb_items=nb_entities + 1, embedding_size=entity_embedding_size,
+                                     mask_ranges=mask_ranges)
         entity_constraint = MaskConstraint(mask=mask)
 
     # Constraints on the predicate embeddings

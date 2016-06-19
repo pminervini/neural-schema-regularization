@@ -22,7 +22,8 @@ class TestMasking(unittest.TestCase):
         embedding_lengths = util.get_embedding_lengths(triples, [1, 2, 3], [4, 5, 6])
         self.assertTrue(embedding_lengths == {0: 6, 1: 5, 2: 4})
 
-        mask = util.create_mask(3, 10, [embedding_lengths[e] for e in entities])
+        mask_ranges = np.array([[0, embedding_lengths[e]] for e in entities])
+        mask = util.create_mask(3, 10, mask_ranges)
         true_mask = np.array([
             [1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
             [1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
