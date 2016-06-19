@@ -19,15 +19,36 @@ class TestMasking(unittest.TestCase):
             (1, 0, 2)]
 
         entities = [0, 1, 2]
-        embedding_lengths = util.get_embedding_lengths(triples, [1, 2, 3], [4, 5, 6])
+        embedding_lengths = util.get_entity_frequencies(triples=triples, cut_points=[1, 2, 3],
+                                                        embedding_lengths=[4, 5, 6])
         self.assertTrue(embedding_lengths == {0: 6, 1: 5, 2: 4})
 
         mask_ranges = np.array([[0, embedding_lengths[e]] for e in entities])
-        mask = util.create_mask(3, 10, mask_ranges)
+        mask = util.create_mask(nb_items=3, embedding_size=10, mask_ranges=mask_ranges)
         true_mask = np.array([
             [1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
             [1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
             [1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+        ])
+        self.assertTrue(sum(sum(abs(mask - true_mask))) == 0)
+
+    def test_masking_2(self):
+        triples = [
+            (0, 0, 0),
+            (0, 0, 1),
+            (1, 0, 2)]
+
+        entities = [0, 1, 2]
+        embedding_lengths = util.get_entity_frequencies(triples=triples, cut_points=[1, 2, 3],
+                                                        embedding_lengths=[5, 4, 6])
+        self.assertTrue(embedding_lengths == {0: 6, 1: 4, 2: 5})
+
+        mask_ranges = np.array([[0, embedding_lengths[e]] for e in entities])
+        mask = util.create_mask(nb_items=3, embedding_size=10, mask_ranges=mask_ranges)
+        true_mask = np.array([
+            [1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+            [1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
         ])
         self.assertTrue(sum(sum(abs(mask - true_mask))) == 0)
 

@@ -302,8 +302,8 @@ def main(argv):
         import hyper.masking.util as mask_util
         from hyper.constraints import MaskConstraint
 
-        embedding_lengths = mask_util.get_embedding_lengths([(s, p, o) for [p, [s, o]] in train_sequences],
-                                                            frequency_cutoffs, frequency_embedding_lengths)
+        embedding_lengths = mask_util.get_entity_frequencies([(s, p, o) for [p, [s, o]] in train_sequences],
+                                                             frequency_cutoffs, frequency_embedding_lengths)
 
         mask_ranges = np.zeros((nb_entities + 1, 2), dtype='int8')
         for idx in range(1, nb_entities + 1):
