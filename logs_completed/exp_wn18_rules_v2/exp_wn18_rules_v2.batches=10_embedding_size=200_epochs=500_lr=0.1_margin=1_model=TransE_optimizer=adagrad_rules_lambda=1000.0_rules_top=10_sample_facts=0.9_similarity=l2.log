@@ -14,6 +14,26 @@ INFO:root:[Rules] Adding Head: 8, Tail: [(9, True)]
 INFO:root:[Rules] Adding Head: 2, Tail: [(2, True)]
 INFO:root:Samples: 127298, no. batches: 10 -> batch size: 12730
 INFO:root:Epoch no. 1 of 500 (samples: 127298)
+INFO (theano.gof.compilelock): Waiting for existing lock by process '5573' (I am process '6035')
+INFO:theano.gof.compilelock:Waiting for existing lock by process '5573' (I am process '6035')
+INFO (theano.gof.compilelock): To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.5--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
+INFO:theano.gof.compilelock:To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.5--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
+INFO (theano.gof.compilelock): Waiting for existing lock by process '5573' (I am process '6035')
+INFO:theano.gof.compilelock:Waiting for existing lock by process '5573' (I am process '6035')
+INFO (theano.gof.compilelock): To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.5--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
+INFO:theano.gof.compilelock:To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.5--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
+INFO (theano.gof.compilelock): Waiting for existing lock by process '5573' (I am process '6035')
+INFO:theano.gof.compilelock:Waiting for existing lock by process '5573' (I am process '6035')
+INFO (theano.gof.compilelock): To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.5--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
+INFO:theano.gof.compilelock:To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.5--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
+INFO (theano.gof.compilelock): Waiting for existing lock by process '5573' (I am process '6035')
+INFO:theano.gof.compilelock:Waiting for existing lock by process '5573' (I am process '6035')
+INFO (theano.gof.compilelock): To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.5--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
+INFO:theano.gof.compilelock:To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.5--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
+INFO (theano.gof.compilelock): Waiting for existing lock by process '6595' (I am process '6035')
+INFO:theano.gof.compilelock:Waiting for existing lock by process '6595' (I am process '6035')
+INFO (theano.gof.compilelock): To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.5--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
+INFO:theano.gof.compilelock:To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.5--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
 INFO:root:Loss: 569.153 +/- 96.1096
 INFO:root:Epoch no. 2 of 500 (samples: 127298)
 INFO:root:Loss: 350.6133 +/- 12.4472
@@ -1013,7 +1033,7 @@ INFO:root:Epoch no. 499 of 500 (samples: 127298)
 INFO:root:Loss: 28.5693 +/- 0.933
 INFO:root:Epoch no. 500 of 500 (samples: 127298)
 INFO:root:Loss: 28.5927 +/- 1.0574
-/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.1-py3.4.egg/keras/backend/theano_backend.py:489: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
+/usr/local/lib/python3.5/dist-packages/keras/backend/theano_backend.py:503: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
 To make this warning into an error, you can pass the parameter on_unused_input='raise' to theano.function. To disable it completely, use on_unused_input='ignore'.
   **kwargs)
 INFO:root:### MICRO (validation raw):

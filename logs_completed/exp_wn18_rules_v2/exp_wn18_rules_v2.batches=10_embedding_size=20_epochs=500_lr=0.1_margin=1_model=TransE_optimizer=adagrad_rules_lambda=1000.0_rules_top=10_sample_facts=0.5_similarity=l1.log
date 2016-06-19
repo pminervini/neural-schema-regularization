@@ -1013,7 +1013,7 @@ INFO:root:Epoch no. 499 of 500 (samples: 70721)
 INFO:root:Loss: 0.9338 +/- 0.2222
 INFO:root:Epoch no. 500 of 500 (samples: 70721)
 INFO:root:Loss: 0.9877 +/- 0.2095
-/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.1-py3.4.egg/keras/backend/theano_backend.py:489: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
+/usr/local/lib/python3.5/dist-packages/keras/backend/theano_backend.py:503: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
 To make this warning into an error, you can pass the parameter on_unused_input='raise' to theano.function. To disable it completely, use on_unused_input='ignore'.
   **kwargs)
 INFO:root:### MICRO (validation raw):

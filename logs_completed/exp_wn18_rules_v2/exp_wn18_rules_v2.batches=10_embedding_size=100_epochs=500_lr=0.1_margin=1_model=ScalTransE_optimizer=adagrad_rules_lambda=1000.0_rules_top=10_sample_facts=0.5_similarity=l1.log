@@ -1,25 +1,4 @@
 Using Theano backend.
-RuntimeError: module compiled against API version 0xa but this version of numpy is 0x9
-Traceback (most recent call last):
-  File "./bin/hyper-cli.py", line 17, in <module>
-    import hyper.learning.core as learning
-  File "/home/insight/.local/lib/python3.4/site-packages/hyper-0.0.1-py3.4.egg/hyper/learning/core.py", line 18, in <module>
-  File "/home/insight/.local/lib/python3.4/site-packages/hyper-0.0.1-py3.4.egg/hyper/visualization/visualization.py", line 4, in <module>
-  File "/home/insight/.local/lib/python3.4/site-packages/hyper-0.0.1-py3.4.egg/hyper/visualization/plot/util.py", line 4, in <module>
-  File "/home/insight/.local/lib/python3.4/site-packages/matplotlib-2.0.0b1-py3.4-linux-x86_64.egg/pylab.py", line 1, in <module>
-    from matplotlib.pylab import *
-  File "/home/insight/.local/lib/python3.4/site-packages/matplotlib-2.0.0b1-py3.4-linux-x86_64.egg/matplotlib/pylab.py", line 231, in <module>
-    import matplotlib.finance
-  File "/home/insight/.local/lib/python3.4/site-packages/matplotlib-2.0.0b1-py3.4-linux-x86_64.egg/matplotlib/finance.py", line 25, in <module>
-    from matplotlib.dates import date2num
-  File "/home/insight/.local/lib/python3.4/site-packages/matplotlib-2.0.0b1-py3.4-linux-x86_64.egg/matplotlib/dates.py", line 137, in <module>
-    import matplotlib.ticker as ticker
-  File "/home/insight/.local/lib/python3.4/site-packages/matplotlib-2.0.0b1-py3.4-linux-x86_64.egg/matplotlib/ticker.py", line 168, in <module>
-    from matplotlib import transforms as mtransforms
-  File "/home/insight/.local/lib/python3.4/site-packages/matplotlib-2.0.0b1-py3.4-linux-x86_64.egg/matplotlib/transforms.py", line 39, in <module>
-    from matplotlib._path import (affine_transform, count_bboxes_overlapping_bbox,
-ImportError: numpy.core.multiarray failed to import
-Using Theano backend.
 INFO:root:Acquiring data/wn18/wordnet-mlj12-train.txt ..
 INFO:root:Acquiring data/wn18/wordnet-mlj12-valid.txt ..
 INFO:root:Acquiring data/wn18/wordnet-mlj12-test.txt ..
@@ -1034,7 +1013,7 @@ INFO:root:Epoch no. 499 of 500 (samples: 70721)
 INFO:root:Loss: 11460.8332 +/- 3.8276
 INFO:root:Epoch no. 500 of 500 (samples: 70721)
 INFO:root:Loss: 11450.6021 +/- 3.7986
-/usr/local/lib/python3.4/dist-packages/keras/backend/theano_backend.py:514: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
+/usr/local/lib/python3.5/dist-packages/keras/backend/theano_backend.py:514: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
 To make this warning into an error, you can pass the parameter on_unused_input='raise' to theano.function. To disable it completely, use on_unused_input='ignore'.
   **kwargs)
 INFO:root:### MICRO (validation raw):

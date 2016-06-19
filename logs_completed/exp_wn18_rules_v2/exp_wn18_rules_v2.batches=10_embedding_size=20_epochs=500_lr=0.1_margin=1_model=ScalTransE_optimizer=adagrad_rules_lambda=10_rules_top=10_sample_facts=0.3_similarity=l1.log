@@ -1013,13 +1013,9 @@ INFO:root:Epoch no. 499 of 500 (samples: 42433)
 INFO:root:Loss: 12.9392 +/- 0.1033
 INFO:root:Epoch no. 500 of 500 (samples: 42433)
 INFO:root:Loss: 12.9711 +/- 0.2424
-/usr/local/lib/python3.4/dist-packages/keras/backend/theano_backend.py:514: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
+/usr/local/lib/python3.5/dist-packages/keras/backend/theano_backend.py:514: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
 To make this warning into an error, you can pass the parameter on_unused_input='raise' to theano.function. To disable it completely, use on_unused_input='ignore'.
   **kwargs)
-INFO (theano.gof.compilelock): Waiting for existing lock by process '23161' (I am process '22832')
-INFO:theano.gof.compilelock:Waiting for existing lock by process '23161' (I am process '22832')
-INFO (theano.gof.compilelock): To manually release the lock, delete /home/insight/.theano/compiledir_Linux-3.16--amd64-x86_64-with-debian-8.4--3.4.2-64/lock_dir
-INFO:theano.gof.compilelock:To manually release the lock, delete /home/insight/.theano/compiledir_Linux-3.16--amd64-x86_64-with-debian-8.4--3.4.2-64/lock_dir
 INFO:root:### MICRO (validation raw):
 INFO:root:	-- left   >> mean: 11647.4228, median: 6453.5, mrr: 0.028, hits@1: 1.34%
 INFO:root:	-- right  >> mean: 11608.0916, median: 6747.5, mrr: 0.028, hits@1: 1.5%

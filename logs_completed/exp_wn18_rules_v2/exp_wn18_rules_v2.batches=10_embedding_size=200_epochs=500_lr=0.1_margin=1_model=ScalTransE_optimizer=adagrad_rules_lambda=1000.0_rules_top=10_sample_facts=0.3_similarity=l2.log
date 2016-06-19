@@ -1,4 +1,73 @@
 Using Theano backend.
+/usr/local/lib/python3.5/dist-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/usr/local/lib/python3.5/dist-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+INFO:root:Acquiring data/wn18/wordnet-mlj12-train.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-valid.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-test.txt ..
+INFO:root:[Rules] Adding Head: 15, Tail: [(10, True)]
+INFO:root:[Rules] Adding Head: 12, Tail: [(17, True)]
+INFO:root:[Rules] Adding Head: 4, Tail: [(5, True)]
+INFO:root:[Rules] Adding Head: 13, Tail: [(3, True)]
+INFO:root:[Rules] Adding Head: 5, Tail: [(4, True)]
+INFO:root:[Rules] Adding Head: 16, Tail: [(11, True)]
+INFO:root:[Rules] Adding Head: 17, Tail: [(12, True)]
+INFO:root:[Rules] Adding Head: 11, Tail: [(16, True)]
+INFO:root:[Rules] Adding Head: 8, Tail: [(9, True)]
+INFO:root:[Rules] Adding Head: 2, Tail: [(2, True)]
+INFO:root:Samples: 42433, no. batches: 10 -> batch size: 4244
+INFO:root:Epoch no. 1 of 500 (samples: 42433)
+INFO (theano.gof.compilelock): Waiting for existing lock by process '10043' (I am process '9896')
+INFO:theano.gof.compilelock:Waiting for existing lock by process '10043' (I am process '9896')
+INFO (theano.gof.compilelock): To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.5--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
+INFO:theano.gof.compilelock:To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.5--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
+INFO:root:Loss: 20634382111.3 +/- 1028254436.04
+INFO:root:Epoch no. 2 of 500 (samples: 42433)
+INFO:root:Loss: 20183651845.1 +/- 9957271.2808
+INFO:root:Epoch no. 3 of 500 (samples: 42433)
+INFO:root:Loss: 20183382859.8 +/- 9968909.1896
+INFO:root:Epoch no. 4 of 500 (samples: 42433)
+INFO:root:Loss: 20183173705.8 +/- 9974334.8076
+INFO:root:Epoch no. 5 of 500 (samples: 42433)
+INFO:root:Loss: 20182999739.3 +/- 9976858.7949
+INFO:root:Epoch no. 6 of 500 (samples: 42433)
+INFO:root:Loss: 20182845410.5 +/- 9980331.0706
+INFO:root:Epoch no. 7 of 500 (samples: 42433)
+INFO:root:Loss: 20182709004.7 +/- 9981793.2006
+INFO:root:Epoch no. 8 of 500 (samples: 42433)
+INFO:root:Loss: 20182583405.9 +/- 9983170.8362
+INFO:root:Epoch no. 9 of 500 (samples: 42433)
+INFO:root:Loss: 20182468087.5 +/- 9985526.9693
+INFO:root:Epoch no. 10 of 500 (samples: 42433)
+INFO:root:Loss: 20182359489.5 +/- 9985647.3616
+INFO:root:Epoch no. 11 of 500 (samples: 42433)
+INFO:root:Loss: 20182258272.5 +/- 9986823.3595
+INFO:root:Epoch no. 12 of 500 (samples: 42433)
+INFO:root:Loss: 20182162063.6 +/- 9988095.4862
+INFO:root:Epoch no. 13 of 500 (samples: 42433)
+INFO:root:Loss: 20182070862.4 +/- 9988133.5702
+INFO:root:Epoch no. 14 of 500 (samples: 42433)
+Traceback (most recent call last):
+  File "./bin/hyper-cli.py", line 334, in <module>
+    main(sys.argv[1:])
+  File "./bin/hyper-cli.py", line 293, in main
+    visualize=is_visualize)
+  File "/home/insight/.local/lib/python3.5/site-packages/hyper-0.0.1-py3.5.egg/hyper/learning/core.py", line 182, in pairwise_training
+  File "/usr/local/lib/python3.5/dist-packages/keras/models.py", line 408, in fit
+    sample_weight=sample_weight)
+  File "/usr/local/lib/python3.5/dist-packages/keras/engine/training.py", line 1053, in fit
+    callback_metrics=callback_metrics)
+  File "/usr/local/lib/python3.5/dist-packages/keras/engine/training.py", line 791, in _fit_loop
+    outs = f(ins_batch)
+  File "/usr/local/lib/python3.5/dist-packages/keras/backend/theano_backend.py", line 518, in __call__
+    return self.function(*inputs)
+  File "/usr/local/lib/python3.5/dist-packages/theano/compile/function_module.py", line 859, in __call__
+    outputs = self.fn()
+  File "/usr/local/lib/python3.5/dist-packages/theano/gof/op.py", line 911, in rval
+    def rval(p=p, i=node_input_storage, o=node_output_storage, n=node):
+KeyboardInterrupt
+Using Theano backend.
 INFO:root:Acquiring data/wn18/wordnet-mlj12-train.txt ..
 INFO:root:Acquiring data/wn18/wordnet-mlj12-valid.txt ..
 INFO:root:Acquiring data/wn18/wordnet-mlj12-test.txt ..
@@ -1013,7 +1082,7 @@ INFO:root:Epoch no. 499 of 500 (samples: 42433)
 INFO:root:Loss: 20171136331.0 +/- 9993996.2444
 INFO:root:Epoch no. 500 of 500 (samples: 42433)
 INFO:root:Loss: 20171123283.6 +/- 9994385.9952
-/usr/local/lib/python3.4/dist-packages/keras/backend/theano_backend.py:514: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
+/usr/local/lib/python3.5/dist-packages/keras/backend/theano_backend.py:514: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
 To make this warning into an error, you can pass the parameter on_unused_input='raise' to theano.function. To disable it completely, use on_unused_input='ignore'.
   **kwargs)
 INFO:root:### MICRO (validation raw):

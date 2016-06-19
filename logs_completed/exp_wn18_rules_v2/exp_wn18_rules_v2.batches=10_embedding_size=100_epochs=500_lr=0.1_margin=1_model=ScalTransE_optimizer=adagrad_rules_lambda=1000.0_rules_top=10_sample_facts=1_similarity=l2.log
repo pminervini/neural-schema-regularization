@@ -32,6 +32,57 @@ INFO:root:Loss: 38811.7485 +/- 502.284
 INFO:root:Epoch no. 9 of 500 (samples: 141442)
 INFO:root:Loss: 37153.4263 +/- 431.299
 INFO:root:Epoch no. 10 of 500 (samples: 141442)
+Traceback (most recent call last):
+  File "./bin/hyper-cli.py", line 334, in <module>
+    main(sys.argv[1:])
+  File "./bin/hyper-cli.py", line 293, in main
+    visualize=is_visualize)
+  File "/home/insight/.local/lib/python3.5/site-packages/hyper-0.0.1-py3.5.egg/hyper/learning/core.py", line 182, in pairwise_training
+  File "/usr/local/lib/python3.5/dist-packages/keras/models.py", line 408, in fit
+    sample_weight=sample_weight)
+  File "/usr/local/lib/python3.5/dist-packages/keras/engine/training.py", line 1053, in fit
+    callback_metrics=callback_metrics)
+  File "/usr/local/lib/python3.5/dist-packages/keras/engine/training.py", line 780, in _fit_loop
+    ins_batch = slice_X(ins[:-1], batch_ids) + [ins[-1]]
+  File "/usr/local/lib/python3.5/dist-packages/keras/engine/training.py", line 292, in slice_X
+    return [x[start] for x in X]
+  File "/usr/local/lib/python3.5/dist-packages/keras/engine/training.py", line 292, in <listcomp>
+    return [x[start] for x in X]
+KeyboardInterrupt
+Using Theano backend.
+INFO:root:Acquiring data/wn18/wordnet-mlj12-train.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-valid.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-test.txt ..
+INFO:root:[Rules] Adding Head: 15, Tail: [(10, True)]
+INFO:root:[Rules] Adding Head: 12, Tail: [(17, True)]
+INFO:root:[Rules] Adding Head: 4, Tail: [(5, True)]
+INFO:root:[Rules] Adding Head: 13, Tail: [(3, True)]
+INFO:root:[Rules] Adding Head: 5, Tail: [(4, True)]
+INFO:root:[Rules] Adding Head: 16, Tail: [(11, True)]
+INFO:root:[Rules] Adding Head: 17, Tail: [(12, True)]
+INFO:root:[Rules] Adding Head: 11, Tail: [(16, True)]
+INFO:root:[Rules] Adding Head: 8, Tail: [(9, True)]
+INFO:root:[Rules] Adding Head: 2, Tail: [(2, True)]
+INFO:root:Samples: 141442, no. batches: 10 -> batch size: 14145
+INFO:root:Epoch no. 1 of 500 (samples: 141442)
+INFO:root:Loss: 32199995.4551 +/- 96362902.692
+INFO:root:Epoch no. 2 of 500 (samples: 141442)
+INFO:root:Loss: 62569.2898 +/- 2952.491
+INFO:root:Epoch no. 3 of 500 (samples: 141442)
+INFO:root:Loss: 54663.6151 +/- 1725.5718
+INFO:root:Epoch no. 4 of 500 (samples: 141442)
+INFO:root:Loss: 49607.0912 +/- 1198.141
+INFO:root:Epoch no. 5 of 500 (samples: 141442)
+INFO:root:Loss: 45931.7179 +/- 905.8234
+INFO:root:Epoch no. 6 of 500 (samples: 141442)
+INFO:root:Loss: 43073.0319 +/- 720.6008
+INFO:root:Epoch no. 7 of 500 (samples: 141442)
+INFO:root:Loss: 40752.8246 +/- 594.0968
+INFO:root:Epoch no. 8 of 500 (samples: 141442)
+INFO:root:Loss: 38811.7485 +/- 502.284
+INFO:root:Epoch no. 9 of 500 (samples: 141442)
+INFO:root:Loss: 37153.4263 +/- 431.299
+INFO:root:Epoch no. 10 of 500 (samples: 141442)
 INFO:root:Loss: 35710.3721 +/- 377.1702
 INFO:root:Epoch no. 11 of 500 (samples: 141442)
 INFO:root:Loss: 34437.8366 +/- 334.1718
@@ -1013,7 +1064,7 @@ INFO:root:Epoch no. 499 of 500 (samples: 141442)
 INFO:root:Loss: 5779.0764 +/- 0.9713
 INFO:root:Epoch no. 500 of 500 (samples: 141442)
 INFO:root:Loss: 5774.1313 +/- 1.1008
-/usr/local/lib/python3.4/dist-packages/keras/backend/theano_backend.py:514: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
+/usr/local/lib/python3.5/dist-packages/keras/backend/theano_backend.py:514: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
 To make this warning into an error, you can pass the parameter on_unused_input='raise' to theano.function. To disable it completely, use on_unused_input='ignore'.
   **kwargs)
 INFO:root:### MICRO (validation raw):

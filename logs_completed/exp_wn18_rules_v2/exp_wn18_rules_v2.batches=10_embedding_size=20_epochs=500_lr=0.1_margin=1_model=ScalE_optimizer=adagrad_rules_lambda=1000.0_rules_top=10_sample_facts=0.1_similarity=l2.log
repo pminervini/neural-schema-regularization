@@ -14,6 +14,14 @@ INFO:root:[Rules] Adding Head: 8, Tail: [(9, True)]
 INFO:root:[Rules] Adding Head: 2, Tail: [(2, True)]
 INFO:root:Samples: 14144, no. batches: 10 -> batch size: 1415
 INFO:root:Epoch no. 1 of 500 (samples: 14144)
+INFO (theano.gof.compilelock): Waiting for existing lock by process '13120' (I am process '12294')
+INFO:theano.gof.compilelock:Waiting for existing lock by process '13120' (I am process '12294')
+INFO (theano.gof.compilelock): To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.4--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
+INFO:theano.gof.compilelock:To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.4--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
+INFO (theano.gof.compilelock): Waiting for existing lock by process '13120' (I am process '12294')
+INFO:theano.gof.compilelock:Waiting for existing lock by process '13120' (I am process '12294')
+INFO (theano.gof.compilelock): To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.4--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
+INFO:theano.gof.compilelock:To manually release the lock, delete /home/insight/.theano/compiledir_Linux-4.4--amd64-x86_64-with-debian-stretch-sid--3.5.1+-64/lock_dir
 INFO:root:Loss: 840228.3877 +/- 2303924.0033
 INFO:root:Epoch no. 2 of 500 (samples: 14144)
 INFO:root:Loss: 54657.1352 +/- 2934.8412
@@ -1013,7 +1021,7 @@ INFO:root:Epoch no. 499 of 500 (samples: 14144)
 INFO:root:Loss: 2754.6938 +/- 3.1462
 INFO:root:Epoch no. 500 of 500 (samples: 14144)
 INFO:root:Loss: 2751.8011 +/- 3.2201
-/home/insight/.local/lib/python3.4/site-packages/Keras-1.0.1-py3.4.egg/keras/backend/theano_backend.py:489: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
+/usr/local/lib/python3.5/dist-packages/keras/backend/theano_backend.py:503: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
 To make this warning into an error, you can pass the parameter on_unused_input='raise' to theano.function. To disable it completely, use on_unused_input='ignore'.
   **kwargs)
 INFO:root:### MICRO (validation raw):
