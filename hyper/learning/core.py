@@ -197,4 +197,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
 
         logging.info('Loss: %s +/- %s' % (round(np.mean(losses), 4), round(np.std(losses), 4)))
 
+        if np.isnan(np.mean(losses)):
+            raise ValueError('NaN propagation.')
+
     return model
