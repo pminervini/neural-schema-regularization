@@ -19,11 +19,12 @@ class TestMasking(unittest.TestCase):
             (1, 0, 2)]
 
         entities = [0, 1, 2]
-        embedding_lengths = util.get_entity_frequencies(triples=triples, cut_points=[1, 2, 3],
-                                                        embedding_lengths=[4, 5, 6])
-        self.assertTrue(embedding_lengths == {0: 6, 1: 5, 2: 4})
+        embedding_lengths = [4, 5, 6]
 
-        mask_ranges = np.array([[0, embedding_lengths[e]] for e in entities])
+        entity_bins = util.get_entity_bins(triples=triples, cut_points=[1, 2, 3])
+        self.assertTrue(entity_bins == {0: 2, 1: 1, 2: 0})
+
+        mask_ranges = np.array([[0, embedding_lengths[entity_bins[e]]] for e in entities])
         mask = util.create_mask(nb_items=3, embedding_size=10, mask_ranges=mask_ranges)
         true_mask = np.array([
             [1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
@@ -39,11 +40,12 @@ class TestMasking(unittest.TestCase):
             (1, 0, 2)]
 
         entities = [0, 1, 2]
-        embedding_lengths = util.get_entity_frequencies(triples=triples, cut_points=[1, 2, 3],
-                                                        embedding_lengths=[5, 4, 6])
-        self.assertTrue(embedding_lengths == {0: 6, 1: 4, 2: 5})
+        embedding_lengths = [5, 4, 6]
 
-        mask_ranges = np.array([[0, embedding_lengths[e]] for e in entities])
+        entity_bins = util.get_entity_bins(triples=triples, cut_points=[1, 2, 3])
+        self.assertTrue(entity_bins == {0: 2, 1: 1, 2: 0})
+
+        mask_ranges = np.array([[0, embedding_lengths[entity_bins[e]]] for e in entities])
         mask = util.create_mask(nb_items=3, embedding_size=10, mask_ranges=mask_ranges)
         true_mask = np.array([
             [1, 1, 1, 1, 1, 1, 0, 0, 0, 0],

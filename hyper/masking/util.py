@@ -16,13 +16,13 @@ def create_mask(nb_items, embedding_size, mask_ranges):
     return mask
 
 
-def get_entity_frequencies(triples, cut_points, embedding_lengths):
+def get_entity_bins(triples, cut_points):
     entity_seq = [s for (s, _, _) in triples] + [o for (_, _, o) in triples]
     entity_counts = sorted(Counter(entity_seq).items(), key=lambda entry: entry[1])
 
-    entity_lengths = {}
+    entity_bins = {}
     for (entity, count) in entity_counts:
-        idx = next((cut_points.index(c) for c in cut_points if c >= count), len(cut_points))
-        entity_lengths[entity] = embedding_lengths[idx]
+        bin_idx = next((cut_points.index(c) for c in cut_points if c >= count), len(cut_points))
+        entity_bins[entity] = bin_idx
 
-    return entity_lengths
+    return entity_bins

@@ -104,9 +104,11 @@ def main(argv):
 
     # Frequency-based embedding size
     argparser.add_argument('--frequency-embedding-lengths', action='store', nargs='+', type=int, default=None,
-                           help='Frequency based embedding lengths')
+                           help='Frequency-based embedding lengths')
     argparser.add_argument('--frequency-cutoffs', action='store', nargs='+', type=int, default=None,
                            help='Frequency cutoffs')
+    argparser.add_argument('--frequency-mask-type', action='store', type=int, default=1,
+                           help='Frequency-based embedding lengths - Mask type')
 
     argparser.add_argument('--model', action='store', type=str, default=None,
                            help='Name of the model to use')
@@ -190,8 +192,14 @@ def main(argv):
 
     frequency_embedding_lengths = args.frequency_embedding_lengths
     frequency_cutoffs = args.frequency_cutoffs
-    assert (frequency_embedding_lengths is None and frequency_embedding_lengths is None) or \
-           (len(frequency_embedding_lengths) == len(frequency_cutoffs) + 1)
+
+    # The number of embedding sizes should be the number entity frequency cut-offs + 1
+    if (frequency_embedding_lengths is not None) and (frequency_cutoffs is not None):
+        assert len(frequency_embedding_lengths) == (len(frequency_cutoffs) + 1)
+
+    frequency_mask_type = args.frequency_mask_type
+    if frequency_mask_type == 2:
+        assert entity_embedding_size == sum(frequency_embedding_lengths)
 
     model_name = args.model
     similarity_name = args.similarity
@@ -302,12 +310,17 @@ def main(argv):
         import hyper.masking.util as mask_util
         from hyper.constraints import MaskConstraint
 
-        embedding_lengths = mask_util.get_entity_frequencies([(s, p, o) for [p, [s, o]] in train_sequences],
-                                                             frequency_cutoffs, frequency_embedding_lengths)
+        entity_bins = mask_util.get_entity_bins([(s, p, o) for [p, [s, o]] in train_sequences], frequency_cutoffs)
 
-        mask_ranges = np.zeros((nb_entities + 1, 2), dtype='int8')
-        for idx in range(1, nb_entities + 1):
-            mask_ranges[idx, 0], mask_ranges[idx, 1] = 0, embedding_lengths[idx]
+        mask_ranges = None
+        if frequency_mask_type == 1:
+            mask_ranges = np.zeros((nb_entities + 1, 2), dtype='int8')
+            for idx in range(1, nb_entities + 1):
+                mask_ranges[idx, 0], mask_ranges[idx, 1] = 0, frequency_embedding_lengths[entity_bins[idx]]
+        elif frequency_mask_type == 2:
+            pass
+        else:
+            raise ValueError('Unsupported frequency mask type: %s' % frequency_mask_type)
 
         mask = mask_util.create_mask(nb_items=nb_entities + 1, embedding_size=entity_embedding_size,
                                      mask_ranges=mask_ranges)
