@@ -11,17 +11,16 @@ import unittest
 class TestMasking(unittest.TestCase):
     def setUp(self):
         self.rs = np.random.RandomState(1)
-
-    def test_masking(self):
-        triples = [
+        self.triples = [
             (0, 0, 0),
             (0, 0, 1),
             (1, 0, 2)]
 
+    def test_masking(self):
         entities = [0, 1, 2]
         embedding_lengths = [4, 5, 6]
 
-        entity_bins = util.get_entity_bins(triples=triples, cut_points=[1, 2, 3])
+        entity_bins = util.get_entity_bins(triples=self.triples, cut_points=[1, 2, 3])
         self.assertTrue(entity_bins == {0: 2, 1: 1, 2: 0})
 
         mask_ranges = np.array([[0, embedding_lengths[entity_bins[e]]] for e in entities])
@@ -34,15 +33,10 @@ class TestMasking(unittest.TestCase):
         self.assertTrue(sum(sum(abs(mask - true_mask))) == 0)
 
     def test_masking_2(self):
-        triples = [
-            (0, 0, 0),
-            (0, 0, 1),
-            (1, 0, 2)]
-
         entities = [0, 1, 2]
         embedding_lengths = [5, 4, 6]
 
-        entity_bins = util.get_entity_bins(triples=triples, cut_points=[1, 2, 3])
+        entity_bins = util.get_entity_bins(triples=self.triples, cut_points=[1, 2, 3])
         self.assertTrue(entity_bins == {0: 2, 1: 1, 2: 0})
 
         mask_ranges = np.array([[0, embedding_lengths[entity_bins[e]]] for e in entities])
@@ -81,6 +75,22 @@ class TestMasking(unittest.TestCase):
         l = [2, 1, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2]
         for a, b in zip(l, [entity_lengths[i] for i in range(NE)]):
             self.assertTrue(a == b)
+
+    def test_zero(self):
+        entities = [0, 1, 2]
+        embedding_lengths = [5, 4]
+
+        entity_bins = util.get_entity_bins(triples=self.triples, cut_points=[0])
+        self.assertTrue(entity_bins == {0: 1, 1: 1, 2: 1})
+
+        mask_ranges = np.array([[0, embedding_lengths[entity_bins[e]]] for e in entities])
+        mask = util.create_mask(nb_items=3, embedding_size=10, mask_ranges=mask_ranges)
+        true_mask = np.array([
+            [1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+        ])
+        self.assertTrue(sum(sum(abs(mask - true_mask))) == 0)
 
 if __name__ == '__main__':
     unittest.main()
