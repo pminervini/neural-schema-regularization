@@ -51,7 +51,7 @@ hyperparameters_space = dict(
     embedding_size=[20, 50, 100, 200],
     freq_emb_len_one=[20, 50, 100, 200],
     freq_emb_len_two=[20, 50, 100, 200],
-    freq_cutoffs=[50, 100, 200, 300, 400, 500]
+    freq_cutoffs=[0, 50, 100, 200, 300, 400, 500]
 )
 
 configurations = cartesian_product(hyperparameters_space)
