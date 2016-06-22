@@ -66,7 +66,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
     if entity_constraint is None:
         entity_constraints = norm_constraint
     else:
-        entity_constraints = constraints.GroupConstraint(constraints=[norm_constraint, entity_constraint])
+        entity_constraints = constraints.GroupConstraint(constraints=[entity_constraint, norm_constraint])
 
     entity_embedding_layer = Embedding(input_dim=nb_entities + 1, output_dim=entity_embedding_size,
                                        input_length=entity_input_length, init='glorot_uniform',
