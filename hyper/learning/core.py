@@ -6,7 +6,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import SimpleRNN, GRU, LSTM
 from keras.layers.embeddings import Embedding
-from keras.layers.core import Merge, Dropout
+from keras.layers.core import Merge, Dropout, Reshape, Dense
 from keras.engine.training import make_batches
 
 import hyper.layers.core as core
@@ -25,7 +25,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
                       dropout_entity_embeddings=None, dropout_predicate_embeddings=None,
                       model_name='TransE', similarity_name='L1', nb_epochs=1000, batch_size=128, nb_batches=None,
                       margin=1.0, loss_name='hinge', negatives_name='corrupt', optimizer=None, regularizer=None,
-                      entity_constraint=None, predicate_constraint=None, visualize=False):
+                      hidden_size=None, entity_constraint=None, predicate_constraint=None, visualize=False):
 
     np.random.seed(seed)
     random_state = np.random.RandomState(seed=seed)
@@ -50,9 +50,13 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
         elif model_name in ['DualAffinE']:
             predicate_embedding_size = ((entity_embedding_size ** 2) + entity_embedding_size) * 2
 
+    predicate_input_length, entity_input_length = None, None
+    if model_name == 'ER-MLP':
+        predicate_input_length, entity_input_length = 1, 2
+
     predicate_embedding_layer = Embedding(input_dim=nb_predicates + 1, output_dim=predicate_embedding_size,
-                                          input_length=None, init='glorot_uniform', W_regularizer=regularizer,
-                                          W_constraint=predicate_constraint)
+                                          input_length=predicate_input_length, init='glorot_uniform',
+                                          W_regularizer=regularizer, W_constraint=predicate_constraint)
     predicate_encoder.add(predicate_embedding_layer)
 
     if dropout_predicate_embeddings is not None and dropout_predicate_embeddings > .0:
@@ -65,7 +69,8 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
         entity_constraints = constraints.GroupConstraint(constraints=[norm_constraint, entity_constraint])
 
     entity_embedding_layer = Embedding(input_dim=nb_entities + 1, output_dim=entity_embedding_size,
-                                       input_length=None, init='glorot_uniform', W_constraint=entity_constraints)
+                                       input_length=entity_input_length, init='glorot_uniform',
+                                       W_constraint=entity_constraints)
     entity_encoder.add(entity_embedding_layer)
 
     if dropout_entity_embeddings is not None and dropout_entity_embeddings > .0:
@@ -83,6 +88,22 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
         merge_layer = Merge([predicate_encoder, entity_encoder], mode=merge_function, output_shape=lambda _: (None, 1))
         model.add(merge_layer)
 
+    elif model_name in ['ER-MLP']:
+        reshape_layer = Reshape(target_shape=(1, entity_embedding_size * entity_input_length))
+        entity_encoder.add(reshape_layer)
+
+        model = Sequential()
+        merge_layer = Merge([predicate_encoder, entity_encoder], mode='concat', concat_axis=-1)
+        model.add(merge_layer)
+
+        reshape_layer = Reshape(target_shape=(entity_embedding_size * (entity_input_length + 1),))
+        model.add(reshape_layer)
+
+        C_layer = Dense(output_dim=hidden_size, activation='tanh')
+        model.add(C_layer)
+
+        w_layer = Dense(output_dim=1)
+        model.add(w_layer)
     elif model_name in ['rTransE', 'rScalE']:
         merge_function = core.latent_distance_nary_merge_function
 

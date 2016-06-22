@@ -135,6 +135,9 @@ def main(argv):
     argparser.add_argument('--predicate-nonnegative', action='store_true',
                            help='Enforce a non-negativity constraint on the predicate embeddings')
 
+    argparser.add_argument('--hidden-size', action='store', type=int, default=None,
+                           help='Dimension of the hidden layer (used by e.g. the ER-MLP model')
+
     argparser.add_argument('--raw', action='store_true', help='Evaluate the model in the raw setting')
     argparser.add_argument('--filtered', action='store_true', help='Evaluate the model in the filtered setting')
     argparser.add_argument('--visualize', action='store_true', help='Visualize the embeddings')
@@ -214,6 +217,8 @@ def main(argv):
     predicate_l1 = args.predicate_l1
     predicate_l2 = args.predicate_l2
     predicate_nonnegative = args.predicate_nonnegative
+
+    hidden_size = args.hidden_size
 
     is_raw = args.raw
     is_filtered = args.filtered
@@ -352,6 +357,7 @@ def main(argv):
         model = robust.pairwise_training(robust_alpha=robust_alpha, robust_beta=robust_beta, **kwargs)
     else:
         kwargs['entity_constraint'] = entity_constraint
+        kwargs['hidden_size'] = hidden_size
 
         model = learning.pairwise_training(**kwargs)
 
