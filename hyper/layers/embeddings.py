@@ -95,9 +95,6 @@ class MemoryEfficientEmbedding(Layer):
             W_frame = self.init((frame_input_dim, frame_output_dim), name='{}_W'.format(self.name))
             self.frame_parameters.append(W_frame)
 
-            #if frame.W is not None:
-            #    K.set_value(W_frame, frame.W)
-
             self.W = T.set_subtensor(self.W[frame.row_start:frame.row_end, frame.col_start:frame.col_end], W_frame)
 
         self.trainable_weights = self.frame_parameters
@@ -115,8 +112,6 @@ class MemoryEfficientEmbedding(Layer):
         if self.activity_regularizer:
             self.activity_regularizer.set_layer(self)
             self.regularizers.append(self.activity_regularizer)
-
-        print(self.get_weights())
 
         if self.initial_weights is not None:
             self.set_weights(self.initial_weights)
