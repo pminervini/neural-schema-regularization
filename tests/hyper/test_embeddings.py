@@ -4,8 +4,10 @@ import numpy as np
 
 from keras.models import Sequential
 from keras.layers.embeddings import Embedding
+from keras.optimizers import SGD
 from keras import backend as K
 
+from hyper import constraints
 from hyper.layers.embeddings import MemoryEfficientEmbedding, Frame
 
 import unittest
@@ -17,7 +19,7 @@ def loss(y_true, y_pred):
 
 
 class TestEmbeddings(unittest.TestCase):
-    _ITERATIONS = 1
+    _ITERATIONS = 8
 
     def setUp(self):
         self.rs = np.random.RandomState(1)
@@ -51,7 +53,7 @@ class TestEmbeddings(unittest.TestCase):
 
             old_y = encoder.predict(x, batch_size=1)[0]
             old_weights = encoder.get_weights()
-            print(old_y)
+            #print(old_y)
 
             for frame, weight in zip(frames, weights):
                 for i in range(frame.row_end - frame.row_start):
@@ -66,6 +68,37 @@ class TestEmbeddings(unittest.TestCase):
 
             for old_weight, new_weight in zip(old_weights, new_weights):
                 self.assertTrue(sum(sum(old_weight - new_weight)) > .0)
+
+    def test_memory_efficient_embeddings_constraint(self):
+        for _ in range(self._ITERATIONS):
+            encoder = Sequential()
+
+            frames = [Frame(0, 1, 0, 2), Frame(2, 3, 2, 4)]
+            weights = [self.rs.random_sample((1, 2)), np.ones((1, 2))]
+
+            normcon = constraints.NormConstraint(m=1., axis=1)
+
+            layer = MemoryEfficientEmbedding(input_dim=3, output_dim=10, input_length=None,
+                                             frames=frames, weights=weights, W_constraint=normcon)
+            encoder.add(layer)
+
+            optimizer = SGD(lr=.0, momentum=.0, decay=.0, nesterov=False)
+            encoder.compile(loss=loss, optimizer=optimizer)
+
+            x = [np.array([[0, 1, 2]])]
+
+            old_y = encoder.predict(x, batch_size=1)[0]
+            old_weights = encoder.get_weights()
+
+            t = [np.zeros(shape=(1, 3, 10))]
+            encoder.fit(x=x, y=t, nb_epoch=1, batch_size=1, shuffle=False, verbose=0)
+
+            new_y = encoder.predict(x, batch_size=1)[0]
+            new_weights = encoder.get_weights()
+
+            for weight in new_weights:
+                self.assertAlmostEquals(np.linalg.norm(weight, 2), 1.0, 5)
+
 
 if __name__ == '__main__':
     unittest.main()

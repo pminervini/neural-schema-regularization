@@ -2,8 +2,6 @@
 
 This package implements several state-of-the-art latent factor models for link prediction in Knowledge Graphs such as the Translating Embeddings model, and their extensions for managing Knowledge (Hyper-)Graphs with super-dyadic relation types.
 
-[1] Bordes, A. et al. - Translating Embeddings for Modeling Multi-relational Data - NIPS 2013
-
 ## Installation
 
 This library is heavily based on Keras and Theano.
@@ -23,8 +21,6 @@ $ python3 -uB setup.py install --user
 ## Running
 
 The following command trains a Translating Embeddings model (in its L1 formulation) on the FB15k dataset: the training process uses AdaGrad [2] with a 0.1 learning rate and a 100 embedding size, and then returns the Mean Rank and Hits@10 metrics on both the validation and the test set.
-
-[2] Duchi, J. et al. - Adaptive Subgradient Methods for Online Learning and Stochastic Optimization - JMLR 2011
 
 ```bash
 $ ./bin/hyper-cli.py --train data/fb15k/freebase_mtr100_mte100-train.txt --valid data/fb15k/freebase_mtr100_mte100-valid.txt --test data/fb15k/freebase_mtr100_mte100-test.txt --epochs 100 --optimizer adagrad --lr 0.1 --batches 10 --model TransE --similarity L1 --entity-embedding-size 100 --predicate-embedding-size 100
@@ -93,3 +89,7 @@ INFO:root:      -- global >> mean: 277.8351, median: 2.0, hits@10: 92.5%
 ```
 
 Please note that our results improve over those in [1]: AdaGrad has better convergence guarantees than Stochastic Gradient Descent (SGD), which was used in [1].
+
+[1] Bordes, A. et al. - Translating Embeddings for Modeling Multi-relational Data - NIPS 2013
+
+[2] Duchi, J. et al. - Adaptive Subgradient Methods for Online Learning and Stochastic Optimization - JMLR 2011
