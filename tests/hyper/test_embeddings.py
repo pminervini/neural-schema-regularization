@@ -36,10 +36,11 @@ class TestEmbeddings(unittest.TestCase):
         for _ in range(self._ITERATIONS):
             encoder = Sequential()
 
-            W_frame = self.rs.random_sample((1, 2))
-            frames = [Frame(0, 1, 0, 2, W=W_frame)]
+            frames = [Frame(0, 1, 0, 2), Frame(2, 3, 0, 2)]
+            weights = [self.rs.random_sample((1, 2)), np.ones((1, 2))]
 
-            layer = MemoryEfficientEmbedding(input_dim=3, output_dim=10, input_length=None, frames=frames)
+            layer = MemoryEfficientEmbedding(input_dim=3, output_dim=10, input_length=None,
+                                             frames=frames, weights=weights)
             encoder.add(layer)
 
             encoder.compile(loss='binary_crossentropy', optimizer='adagrad')

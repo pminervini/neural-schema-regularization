@@ -11,15 +11,12 @@ import logging
 
 
 class Frame:
-    def __init__(self, row_start, row_end, col_start, col_end, W=None):
+    def __init__(self, row_start, row_end, col_start, col_end):
         # Item indices considered by the frame
         self.row_start, self.row_end = row_start, row_end
 
         # Start and end of the embedding vectors
         self.col_start, self.col_end = col_start, col_end
-
-        # Weights
-        self.W = W
 
     @property
     def row_start(self):
@@ -53,22 +50,17 @@ class Frame:
     def col_end(self, col_end):
         self._col_end = col_end
 
-    @property
-    def W(self):
-        return self._W
-
-
-    @W.setter
-    def W(self, W):
-        self._W = W
-
 
 class MemoryEfficientEmbedding(Layer):
     input_ndim = 2
 
-    def __init__(self, input_dim, output_dim, frames=None, init='uniform', input_length=None,
-                 W_regularizer=None, activity_regularizer=None, W_constraint=None,
-                 mask_zero=False, **kwargs):
+    def __init__(self, input_dim, output_dim, frames=None,
+                 init='uniform', input_length=None,
+                 W_regularizer=None, activity_regularizer=None,
+                 W_constraint=None,
+                 mask_zero=False,
+                 weights=None,
+                 **kwargs):
 
         self.input_dim = input_dim
         self.output_dim = output_dim
@@ -86,14 +78,13 @@ class MemoryEfficientEmbedding(Layer):
         self.W_regularizer = regularizers.get(W_regularizer)
         self.activity_regularizer = regularizers.get(activity_regularizer)
 
+        self.initial_weights = weights
         kwargs['input_shape'] = (self.input_length,)
         kwargs['input_dtype'] = 'int32'
 
         super(MemoryEfficientEmbedding, self).__init__(**kwargs)
 
     def build(self, input_shape):
-        # self.W = self.init((self.input_dim, self.output_dim), name='{}_W'.format(self.name))
-
         self.W = K.zeros(shape=(self.input_dim, self.output_dim))
 
         self.frame_parameters = []
@@ -104,8 +95,8 @@ class MemoryEfficientEmbedding(Layer):
             W_frame = self.init((frame_input_dim, frame_output_dim), name='{}_W'.format(self.name))
             self.frame_parameters.append(W_frame)
 
-            if frame.W is not None:
-                K.set_value(W_frame, frame.W)
+            #if frame.W is not None:
+            #    K.set_value(W_frame, frame.W)
 
             self.W = T.set_subtensor(self.W[frame.row_start:frame.row_end, frame.col_start:frame.col_end], W_frame)
 
@@ -125,8 +116,10 @@ class MemoryEfficientEmbedding(Layer):
             self.activity_regularizer.set_layer(self)
             self.regularizers.append(self.activity_regularizer)
 
-        #if self.initial_weights is not None:
-        #    self.set_weights(self.initial_weights)
+        print(self.get_weights())
+
+        if self.initial_weights is not None:
+            self.set_weights(self.initial_weights)
 
     def compute_mask(self, x, mask=None):
         if not self.mask_zero:
