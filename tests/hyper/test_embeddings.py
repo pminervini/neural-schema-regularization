@@ -19,7 +19,7 @@ def loss(y_true, y_pred):
 
 
 class TestEmbeddings(unittest.TestCase):
-    _ITERATIONS = 8
+    _ITERATIONS = 32
 
     def setUp(self):
         self.rs = np.random.RandomState(1)
@@ -58,12 +58,12 @@ class TestEmbeddings(unittest.TestCase):
             for frame, weight in zip(frames, weights):
                 for i in range(frame.row_end - frame.row_start):
                     for j in range(frame.col_end - frame.col_start):
-                        self.assertAlmostEquals(weight[i, j], old_y[frame.row_start + i, frame.col_start + j])
+                        self.assertAlmostEqual(weight[i, j], old_y[frame.row_start + i, frame.col_start + j])
 
             t = [np.zeros(shape=(1, 3, 10))]
             encoder.fit(x=x, y=t, nb_epoch=1, batch_size=1, shuffle=False, verbose=0)
 
-            new_y = encoder.predict(x, batch_size=1)[0]
+            #new_y = encoder.predict(x, batch_size=1)[0]
             new_weights = encoder.get_weights()
 
             for old_weight, new_weight in zip(old_weights, new_weights):
@@ -87,8 +87,8 @@ class TestEmbeddings(unittest.TestCase):
 
             x = [np.array([[0, 1, 2]])]
 
-            old_y = encoder.predict(x, batch_size=1)[0]
-            old_weights = encoder.get_weights()
+            #old_y = encoder.predict(x, batch_size=1)[0]
+            #old_weights = encoder.get_weights()
 
             t = [np.zeros(shape=(1, 3, 10))]
             encoder.fit(x=x, y=t, nb_epoch=1, batch_size=1, shuffle=False, verbose=0)
@@ -97,8 +97,11 @@ class TestEmbeddings(unittest.TestCase):
             new_weights = encoder.get_weights()
 
             for weight in new_weights:
-                self.assertAlmostEquals(np.linalg.norm(weight, 2), 1.0, 5)
+                self.assertAlmostEqual(np.linalg.norm(weight, 2), 1.0, 5)
 
+            for row_idx in range(new_y.shape[0]):
+                row_norm = np.linalg.norm(new_y[row_idx, :], 2)
+                self.assertAlmostEqual(row_norm, 0.0 if row_norm < .5 else 1.0, 5)
 
 if __name__ == '__main__':
     unittest.main()
