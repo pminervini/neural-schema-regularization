@@ -207,9 +207,6 @@ def main(argv):
     nb_entities = len(parser.entity_vocabulary)
     nb_predicates = len(parser.predicate_vocabulary)
 
-    #print(sorted(parser.entity_index, key=parser.entity_index.get, reverse=True))
-    #sys.exit(0)
-
     seed = args.seed
 
     entity_embedding_size = args.entity_embedding_size

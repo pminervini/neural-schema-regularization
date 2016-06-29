@@ -19,7 +19,8 @@ class KnowledgeBaseParser(object):
             for arg in fact.argument_names:
                 self.entity_vocabulary.add(arg)
 
-        self._fit(entity_ordering=entity_ordering, predicate_ordering=predicate_ordering)
+        self.entity_index, self.predicate_index = self._fit(entity_ordering=entity_ordering,
+                                                            predicate_ordering=predicate_ordering)
 
     def _fit(self, entity_ordering=None, predicate_ordering=None):
         """
@@ -30,9 +31,9 @@ class KnowledgeBaseParser(object):
         sorted_ent_lst = entity_ordering if entity_ordering is not None else sorted(self.entity_vocabulary)
         sorted_pred_lst = predicate_ordering if predicate_ordering is not None else sorted(self.predicate_vocabulary)
 
-        self.entity_index = {entity: idx for idx, entity in enumerate(sorted_ent_lst, start=1)}
-        self.predicate_index = {predicate: idx for idx, predicate in enumerate(sorted_pred_lst, start=1)}
-        return
+        entity_index = {entity: idx for idx, entity in enumerate(sorted_ent_lst, start=1)}
+        predicate_index = {predicate: idx for idx, predicate in enumerate(sorted_pred_lst, start=1)}
+        return entity_index, predicate_index
 
     def facts_to_sequences(self, facts):
         """
