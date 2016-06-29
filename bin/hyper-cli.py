@@ -182,7 +182,24 @@ def main(argv):
     if args.test is not None:
         test_facts = [fact(s, p, o) for s, p, o in read_triples(args.test)]
 
-    parser = knowledgebase.KnowledgeBaseParser(train_facts + validation_facts + test_facts)
+    all_facts = train_facts + validation_facts + test_facts
+
+    entity_ord, predicate_ord = None, None
+    if args.sort is True:
+        import collections
+
+        entity_lst, predicate_lst = [], []
+        for fact in train_facts:
+            entity_lst += fact.argument_names
+            predicate_lst += [fact.predicate_name]
+
+        _entity_counts = {k: (-v, k) for k, v in collections.Counter(entity_lst).items()}
+        _predicate_counts = {k: (-v, k) for k, v in collections.Counter(predicate_lst).items()}
+
+        entity_ord = sorted(_entity_counts, key=_entity_counts.get)
+        predicate_ord = sorted(_predicate_counts, key=_predicate_counts.get)
+
+    parser = knowledgebase.KnowledgeBaseParser(all_facts, entity_ordering=entity_ord, predicate_ordering=predicate_ord)
 
     nb_entities = len(parser.entity_vocabulary)
     nb_predicates = len(parser.predicate_vocabulary)
