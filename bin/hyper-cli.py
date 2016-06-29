@@ -92,6 +92,10 @@ def main(argv):
     argparser.add_argument('--robust-beta', action='store', type=float, default=1.0,
                            help='Robust Ranking, Beta parameter')
 
+    # Sort entities according to their frequency in the training set
+    argparser.add_argument('--sort', action='store_true',
+                           help='Sort entities according to their frequency in the training set')
+
     # Frequency-based embedding size
     argparser.add_argument('--frequency-embedding-lengths', action='store', nargs='+', type=int, default=None,
                            help='Frequency-based embedding lengths')
@@ -164,14 +168,19 @@ def main(argv):
         sess = tf.Session()
         K.set_session(sess)
 
-    def to_fact(s, p, o):
+    def fact(s, p, o):
         return knowledgebase.Fact(predicate_name=p, argument_names=[s, o])
 
-    train_facts = [to_fact(s, p, o) for s, p, o in read_triples(args.train)]
-    validation_facts = [to_fact(s, p, o) for s, p, o in read_triples(args.validation)]\
-        if args.validation is not None else []
-    test_facts = [to_fact(s, p, o) for s, p, o in read_triples(args.test)]\
-        if args.test is not None else []
+    assert args.train is not None
+    train_facts = [fact(s, p, o) for s, p, o in read_triples(args.train)]
+
+    validation_facts = []
+    if args.validation is not None:
+        validation_facts = [fact(s, p, o) for s, p, o in read_triples(args.validation)]
+
+    test_facts = []
+    if args.test is not None:
+        test_facts = [fact(s, p, o) for s, p, o in read_triples(args.test)]
 
     parser = knowledgebase.KnowledgeBaseParser(train_facts + validation_facts + test_facts)
 

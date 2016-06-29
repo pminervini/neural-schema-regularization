@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import unittest
+import collections
 from hyper.parsing import knowledgebase
+
+import unittest
 
 
 class TestKnowledgeBaseParser(unittest.TestCase):
@@ -36,12 +38,18 @@ class TestKnowledgeBaseParser(unittest.TestCase):
             's2 p3 s5'
         ]
 
-        facts = []
+        entity_lst, predicate_lst, facts = [], [], []
         for line in lines:
             s, p, o = line.split()
+            entity_lst += [s, o]
+            predicate_lst += [p]
             facts += [knowledgebase.Fact(predicate_name=p, argument_names=[s, o])]
 
-        parser = knowledgebase.KnowledgeBaseParser(facts, sort_by_frequency=True)
+        entity_count = collections.Counter(entity_lst)
+        predicate_count = collections.Counter(predicate_lst)
+
+        parser = knowledgebase.KnowledgeBaseParser(facts, entity_partial_ordering=entity_count,
+                                                   predicate_partial_ordering=predicate_count)
 
         self.assertTrue(parser.entity_index['s2'] == 1)
         self.assertTrue(parser.entity_index['s1'] == 2)
