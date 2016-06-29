@@ -199,9 +199,8 @@ def main(argv):
         entity_ord = sorted(_entity_counts, key=_entity_counts.get)
         predicate_ord = sorted(_predicate_counts, key=_predicate_counts.get)
 
-        logging.info('entity[0]: %s' % entity_ord[0])
-        logging.info('entity[1]: %s' % entity_ord[1])
-        logging.info('entity[-1]: %s' % entity_ord[-1])
+        for idx in [0, 1, -1]:
+            logging.info('entity[%s]: %s' % (idx, entity_ord[idx]))
 
     parser = knowledgebase.KnowledgeBaseParser(all_facts, entity_ordering=entity_ord, predicate_ordering=predicate_ord)
 
