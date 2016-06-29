@@ -1,28 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import gzip
-import sys
-
 from collections import Counter
 from ascii_graph import Pyasciigraph
 
+from hyper.io import read_triples
+
+import sys
 import argparse
 import logging
 
 __author__ = 'pminervini'
 __copyright__ = 'INSIGHT Centre for Data Analytics 2016'
-
-
-def read_triples(path):
-    triples = None
-    if path is not None:
-        logging.info('Acquiring %s ..' % path)
-        my_open = gzip.open if path.endswith('.gz') else open
-        with my_open(path, 'rt') as f:
-            lines = f.readlines()
-        triples = [(s.strip(), p.strip(), o.strip()) for [s, p, o] in [l.split() for l in lines]]
-    return triples
 
 
 def summary(triples):

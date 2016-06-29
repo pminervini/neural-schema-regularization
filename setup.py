@@ -20,6 +20,7 @@ setup(name='hyper',
           'requests>=2.8.1',
           'terminaltables>=2.1.0',
           'colorclass>=2.2.0',
-          'matplotlib>=1.5.1'
+          'matplotlib>=1.5.1',
+          'ascii_graph>=1.1.4'
       ],
       packages=find_packages())
