@@ -207,8 +207,7 @@ def main(argv):
     nb_predicates = len(parser.predicate_vocabulary)
 
     #print(sorted(parser.entity_index, key=parser.entity_index.get, reverse=True))
-
-    sys.exit(0)
+    #sys.exit(0)
 
     seed = args.seed
 
