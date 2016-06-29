@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
 
+import collections
+
 import logging
 
 
 class Fact(object):
-    def __init__(self, predicate_name, argument_names=[]):
+    def __init__(self, predicate_name, argument_names):
         self.predicate_name = predicate_name
         self.argument_names = argument_names
 
 
 class KnowledgeBaseParser(object):
-    def __init__(self, facts):
+    def __init__(self, facts, sort_by_frequency=False):
         self.entity_vocabulary, self.predicate_vocabulary = set(), set()
         self.entity_index, self.predicate_index = dict(), dict()
-        self._fit_on_facts(facts)
+        self._fit_on_facts(facts, sort_by_frequency=sort_by_frequency)
 
-    def _fit_on_facts(self, facts):
+    def _fit_on_facts(self, facts, sort_by_frequency=False):
         """
         Required before using facts_to_sequences
         :param facts: List or generator of facts.
@@ -26,8 +28,20 @@ class KnowledgeBaseParser(object):
             for arg in fact.argument_names:
                 self.entity_vocabulary.add(arg)
 
-        sorted_entity_vocabulary = sorted(self.entity_vocabulary)
-        sorted_predicate_vocabulary = sorted(self.predicate_vocabulary)
+        if sort_by_frequency is True:
+            entity_lst, predicate_lst = [], []
+            for fact in facts:
+                entity_lst += fact.argument_names
+                predicate_lst += [fact.predicate_name]
+
+            entity_counts = collections.Counter(entity_lst)
+            predicate_counts = collections.Counter(predicate_lst)
+
+            sorted_entity_vocabulary = sorted(entity_counts, key=entity_counts.get, reverse=True)
+            sorted_predicate_vocabulary = sorted(predicate_counts, key=predicate_counts.get, reverse=True)
+        else:
+            sorted_entity_vocabulary = sorted(self.entity_vocabulary)
+            sorted_predicate_vocabulary = sorted(self.predicate_vocabulary)
 
         self.entity_index = {entity: idx for idx, entity in enumerate(sorted_entity_vocabulary, start=1)}
         self.predicate_index = {predicate: idx for idx, predicate in enumerate(sorted_predicate_vocabulary, start=1)}

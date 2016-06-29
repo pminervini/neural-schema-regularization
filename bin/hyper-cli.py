@@ -3,6 +3,7 @@
 
 import numpy as np
 
+from hyper.io import read_triples
 from hyper.parsing import knowledgebase
 from hyper import optimizers
 
@@ -19,23 +20,12 @@ import hyper.learning.core as learning
 import hyper.learning.robust as robust
 
 import sys
-import gzip
+
 import logging
 import argparse
 
 __author__ = 'pminervini'
 __copyright__ = 'INSIGHT Centre for Data Analytics 2016'
-
-
-def read_triples(path):
-    triples = None
-    if path is not None:
-        logging.info('Acquiring %s ..' % path)
-        my_open = gzip.open if path.endswith('.gz') else open
-        with my_open(path, 'rt') as f:
-            lines = f.readlines()
-        triples = [(s.strip(), p.strip(), o.strip()) for [s, p, o] in [l.split() for l in lines]]
-    return triples
 
 
 def evaluate_model(model, evaluation_sequences, nb_entities, true_triples=None, tag=None):
