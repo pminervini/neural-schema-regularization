@@ -2,9 +2,11 @@
 
 import json
 import requests
+
 from hyper.pathranking.domain import Hop, Feature
+from hyper.io import iopen
+
 from urllib.parse import urljoin
-import gzip
 import os.path
 
 
@@ -53,9 +55,7 @@ class PathRankingClient(object):
         if self.url_or_path.startswith('http'):
             ans = self._http_request(triples, parameters, predicates)
         else:
-            def _open(path, mode):
-                return gzip.open(path, mode) if path.endswith('.gz') else open(path, mode)
-            with _open(self.url_or_path, 'r') as f:
+            with iopen(self.url_or_path, 'r') as f:
                 ans = f.read().decode("utf-8") if self.url_or_path.endswith('.gz') else f.read()
         return self._to_pfw_triples(json_str=ans, *args, **kwargs)
 
