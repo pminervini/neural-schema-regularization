@@ -193,16 +193,22 @@ def main(argv):
             entity_lst += fact.argument_names
             predicate_lst += [fact.predicate_name]
 
-        _entity_counts = {k: (-v, k) for k, v in collections.Counter(entity_lst).items()}
-        _predicate_counts = {k: (-v, k) for k, v in collections.Counter(predicate_lst).items()}
+        _entity_counts = {k: (v, k) for k, v in collections.Counter(entity_lst).items()}
+        _predicate_counts = {k: (v, k) for k, v in collections.Counter(predicate_lst).items()}
 
         entity_ord = sorted(_entity_counts, key=_entity_counts.get)
         predicate_ord = sorted(_predicate_counts, key=_predicate_counts.get)
+
+        print(entity_ord[0], entity_ord[1], entity_ord[-1])
 
     parser = knowledgebase.KnowledgeBaseParser(all_facts, entity_ordering=entity_ord, predicate_ordering=predicate_ord)
 
     nb_entities = len(parser.entity_vocabulary)
     nb_predicates = len(parser.predicate_vocabulary)
+
+    #print(sorted(parser.entity_index, key=parser.entity_index.get, reverse=True))
+
+    sys.exit(0)
 
     seed = args.seed
 
