@@ -3,7 +3,7 @@
 
 import numpy as np
 
-from hyper.io import read_triples
+from hyper.io import read_triples, serialize
 from hyper.parsing import knowledgebase
 from hyper import optimizers
 
@@ -352,8 +352,6 @@ def main(argv):
         model = learning.pairwise_training(**kwargs)
 
     if args.save is not None:
-        from hyper.serialization.util import serialize
-
         prefix = args.save
         serialize(prefix, model, parser)
 

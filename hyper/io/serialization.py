@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
-import pickle
-
 
 def serialize(prefix, model, parser):
 
