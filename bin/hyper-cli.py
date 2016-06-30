@@ -101,7 +101,7 @@ def main(argv):
                            help='Frequency-based embedding lengths')
     argparser.add_argument('--frequency-cutoffs', action='store', nargs='+', type=int, default=None,
                            help='Frequency cutoffs')
-    argparser.add_argument('--frequency-mask-type', action='store', type=int, default=1, choices=[1, 2],
+    argparser.add_argument('--frequency-mask-type', action='store', type=int, default=1, choices=[1, 2, 3],
                            help='Frequency-based embedding lengths - Mask type')
 
     argparser.add_argument('--model', action='store', type=str, default=None,
@@ -328,39 +328,64 @@ def main(argv):
 
     train_sequences = parser.facts_to_sequences(train_facts)
 
-    # Constraints on the entity embeddings
-    entity_constraint = None
+    # Memory Efficient Knowledge Graph Embeddings
+
+    # Constraints on the entity embeddings, and frames composing the embedding layer
+    entity_constraint, frames = None, None
+
     if frequency_embedding_lengths is not None and frequency_cutoffs is not None:
         import hyper.masking.util as mask_util
+        from hyper.layers.embeddings import Frame
         from hyper.constraints import MaskConstraint
 
-        entity_bins = mask_util.get_entity_bins([(s, p, o) for [p, [s, o]] in train_sequences], frequency_cutoffs)
+        mask_ranges, cur_frame = None, None
 
-        mask_ranges = np.zeros((nb_entities + 1, 2), dtype='int8')
+        # Compute the entity bin of each entity
+        entity_bins = mask_util.get_entity_bins([(s, p, o) for [p, [s, o]] in train_sequences], frequency_cutoffs)
 
         for entity_idx in range(1, nb_entities + 1):
             entity_bin = entity_bins[entity_idx]
             embedding_length = frequency_embedding_lengths[entity_bin]
 
             if frequency_mask_type == 1:
+                if mask_ranges is None:
+                    mask_ranges = np.zeros((nb_entities + 1, 2), dtype='int8')
+
                 mask_ranges[entity_idx, :] = [0, embedding_length]
 
             elif frequency_mask_type == 2:
                 embedding_start = sum(frequency_embedding_lengths[:entity_bin])
                 embedding_end = embedding_start + embedding_length
 
-                mask_ranges[entity_idx, :] = [embedding_start, embedding_end]
-            else:
-                raise ValueError('Unsupported frequency mask type: %s' % frequency_mask_type)
+                if mask_ranges is None:
+                    mask_ranges = np.zeros((nb_entities + 1, 2), dtype='int8')
 
-        mask = mask_util.create_mask(nb_items=nb_entities + 1, embedding_size=entity_embedding_size,
-                                     mask_ranges=mask_ranges)
-        entity_constraint = MaskConstraint(mask=mask)
+                mask_ranges[entity_idx, :] = [embedding_start, embedding_end]
+
+            elif frequency_mask_type == 3:
+                if frames is None:
+                    frames = []
+
+                if cur_frame is None:
+                    cur_frame = Frame(entity_idx, entity_idx + 1, 0, embedding_length)
+                elif cur_frame.col_end == embedding_length:
+                    cur_frame.row_end = entity_idx + 1
+                else:
+                    frames += [cur_frame]
+                    cur_frame = Frame(entity_idx, entity_idx + 1, 0, embedding_length)
+
+        if frames is not None:
+            frames += [cur_frame]
+
+        if mask_ranges is not None:
+            mask = mask_util.create_mask(nb_items=nb_entities + 1, embedding_size=entity_embedding_size,
+                                         mask_ranges=mask_ranges)
+            entity_constraint = MaskConstraint(mask=mask)
+
+
 
     # Constraints on the predicate embeddings
-    predicate_constraint = None
-    if predicate_nonnegative is True:
-        predicate_constraint = nonneg()
+    predicate_constraint = nonneg() if predicate_nonnegative is True else None
 
     kwargs = dict(train_sequences=train_sequences, nb_entities=nb_entities, nb_predicates=nb_predicates, seed=seed,
                   entity_embedding_size=entity_embedding_size, predicate_embedding_size=predicate_embedding_size,
