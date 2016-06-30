@@ -381,8 +381,6 @@ def main(argv):
         if frames is not None:
             frames += [cur_frame]
 
-        print(frames)
-
         if mask_ranges is not None:
             mask = mask_util.create_mask(nb_items=nb_entities + 1, embedding_size=entity_embedding_size,
                                          mask_ranges=mask_ranges)

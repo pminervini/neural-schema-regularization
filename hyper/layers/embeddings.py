@@ -63,6 +63,8 @@ class MemoryEfficientEmbedding(Layer):
 
         self.frame_parameters = []
         for frame in self.frames:
+            logging.info('Adding frame %s ..' % repr(frame))
+
             frame_input_dim = frame.row_end - frame.row_start
             frame_output_dim = frame.col_end - frame.col_start
 
