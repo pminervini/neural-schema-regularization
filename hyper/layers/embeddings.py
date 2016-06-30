@@ -18,37 +18,11 @@ class Frame:
         # Start and end of the embedding vectors
         self.col_start, self.col_end = col_start, col_end
 
-    @property
-    def row_start(self):
-        return self._row_start
+    def __str__(self):
+        return str((self.row_start, self.row_end, self.col_start, self.col_end))
 
-    @row_start.setter
-    def row_start(self, row_start):
-        self._row_start = row_start
-
-    @property
-    def row_end(self):
-        return self._row_end
-
-    @row_end.setter
-    def row_end(self, row_end):
-        self._row_end = row_end
-
-    @property
-    def col_start(self):
-        return self._col_start
-    
-    @col_start.setter
-    def col_start(self, col_start):
-        self._col_start = col_start
-    
-    @property
-    def col_end(self):
-        return self._col_end
-    
-    @col_end.setter
-    def col_end(self, col_end):
-        self._col_end = col_end
+    def __repr__(self):
+        return "<Frame %s at %x>" % (str((self.row_start, self.row_end, self.col_start, self.col_end)), id(self))
 
 
 class MemoryEfficientEmbedding(Layer):

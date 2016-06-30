@@ -8,6 +8,12 @@ class Fact(object):
         self.predicate_name = predicate_name
         self.argument_names = argument_names
 
+    def __str__(self):
+        return "%s(%s)" % (str(self.predicate_name), str(self.argument_names))
+
+    def __repr__(self):
+        return "<Fact %s(%s) at %x>" % (repr(self.predicate_name), repr(self.argument_names), id(self))
+
 
 class KnowledgeBaseParser(object):
     def __init__(self, facts, entity_ordering=None, predicate_ordering=None):

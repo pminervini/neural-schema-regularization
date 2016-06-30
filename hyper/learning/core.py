@@ -5,7 +5,10 @@ import numpy as np
 
 from keras.models import Sequential
 from keras.layers import SimpleRNN, GRU, LSTM
+
 from keras.layers.embeddings import Embedding
+from hyper.layers.embeddings import MemoryEfficientEmbedding
+
 from keras.layers.core import Merge, Dropout, Reshape, Dense
 from keras.engine.training import make_batches
 
@@ -25,7 +28,8 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
                       dropout_entity_embeddings=None, dropout_predicate_embeddings=None,
                       model_name='TransE', similarity_name='L1', nb_epochs=1000, batch_size=128, nb_batches=None,
                       margin=1.0, loss_name='hinge', negatives_name='corrupt', optimizer=None, regularizer=None,
-                      hidden_size=None, entity_constraint=None, predicate_constraint=None, visualize=False):
+                      hidden_size=None, entity_constraint=None, predicate_constraint=None, frames=None,
+                      visualize=False):
 
     np.random.seed(seed)
     random_state = np.random.RandomState(seed=seed)
@@ -68,9 +72,14 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
     else:
         entity_constraints = constraints.GroupConstraint(constraints=[entity_constraint, norm_constraint])
 
-    entity_embedding_layer = Embedding(input_dim=nb_entities + 1, output_dim=entity_embedding_size,
-                                       input_length=entity_input_length, init='glorot_uniform',
-                                       W_constraint=entity_constraints)
+    if frames is None:
+        entity_embedding_layer = Embedding(input_dim=nb_entities + 1, output_dim=entity_embedding_size,
+                                           input_length=entity_input_length, init='glorot_uniform',
+                                           W_constraint=entity_constraints)
+    else:
+        entity_embedding_layer = MemoryEfficientEmbedding(input_dim=nb_entities + 1, output_dim=entity_embedding_size,
+                                                          input_length=entity_input_length, init='glorot_uniform',
+                                                          W_constraint=entity_constraints, frames=frames)
     entity_encoder.add(entity_embedding_layer)
 
     if dropout_entity_embeddings is not None and dropout_entity_embeddings > .0:

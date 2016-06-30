@@ -344,45 +344,49 @@ def main(argv):
         entity_bins = mask_util.get_entity_bins([(s, p, o) for [p, [s, o]] in train_sequences], frequency_cutoffs)
 
         for entity_idx in range(1, nb_entities + 1):
+
+            # Bin of the entity
             entity_bin = entity_bins[entity_idx]
-            embedding_length = frequency_embedding_lengths[entity_bin]
+
+            # Length of the entity embedding
+            emb_len = frequency_embedding_lengths[entity_bin]
 
             if frequency_mask_type == 1:
-                if mask_ranges is None:
-                    mask_ranges = np.zeros((nb_entities + 1, 2), dtype='int8')
+                mask_ranges = mask_ranges if mask_ranges is not None else np.zeros((nb_entities + 1, 2), dtype='int8')
 
-                mask_ranges[entity_idx, :] = [0, embedding_length]
+                # Each embedding vector starts at zero
+                mask_ranges[entity_idx, :] = [0, emb_len]
 
             elif frequency_mask_type == 2:
-                embedding_start = sum(frequency_embedding_lengths[:entity_bin])
-                embedding_end = embedding_start + embedding_length
+                mask_ranges = mask_ranges if mask_ranges is not None else np.zeros((nb_entities + 1, 2), dtype='int8')
 
-                if mask_ranges is None:
-                    mask_ranges = np.zeros((nb_entities + 1, 2), dtype='int8')
-
-                mask_ranges[entity_idx, :] = [embedding_start, embedding_end]
+                # Each entity bin's embedding vector starts after the end of other embedding vectors
+                emb_start = sum(frequency_embedding_lengths[:entity_bin])
+                emb_end = emb_start + emb_len
+                mask_ranges[entity_idx, :] = [emb_start, emb_end]
 
             elif frequency_mask_type == 3:
-                if frames is None:
-                    frames = []
+                frames = frames if frames is not None else []
 
                 if cur_frame is None:
-                    cur_frame = Frame(entity_idx, entity_idx + 1, 0, embedding_length)
-                elif cur_frame.col_end == embedding_length:
+                    cur_frame = Frame(entity_idx, entity_idx + 1, 0, emb_len)
+                elif cur_frame.col_end == emb_len:
                     cur_frame.row_end = entity_idx + 1
                 else:
                     frames += [cur_frame]
-                    cur_frame = Frame(entity_idx, entity_idx + 1, 0, embedding_length)
+                    cur_frame = Frame(entity_idx, entity_idx + 1, 0, emb_len)
+            else:
+                raise ValueError('Unknown frequency mask type: %s' % frequency_mask_type)
 
         if frames is not None:
             frames += [cur_frame]
+
+        print(frames)
 
         if mask_ranges is not None:
             mask = mask_util.create_mask(nb_items=nb_entities + 1, embedding_size=entity_embedding_size,
                                          mask_ranges=mask_ranges)
             entity_constraint = MaskConstraint(mask=mask)
-
-
 
     # Constraints on the predicate embeddings
     predicate_constraint = nonneg() if predicate_nonnegative is True else None
@@ -402,6 +406,7 @@ def main(argv):
     else:
         kwargs['entity_constraint'] = entity_constraint
         kwargs['hidden_size'] = hidden_size
+        kwargs['frames'] = frames
 
         model = learning.pairwise_training(**kwargs)
 
