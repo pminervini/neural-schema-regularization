@@ -104,6 +104,9 @@ def main(argv):
     argparser.add_argument('--frequency-mask-type', action='store', type=int, default=1, choices=[1, 2, 3],
                            help='Frequency-based embedding lengths - Mask type')
 
+    argparser.add_argument('--entity-rank', action='store', type=int, default=None,
+                           help='Rank of the entity embeddings matrix')
+
     argparser.add_argument('--model', action='store', type=str, default=None,
                            help='Name of the model to use')
     argparser.add_argument('--similarity', action='store', type=str, default=None,
@@ -223,6 +226,8 @@ def main(argv):
     if frequency_mask_type == 2:
         assert entity_embedding_size == sum(frequency_embedding_lengths)
 
+    entity_rank = args.entity_rank
+
     model_name = args.model
     similarity_name = args.similarity
     nb_epochs = args.epochs
@@ -331,7 +336,7 @@ def main(argv):
     # Memory Efficient Knowledge Graph Embeddings
 
     # Constraints on the entity embeddings, and frames composing the embedding layer
-    entity_constraint, frames = None, None
+    entity_constraint, entity_frames = None, None
 
     if frequency_embedding_lengths is not None and frequency_cutoffs is not None:
         import hyper.masking.util as mask_util
@@ -366,20 +371,20 @@ def main(argv):
                 mask_ranges[entity_idx, :] = [emb_start, emb_end]
 
             elif frequency_mask_type == 3:
-                frames = frames if frames is not None else []
+                entity_frames = entity_frames if entity_frames is not None else []
 
                 if cur_frame is None:
                     cur_frame = Frame(entity_idx, entity_idx + 1, 0, emb_len)
                 elif cur_frame.col_end == emb_len:
                     cur_frame.row_end = entity_idx + 1
                 else:
-                    frames += [cur_frame]
+                    entity_frames += [cur_frame]
                     cur_frame = Frame(entity_idx, entity_idx + 1, 0, emb_len)
             else:
                 raise ValueError('Unknown frequency mask type: %s' % frequency_mask_type)
 
-        if frames is not None:
-            frames += [cur_frame]
+        if entity_frames is not None:
+            entity_frames += [cur_frame]
 
         if mask_ranges is not None:
             mask = mask_util.create_mask(nb_items=nb_entities + 1, embedding_size=entity_embedding_size,
@@ -404,7 +409,9 @@ def main(argv):
     else:
         kwargs['entity_constraint'] = entity_constraint
         kwargs['hidden_size'] = hidden_size
-        kwargs['frames'] = frames
+
+        kwargs['entity_frames'] = entity_frames
+        kwargs['entity_rank'] = entity_rank
 
         model = learning.pairwise_training(**kwargs)
 

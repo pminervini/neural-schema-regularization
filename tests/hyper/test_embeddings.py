@@ -8,7 +8,7 @@ from keras.optimizers import SGD
 from keras import backend as K
 
 from hyper import constraints
-from hyper.layers.embeddings import MemoryEfficientEmbedding, Frame
+from hyper.layers.embeddings import FrameEmbedding, Frame
 
 import unittest
 
@@ -37,15 +37,14 @@ class TestEmbeddings(unittest.TestCase):
             y = encoder.predict([Xe], batch_size=1)[0]
             self.assertTrue(sum(sum(abs(y - W_emb[[1, 2], :]))) < 1e-8)
 
-    def test_memory_efficient_embeddings(self):
+    def test_frame_embeddings(self):
         for _ in range(self._ITERATIONS):
             encoder = Sequential()
 
             frames = [Frame(0, 1, 0, 2), Frame(2, 3, 2, 4)]
             weights = [self.rs.random_sample((1, 2)), np.ones((1, 2))]
 
-            layer = MemoryEfficientEmbedding(input_dim=3, output_dim=10, input_length=None,
-                                             frames=frames, weights=weights)
+            layer = FrameEmbedding(input_dim=3, output_dim=10, input_length=None, frames=frames, weights=weights)
             encoder.add(layer)
             encoder.compile(loss=loss, optimizer='adagrad')
 
@@ -69,7 +68,7 @@ class TestEmbeddings(unittest.TestCase):
             for old_weight, new_weight in zip(old_weights, new_weights):
                 self.assertTrue(sum(sum(old_weight - new_weight)) > .0)
 
-    def test_memory_efficient_embeddings_constraint(self):
+    def test_frame_embeddings_constraint(self):
         for _ in range(self._ITERATIONS):
             encoder = Sequential()
 
@@ -78,8 +77,8 @@ class TestEmbeddings(unittest.TestCase):
 
             normcon = constraints.NormConstraint(m=1., axis=1)
 
-            layer = MemoryEfficientEmbedding(input_dim=3, output_dim=10, input_length=None,
-                                             frames=frames, weights=weights, W_constraint=normcon)
+            layer = FrameEmbedding(input_dim=3, output_dim=10, input_length=None,
+                                   frames=frames, weights=weights, W_constraint=normcon)
             encoder.add(layer)
 
             optimizer = SGD(lr=.0, momentum=.0, decay=.0, nesterov=False)
