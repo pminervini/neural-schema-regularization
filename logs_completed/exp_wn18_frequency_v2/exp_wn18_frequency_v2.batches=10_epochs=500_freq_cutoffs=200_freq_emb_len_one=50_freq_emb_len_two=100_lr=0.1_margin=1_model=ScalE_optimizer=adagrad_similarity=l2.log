@@ -1,0 +1,14 @@
+Using Theano backend.
+INFO:root:Acquiring data/wn18/wordnet-mlj12-train.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-valid.txt ..
+INFO:root:Acquiring data/wn18/wordnet-mlj12-test.txt ..
+INFO:root:Samples: 141442, no. batches: 10 -> batch size: 14145
+INFO:root:Epoch no. 1 of 500 (samples: 141442)
+INFO:root:Loss: nan +/- nan
+Traceback (most recent call last):
+  File "./bin/hyper-cli.py", line 392, in <module>
+    main(sys.argv[1:])
+  File "./bin/hyper-cli.py", line 356, in main
+    model = learning.pairwise_training(**kwargs)
+  File "/home/insight/.local/lib/python3.5/site-packages/hyper-0.0.1-py3.5.egg/hyper/learning/core.py", line 201, in pairwise_training
+ValueError: NaN propagation.
