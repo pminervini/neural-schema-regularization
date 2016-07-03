@@ -29,7 +29,7 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
                       model_name='TransE', similarity_name='L1', nb_epochs=1000, batch_size=128, nb_batches=None,
                       margin=1.0, loss_name='hinge', negatives_name='corrupt', optimizer=None, regularizer=None,
                       hidden_size=None, entity_constraint=None, predicate_constraint=None,
-                      entity_frames=None, entity_rank=None, visualize=False):
+                      entity_frames=None, entity_rank=None, predicate_rank=None, visualize=False):
 
     np.random.seed(seed)
     random_state = np.random.RandomState(seed=seed)
@@ -58,9 +58,16 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
     if model_name == 'ER-MLP':
         predicate_input_length, entity_input_length = 1, 2
 
-    predicate_embedding_layer = Embedding(input_dim=nb_predicates + 1, output_dim=predicate_embedding_size,
-                                          input_length=predicate_input_length, init='glorot_uniform',
-                                          W_regularizer=regularizer, W_constraint=predicate_constraint)
+    if predicate_rank is not None:
+        predicate_embedding_layer = LowRankEmbedding(input_dim=nb_predicates + 1, output_dim=predicate_embedding_size,
+                                                     input_length=predicate_input_length, init='glorot_uniform',
+                                                     W_regularizer=regularizer, W_constraint=predicate_constraint,
+                                                     rank=predicate_rank)
+    else:
+        predicate_embedding_layer = Embedding(input_dim=nb_predicates + 1, output_dim=predicate_embedding_size,
+                                              input_length=predicate_input_length, init='glorot_uniform',
+                                              W_regularizer=regularizer, W_constraint=predicate_constraint)
+
     predicate_encoder.add(predicate_embedding_layer)
 
     if dropout_predicate_embeddings is not None and dropout_predicate_embeddings > .0:

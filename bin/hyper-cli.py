@@ -106,6 +106,8 @@ def main(argv):
 
     argparser.add_argument('--entity-rank', action='store', type=int, default=None,
                            help='Rank of the entity embeddings matrix')
+    argparser.add_argument('--predicate-rank', action='store', type=int, default=None,
+                           help='Rank of the predicate embeddings matrix')
 
     argparser.add_argument('--model', action='store', type=str, default=None,
                            help='Name of the model to use')
@@ -227,6 +229,7 @@ def main(argv):
         assert entity_embedding_size == sum(frequency_embedding_lengths)
 
     entity_rank = args.entity_rank
+    predicate_rank = args.predicate_rank
 
     model_name = args.model
     similarity_name = args.similarity
@@ -412,6 +415,7 @@ def main(argv):
 
         kwargs['entity_frames'] = entity_frames
         kwargs['entity_rank'] = entity_rank
+        kwargs['predicate_rank'] = predicate_rank
 
         model = learning.pairwise_training(**kwargs)
 
