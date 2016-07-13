@@ -18,7 +18,6 @@ from hyper.learning import samples, negatives
 from hyper import ranking_objectives, constraints
 
 import hyper.learning.util as learning_util
-import hyper.visualization.visualization as visualization
 
 import logging
 
@@ -231,6 +230,8 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
             losses += [hist.history['loss'][0] / float(train_Xr_batch.shape[0])]
 
         if visualize is True:
+            import hyper.visualization.visualization as visualization
+
             hinton_diagram = visualization.HintonDiagram()
             W_emb = predicate_embedding_layer.trainable_weights[0].get_value()
             print('Embedding dimensions: %s - Max value: %s, Min value: %s'
