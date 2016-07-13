@@ -1,0 +1,268 @@
+Loading files... 
+  Starting yago3_mte10-train.tsv
+  Finished yago3_mte10-train.tsv, still running: 0
+Loaded 1087040 facts in 10.96 s using 345 MB
+Using HeadCoverage as pruning metric with minimum threshold 0.01
+Using recursivity limit 3
+Default mining assistant that defines support by counting support on both head variables
+No minimum threshold on standard confidence
+Filtering on PCA confidence with minimum threshold 0.1
+Constants in the arguments of relations are disabled
+Lossless (query refinement) heuristics enabled
+Starting the mining phase... Using 16 threads
+Rule	Head Coverage	Std Confidence	PCA Confidence	Positive Examples	Body size	PCA Body size	Functional variable	Std. Lower Bound	PCA Lower Bound	PCA Conf estimation
+?b  <hasNeighbor>  ?a   => ?a  <hasNeighbor>  ?b	0.996415771	0.996415771	0.998204668	556	558	557	?b	0.0	0.0	0.0
+?a  <dealsWith>  ?b   => ?a  <hasNeighbor>  ?b	0.299283154	0.126707132	0.166169154	167	1318	1005	?b	0.0	0.0	0.0
+?b  <dealsWith>  ?a   => ?a  <hasNeighbor>  ?b	0.301075269	0.127465857	0.175548589	168	1318	957	?b	0.0	0.0	0.0
+?a  <isLocatedIn>  ?b   => ?a  <hasCapital>  ?b	0.388931889	0.011249538	0.23421114	1005	89337	4291	?a	0.0	0.0	0.0
+?a  <isLeaderOf>  ?b   => ?a  <livesIn>  ?b	0.022591362	0.070466321	0.2125	68	965	320	?a	0.0	0.0	0.0
+?a  <isCitizenOf>  ?b   => ?a  <livesIn>  ?b	0.139202658	0.120540852	0.471316085	419	3476	889	?a	0.0	0.0	0.0
+?a  <isPoliticianOf>  ?b   => ?a  <livesIn>  ?b	0.028239203	0.038937242	0.284280936	85	2183	299	?a	0.0	0.0	0.0
+?a  <diedIn>  ?b   => ?a  <livesIn>  ?b	0.034551495	0.011152815	0.244131455	104	9325	426	?a	0.0	0.0	0.0
+?a  <wasBornIn>  ?b   => ?a  <livesIn>  ?b	0.04551495	0.003022881	0.104660046	137	45321	1309	?a	0.0	0.0	0.0
+?a  <exports>  ?b   => ?a  <imports>  ?b	0.154822335	0.160526316	0.172804533	61	380	353	?a	0.0	0.0	0.0
+?a  <created>  ?b   => ?a  <wroteMusicFor>  ?b	0.092312746	0.080527296	0.125783348	562	6979	4468	?b	0.0	0.0	0.0
+?b  <participatedIn>  ?a   => ?a  <happenedIn>  ?b	0.292836114	0.287919722	0.366494719	1492	5182	4071	?b	0.0	0.0	0.0
+?a  <imports>  ?b   => ?a  <exports>  ?b	0.160526316	0.154822335	0.179411765	61	394	340	?a	0.0	0.0	0.0
+?a  <livesIn>  ?b   => ?a  <diedIn>  ?b	0.011152815	0.034551495	0.140350877	104	3010	741	?a	0.0	0.0	0.0
+?a  <wasBornIn>  ?b   => ?a  <diedIn>  ?b	0.123538874	0.02541868	0.174492578	1152	45321	6602	?a	0.0	0.0	0.0
+?b  <dealsWith>  ?a   => ?a  <dealsWith>  ?b	0.122913505	0.122913505	0.148351648	162	1318	1092	?a	0.0	0.0	0.0
+?b  <hasNeighbor>  ?a   => ?a  <dealsWith>  ?b	0.127465857	0.301075269	0.344969199	168	558	487	?a	0.0	0.0	0.0
+?a  <hasNeighbor>  ?b   => ?a  <dealsWith>  ?b	0.126707132	0.299283154	0.342213115	167	558	488	?a	0.0	0.0	0.0
+?a  <wroteMusicFor>  ?b   => ?a  <created>  ?b	0.080527296	0.092312746	0.157422969	562	6088	3570	?b	0.0	0.0	0.0
+?a  <directed>  ?b   => ?a  <created>  ?b	0.17409371	0.220228385	0.327405012	1215	5517	3711	?b	0.0	0.0	0.0
+?b  <hasChild>  ?a   => ?a  <hasChild>  ?b	0.082401413	0.082401413	0.11023622	420	5097	3810	?b	0.0	0.0	0.0
+?b  <influences>  ?a   => ?a  <hasAcademicAdvisor>  ?b	0.069565217	0.005935268	0.186046512	64	10783	344	?a	0.0	0.0	0.0
+?b  <dealsWith>  ?a  ?b  <hasNeighbor>  ?a   => ?a  <hasNeighbor>  ?b	0.299283154	1	1	167	167	167	?b	0.0	0.0	0.0
+?a  <isLeaderOf>  ?b   => ?a  <isPoliticianOf>  ?b	0.064131929	0.14507772	0.454545455	140	965	308	?a	0.0	0.0	0.0
+?a  <livesIn>  ?b   => ?a  <isPoliticianOf>  ?b	0.038937242	0.028239203	0.223097113	85	3010	381	?a	0.0	0.0	0.0
+?a  <isCitizenOf>  ?b   => ?a  <isPoliticianOf>  ?b	0.092075126	0.057825086	0.755639098	201	3476	266	?a	0.0	0.0	0.0
+?b  <isConnectedTo>  ?a   => ?a  <isConnectedTo>  ?b	0.666935259	0.666935259	0.676389238	21520	32267	31816	?b	0.0	0.0	0.0
+?a  <isPoliticianOf>  ?b   => ?a  <isCitizenOf>  ?b	0.057825086	0.092075126	0.747211896	201	2183	269	?a	0.0	0.0	0.0
+?a  <livesIn>  ?b   => ?a  <isCitizenOf>  ?b	0.120540852	0.139202658	0.356595745	419	3010	1175	?a	0.0	0.0	0.0
+?a  <graduatedFrom>  ?b   => ?a  <worksAt>  ?b	0.178142397	0.081995954	0.279283418	608	7415	2177	?a	0.0	0.0	0.0
+?b  <dealsWith>  ?a  ?a  <dealsWith>  ?b   => ?a  <hasNeighbor>  ?b	0.100358423	0.345679012	0.466666667	56	162	120	?b	0.0	0.0	0.0
+?b  <isMarriedTo>  ?a   => ?a  <isMarriedTo>  ?b	0.986807388	0.986807388	0.99204244	3740	3790	3770	?a	0.0	0.0	0.0
+?f  <hasNeighbor>  ?a  ?b  <hasNeighbor>  ?f   => ?a  <hasNeighbor>  ?b	0.888888889	0.272078991	0.272078991	496	1823	1823	?b	0.0	0.0	0.0
+?a  <hasNeighbor>  ?f  ?b  <hasNeighbor>  ?f   => ?a  <hasNeighbor>  ?b	0.888888889	0.272228321	0.272377814	496	1822	1821	?b	0.0	0.0	0.0
+?f  <dealsWith>  ?a  ?b  <hasNeighbor>  ?f   => ?a  <hasNeighbor>  ?b	0.41218638	0.104831358	0.104831358	230	2194	2194	?b	0.0	0.0	0.0
+?b  <happenedIn>  ?a   => ?a  <participatedIn>  ?b	0.287919722	0.292836114	0.309479361	1492	5095	4821	?b	0.0	0.0	0.0
+?a  <created>  ?b   => ?a  <directed>  ?b	0.220228385	0.17409371	0.236565421	1215	6979	5136	?b	0.0	0.0	0.0
+?f  <hasNeighbor>  ?b  ?a  <hasNeighbor>  ?f   => ?a  <hasNeighbor>  ?b	0.888888889	0.272078991	0.272078991	496	1823	1823	?b	0.0	0.0	0.0
+?f  <dealsWith>  ?b  ?a  <hasNeighbor>  ?f   => ?a  <hasNeighbor>  ?b	0.41218638	0.104831358	0.136498516	230	2194	1685	?b	0.0	0.0	0.0
+?e  <hasNeighbor>  ?a  ?e  <hasNeighbor>  ?b   => ?a  <hasNeighbor>  ?b	0.888888889	0.271483306	0.271483306	496	1827	1827	?b	0.0	0.0	0.0
+?e  <dealsWith>  ?a  ?e  <hasNeighbor>  ?b   => ?a  <hasNeighbor>  ?b	0.41218638	0.103884372	0.103884372	230	2214	2214	?b	0.0	0.0	0.0
+?a  <worksAt>  ?b   => ?a  <graduatedFrom>  ?b	0.081995954	0.178142397	0.193322734	608	3413	3145	?a	0.0	0.0	0.0
+?e  <dealsWith>  ?b  ?e  <hasNeighbor>  ?a   => ?a  <hasNeighbor>  ?b	0.41218638	0.103884372	0.135373749	230	2214	1699	?b	0.0	0.0	0.0
+?e  <isPoliticianOf>  ?a  ?e  <livesIn>  ?b   => ?a  <hasCapital>  ?b	0.026702786	0.174683544	0.19273743	69	395	358	?a	0.0	0.0	0.0
+?e  <diedIn>  ?b  ?e  <isPoliticianOf>  ?a   => ?a  <hasCapital>  ?b	0.050696594	0.240366972	0.278723404	131	545	470	?a	0.0	0.0	0.0
+?e  <diedIn>  ?b  ?e  <isCitizenOf>  ?a   => ?a  <hasCapital>  ?b	0.034055728	0.113402062	0.117021277	88	776	752	?a	0.0	0.0	0.0
+?e  <isPoliticianOf>  ?a  ?e  <wasBornIn>  ?b   => ?a  <hasCapital>  ?b	0.051470588	0.12900097	0.141791045	133	1031	938	?a	0.0	0.0	0.0
+?e  <diedIn>  ?b  ?e  <livesIn>  ?a   => ?a  <hasCapital>  ?b	0.015479876	0.066777963	0.132890365	40	599	301	?a	0.0	0.0	0.0
+?e  <isLeaderOf>  ?a  ?e  <wasBornIn>  ?b   => ?a  <hasCapital>  ?b	0.01625387	0.077777778	0.352941176	42	540	119	?a	0.0	0.0	0.0
+?e  <hasCapital>  ?b  ?e  <isLocatedIn>  ?a   => ?a  <hasCapital>  ?b	0.089396285	0.051174125	0.138406231	231	4514	1669	?a	0.0	0.0	0.0
+?a  <directed>  ?b   => ?a  <actedIn>  ?b	0.017406333	0.102229473	0.104405776	564	5517	5402	?b	0.0	0.0	0.0
+?b  <isLocatedIn>  ?a  ?a  <isLocatedIn>  ?b   => ?a  <hasCapital>  ?b	0.354102167	0.15727054	0.790838375	915	5818	1157	?a	0.0	0.0	0.0
+?b  <hasCapital>  ?f  ?a  <livesIn>  ?f   => ?a  <livesIn>  ?b	0.093355482	0.130333952	0.130333952	281	2156	2156	?a	0.0	0.0	0.0
+?f  <isLocatedIn>  ?b  ?a  <worksAt>  ?f   => ?a  <livesIn>  ?b	0.126910299	0.050933333	0.16940133	382	7500	2255	?a	0.0	0.0	0.0
+?a  <graduatedFrom>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <livesIn>  ?b	0.226245847	0.038114961	0.144493953	681	17867	4713	?a	0.0	0.0	0.0
+?a  <diedIn>  ?b   => ?a  <wasBornIn>  ?b	0.02541868	0.123538874	0.174492578	1152	9325	6602	?a	0.0	0.0	0.0
+?a  <isAffiliatedTo>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <livesIn>  ?b	0.055813953	0.00094511	0.171954964	168	177757	977	?a	0.0	0.0	0.0
+?a  <isLeaderOf>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <livesIn>  ?b	0.034551495	0.063337393	0.189435337	104	1642	549	?a	0.0	0.0	0.0
+?a  <hasAcademicAdvisor>  ?f  ?f  <isCitizenOf>  ?b   => ?a  <livesIn>  ?b	0.034219269	0.13844086	0.438297872	103	744	235	?a	0.0	0.0	0.0
+?a  <hasAcademicAdvisor>  ?f  ?f  <livesIn>  ?b   => ?a  <livesIn>  ?b	0.023255814	0.173267327	0.440251572	70	404	159	?a	0.0	0.0	0.0
+?a  <isMarriedTo>  ?f  ?f  <livesIn>  ?b   => ?a  <livesIn>  ?b	0.019269103	0.16066482	0.464	58	361	125	?a	0.0	0.0	0.0
+?f  <isLocatedIn>  ?b  ?a  <livesIn>  ?f   => ?a  <livesIn>  ?b	0.28372093	0.118151633	0.118151633	854	7228	7228	?a	0.0	0.0	0.0
+?f  <hasCapital>  ?b  ?a  <isPoliticianOf>  ?f   => ?a  <livesIn>  ?b	0.031229236	0.010969775	0.189134809	94	8569	497	?a	0.0	0.0	0.0
+?a  <hasChild>  ?f  ?f  <livesIn>  ?b   => ?a  <livesIn>  ?b	0.014285714	0.110824742	0.316176471	43	388	136	?a	0.0	0.0	0.0
+?e  <hasAcademicAdvisor>  ?a  ?e  <isCitizenOf>  ?b   => ?a  <livesIn>  ?b	0.024916944	0.123152709	0.384615385	75	609	195	?a	0.0	0.0	0.0
+?e  <hasChild>  ?a  ?e  <livesIn>  ?b   => ?a  <livesIn>  ?b	0.013953488	0.128834356	0.328125	42	326	128	?a	0.0	0.0	0.0
+?e  <hasChild>  ?a  ?e  <isPoliticianOf>  ?b   => ?a  <livesIn>  ?b	0.010299003	0.023827825	0.215277778	31	1301	144	?a	0.0	0.0	0.0
+?e  <hasAcademicAdvisor>  ?a  ?e  <livesIn>  ?b   => ?a  <livesIn>  ?b	0.019601329	0.169054441	0.401360544	59	349	147	?a	0.0	0.0	0.0
+?e  <isMarriedTo>  ?a  ?e  <livesIn>  ?b   => ?a  <livesIn>  ?b	0.019269103	0.161111111	0.464	58	360	125	?a	0.0	0.0	0.0
+?a  <owns>  ?f  ?b  <owns>  ?f   => ?a  <owns>  ?b	0.012295082	0.005882353	0.126760563	9	1530	71	?b	0.0	0.0	0.0
+?a  <diedIn>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <livesIn>  ?b	0.081395349	0.007151614	0.162790698	245	34258	1505	?a	0.0	0.0	0.0
+?b  <isLocatedIn>  ?f  ?a  <owns>  ?f   => ?a  <owns>  ?b	0.015027322	0.005626598	0.141025641	11	1955	78	?b	0.0	0.0	0.0
+?a  <hasChild>  ?f  ?f  <owns>  ?b   => ?a  <owns>  ?b	0.024590164	0.36	0.36	18	50	50	?b	0.0	0.0	0.0
+?a  <hasNeighbor>  ?f  ?f  <owns>  ?b   => ?a  <owns>  ?b	0.030054645	0.102803738	0.102803738	22	214	214	?b	0.0	0.0	0.0
+?f  <isLocatedIn>  ?b  ?a  <owns>  ?f   => ?a  <owns>  ?b	0.015027322	0.007251154	0.275	11	1517	40	?b	0.0	0.0	0.0
+?f  <owns>  ?b  ?a  <owns>  ?f   => ?a  <owns>  ?b	0.013661202	0.105263158	0.105263158	10	95	95	?b	0.0	0.0	0.0
+?e  <dealsWith>  ?a  ?e  <owns>  ?b   => ?a  <owns>  ?b	0.039617486	0.104693141	0.104693141	29	277	277	?b	0.0	0.0	0.0
+?e  <hasNeighbor>  ?a  ?e  <owns>  ?b   => ?a  <owns>  ?b	0.030054645	0.101382488	0.101382488	22	217	217	?b	0.0	0.0	0.0
+?e  <hasChild>  ?a  ?e  <owns>  ?b   => ?a  <owns>  ?b	0.027322404	0.281690141	0.281690141	20	71	71	?b	0.0	0.0	0.0
+?e  <hasNeighbor>  ?a  ?e  <imports>  ?b   => ?a  <imports>  ?b	0.421319797	0.206982544	0.251134644	166	802	661	?a	0.0	0.0	0.0
+?e  <exports>  ?b  ?e  <hasNeighbor>  ?a   => ?a  <imports>  ?b	0.197969543	0.09080326	0.111428571	78	859	700	?a	0.0	0.0	0.0
+?e  <dealsWith>  ?a  ?e  <imports>  ?b   => ?a  <imports>  ?b	0.38071066	0.162337662	0.206043956	150	924	728	?a	0.0	0.0	0.0
+?a  <hasNeighbor>  ?f  ?f  <imports>  ?b   => ?a  <imports>  ?b	0.421319797	0.2077597	0.252279635	166	799	658	?a	0.0	0.0	0.0
+?f  <exports>  ?b  ?a  <hasNeighbor>  ?f   => ?a  <imports>  ?b	0.195431472	0.090588235	0.110315186	77	850	698	?a	0.0	0.0	0.0
+?a  <dealsWith>  ?f  ?f  <exports>  ?b   => ?a  <imports>  ?b	0.502538071	0.108255878	0.126923077	198	1829	1560	?a	0.0	0.0	0.0
+?a  <dealsWith>  ?f  ?f  <imports>  ?b   => ?a  <imports>  ?b	0.614213198	0.158169935	0.189210321	242	1530	1279	?a	0.0	0.0	0.0
+?f  <isInterestedIn>  ?b  ?a  <isInterestedIn>  ?f   => ?a  <isInterestedIn>  ?b	0.016460905	0.8	0.8	4	5	5	?a	0.0	0.0	0.0
+?e  <influences>  ?a  ?e  <isKnownFor>  ?b   => ?a  <isInterestedIn>  ?b	0.04526749	0.027848101	0.117021277	11	395	94	?a	0.0	0.0	0.0
+?e  <isInterestedIn>  ?a  ?e  <isInterestedIn>  ?b   => ?a  <isInterestedIn>  ?b	0.024691358	0.049586777	0.461538462	6	121	13	?a	0.0	0.0	0.0
+?e  <influences>  ?a  ?e  <isInterestedIn>  ?b   => ?a  <isInterestedIn>  ?b	0.530864198	0.112467306	0.369627507	129	1147	349	?a	0.0	0.0	0.0
+?a  <influences>  ?e  ?e  <isInterestedIn>  ?b   => ?a  <isInterestedIn>  ?b	0.362139918	0.084615385	0.328358209	88	1040	268	?a	0.0	0.0	0.0
+?a  <hasCapital>  ?b   => ?a  <isLocatedIn>  ?b	0.011249538	0.388931889	0.419274093	1005	2584	2397	?a	0.0	0.0	0.0
+?b  <hasCapital>  ?a   => ?a  <isLocatedIn>  ?b	0.019700684	0.681114551	0.683229814	1760	2584	2576	?a	0.0	0.0	0.0
+?a  <happenedIn>  ?f  ?b  <hasNeighbor>  ?f   => ?a  <happenedIn>  ?b	0.069872424	0.082426488	0.105045736	356	4319	3389	?b	0.0	0.0	0.0
+?a  <happenedIn>  ?f  ?b  <hasCapital>  ?f   => ?a  <happenedIn>  ?b	0.03454367	0.188841202	0.288052373	176	932	611	?b	0.0	0.0	0.0
+?a  <happenedIn>  ?e  ?e  <hasNeighbor>  ?b   => ?a  <happenedIn>  ?b	0.069872424	0.082483781	0.105107765	356	4316	3387	?b	0.0	0.0	0.0
+?a  <happenedIn>  ?e  ?e  <isLocatedIn>  ?b   => ?a  <happenedIn>  ?b	0.171148184	0.132442284	0.173325383	872	6584	5031	?b	0.0	0.0	0.0
+?f  <hasCurrency>  ?b  ?a  <isLocatedIn>  ?f   => ?a  <hasCurrency>  ?b	0.081818182	0.000556036	0.5625	9	16186	16	?a	0.0	0.0	0.0
+?f  <hasCurrency>  ?b  ?a  <hasNeighbor>  ?f   => ?a  <hasCurrency>  ?b	0.163636364	0.211764706	0.666666667	18	85	27	?a	0.0	0.0	0.0
+?a  <dealsWith>  ?f  ?f  <hasCurrency>  ?b   => ?a  <hasCurrency>  ?b	0.209090909	0.057356608	0.315068493	23	401	73	?a	0.0	0.0	0.0
+?e  <hasCurrency>  ?b  ?e  <isLocatedIn>  ?a   => ?a  <hasCurrency>  ?b	0.018181818	0.028169014	0.333333333	2	71	6	?a	0.0	0.0	0.0
+?e  <dealsWith>  ?a  ?e  <hasCurrency>  ?b   => ?a  <hasCurrency>  ?b	0.154545455	0.137096774	0.395348837	17	124	43	?a	0.0	0.0	0.0
+?e  <hasCurrency>  ?b  ?e  <hasNeighbor>  ?a   => ?a  <hasCurrency>  ?b	0.163636364	0.211764706	0.666666667	18	85	27	?a	0.0	0.0	0.0
+?a  <dealsWith>  ?f  ?f  <exports>  ?b   => ?a  <exports>  ?b	0.518421053	0.107709131	0.137377964	197	1829	1434	?a	0.0	0.0	0.0
+?f  <exports>  ?b  ?a  <hasNeighbor>  ?f   => ?a  <exports>  ?b	0.431578947	0.192941176	0.252696456	164	850	649	?a	0.0	0.0	0.0
+?a  <hasNeighbor>  ?f  ?f  <imports>  ?b   => ?a  <exports>  ?b	0.181578947	0.086357947	0.113673806	69	799	607	?a	0.0	0.0	0.0
+?e  <exports>  ?b  ?e  <hasNeighbor>  ?a   => ?a  <exports>  ?b	0.431578947	0.190919674	0.251920123	164	859	651	?a	0.0	0.0	0.0
+?e  <hasNeighbor>  ?a  ?e  <imports>  ?b   => ?a  <exports>  ?b	0.181578947	0.086034913	0.113114754	69	802	610	?a	0.0	0.0	0.0
+?e  <dealsWith>  ?a  ?e  <exports>  ?b   => ?a  <exports>  ?b	0.381578947	0.129464286	0.171394799	145	1120	846	?a	0.0	0.0	0.0
+?e  <dealsWith>  ?a  ?e  <imports>  ?b   => ?a  <exports>  ?b	0.239473684	0.098484848	0.130747126	91	924	696	?a	0.0	0.0	0.0
+?f  <isLocatedIn>  ?b  ?a  <playsFor>  ?f   => ?a  <diedIn>  ?b	0.047828418	0.003740387	0.125386562	446	119239	3557	?a	0.0	0.0	0.0
+?a  <hasChild>  ?f  ?f  <wasBornIn>  ?b   => ?a  <diedIn>  ?b	0.04150134	0.133540373	0.262550882	387	2898	1474	?a	0.0	0.0	0.0
+?f  <diedIn>  ?b  ?a  <hasChild>  ?f   => ?a  <diedIn>  ?b	0.037533512	0.165484634	0.241879751	350	2115	1447	?a	0.0	0.0	0.0
+?a  <isAffiliatedTo>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <diedIn>  ?b	0.094369973	0.004950579	0.14159292	880	177757	6215	?a	0.0	0.0	0.0
+?f  <diedIn>  ?b  ?a  <isMarriedTo>  ?f   => ?a  <diedIn>  ?b	0.038176944	0.227767115	0.325114155	356	1563	1095	?a	0.0	0.0	0.0
+?a  <isMarriedTo>  ?f  ?f  <wasBornIn>  ?b   => ?a  <diedIn>  ?b	0.012761394	0.044386423	0.105871886	119	2681	1124	?a	0.0	0.0	0.0
+?f  <hasCapital>  ?b  ?a  <isPoliticianOf>  ?f   => ?a  <diedIn>  ?b	0.041608579	0.045279496	0.106126915	388	8569	3656	?a	0.0	0.0	0.0
+?f  <isLocatedIn>  ?b  ?a  <worksAt>  ?f   => ?a  <diedIn>  ?b	0.04	0.049733333	0.112859304	373	7500	3305	?a	0.0	0.0	0.0
+?b  <dealsWith>  ?a  ?a  <hasNeighbor>  ?b   => ?a  <dealsWith>  ?b	0.042488619	0.333333333	0.356687898	56	168	157	?a	0.0	0.0	0.0
+?b  <dealsWith>  ?a  ?b  <hasNeighbor>  ?a   => ?a  <dealsWith>  ?b	0.042488619	0.335329341	0.358974359	56	167	156	?a	0.0	0.0	0.0
+?e  <diedIn>  ?b  ?e  <hasChild>  ?a   => ?a  <diedIn>  ?b	0.038820375	0.154108131	0.25528914	362	2349	1418	?a	0.0	0.0	0.0
+?e  <hasChild>  ?a  ?e  <wasBornIn>  ?b   => ?a  <diedIn>  ?b	0.02230563	0.06696716	0.145760336	208	3106	1427	?a	0.0	0.0	0.0
+?e  <diedIn>  ?b  ?e  <isMarriedTo>  ?a   => ?a  <diedIn>  ?b	0.038176944	0.227330779	0.325114155	356	1566	1095	?a	0.0	0.0	0.0
+?e  <isMarriedTo>  ?a  ?e  <wasBornIn>  ?b   => ?a  <diedIn>  ?b	0.012654155	0.044145155	0.105640107	118	2673	1117	?a	0.0	0.0	0.0
+?f  <hasNeighbor>  ?a  ?b  <hasNeighbor>  ?f   => ?a  <dealsWith>  ?b	0.17754173	0.128359846	0.147355164	234	1823	1588	?a	0.0	0.0	0.0
+?a  <hasNeighbor>  ?f  ?b  <hasNeighbor>  ?f   => ?a  <dealsWith>  ?b	0.17754173	0.128430296	0.147448015	234	1822	1587	?a	0.0	0.0	0.0
+?a  <owns>  ?f  ?b  <owns>  ?f   => ?a  <dealsWith>  ?b	0.05538695	0.047712418	0.190600522	73	1530	383	?a	0.0	0.0	0.0
+?f  <dealsWith>  ?b  ?a  <hasNeighbor>  ?f   => ?a  <dealsWith>  ?b	0.494688923	0.297174111	0.334530528	652	2194	1949	?a	0.0	0.0	0.0
+?f  <hasNeighbor>  ?b  ?a  <hasNeighbor>  ?f   => ?a  <dealsWith>  ?b	0.17754173	0.128359846	0.147355164	234	1823	1588	?a	0.0	0.0	0.0
+?e  <hasNeighbor>  ?a  ?e  <hasNeighbor>  ?b   => ?a  <dealsWith>  ?b	0.17754173	0.128078818	0.14707731	234	1827	1591	?a	0.0	0.0	0.0
+?f  <dealsWith>  ?b  ?a  <isLocatedIn>  ?f   => ?a  <dealsWith>  ?b	0.02276176	0.000194688	0.166666667	30	154093	180	?a	0.0	0.0	0.0
+?f  <dealsWith>  ?b  ?a  <dealsWith>  ?f   => ?a  <dealsWith>  ?b	0.734446131	0.251559252	0.251559252	968	3848	3848	?a	0.0	0.0	0.0
+?e  <dealsWith>  ?b  ?e  <hasNeighbor>  ?a   => ?a  <dealsWith>  ?b	0.494688923	0.294489612	0.33299285	652	2214	1958	?a	0.0	0.0	0.0
+?e  <dealsWith>  ?a  ?e  <dealsWith>  ?b   => ?a  <dealsWith>  ?b	0.481031866	0.194837124	0.23155588	634	3254	2738	?a	0.0	0.0	0.0
+?f  <isLocatedIn>  ?a  ?b  <participatedIn>  ?f   => ?a  <dealsWith>  ?b	0.072078907	0.033415406	0.110208817	95	2843	862	?a	0.0	0.0	0.0
+?e  <livesIn>  ?a  ?e  <livesIn>  ?b   => ?a  <dealsWith>  ?b	0.04552352	0.016910936	0.112359551	60	3548	534	?a	0.0	0.0	0.0
+?e  <isCitizenOf>  ?b  ?e  <livesIn>  ?a   => ?a  <dealsWith>  ?b	0.030349014	0.061349693	0.245398773	40	652	163	?a	0.0	0.0	0.0
+?e  <isCitizenOf>  ?a  ?e  <isCitizenOf>  ?b   => ?a  <dealsWith>  ?b	0.067526555	0.130882353	0.216545012	89	680	411	?a	0.0	0.0	0.0
+?e  <dealsWith>  ?b  ?e  <isLocatedIn>  ?a   => ?a  <dealsWith>  ?b	0.016691958	0.040892193	0.392857143	22	538	56	?a	0.0	0.0	0.0
+?a  <actedIn>  ?b  ?a  <directed>  ?b   => ?a  <created>  ?b	0.030949993	0.382978723	0.569920844	216	564	379	?b	0.0	0.0	0.0
+?a  <livesIn>  ?b  ?a  <wasBornIn>  ?b   => ?a  <isLeaderOf>  ?b	0.014507772	0.102189781	0.311111111	14	137	45	?b	0.0	0.0	0.0
+?a  <isLeaderOf>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <isLeaderOf>  ?b	0.087046632	0.051157125	0.173913043	84	1642	483	?b	0.0	0.0	0.0
+?a  <hasChild>  ?f  ?b  <isMarriedTo>  ?f   => ?a  <hasChild>  ?b	0.053364724	0.117902037	0.149862259	272	2307	1815	?b	0.0	0.0	0.0
+?f  <hasChild>  ?b  ?a  <isMarriedTo>  ?f   => ?a  <hasChild>  ?b	0.314498725	0.584823057	0.584823057	1603	2741	2741	?b	0.0	0.0	0.0
+?a  <hasChild>  ?f  ?f  <isMarriedTo>  ?b   => ?a  <hasChild>  ?b	0.053364724	0.117039587	0.149450549	272	2324	1820	?b	0.0	0.0	0.0
+?e  <hasChild>  ?b  ?e  <isMarriedTo>  ?a   => ?a  <hasChild>  ?b	0.314498725	0.581218274	0.581218274	1603	2758	2758	?b	0.0	0.0	0.0
+?e  <owns>  ?a  ?e  <owns>  ?b   => ?a  <isConnectedTo>  ?b	0.010351133	0.117316473	0.275123558	334	2847	1214	?b	0.0	0.0	0.0
+?a  <dealsWith>  ?f  ?f  <hasOfficialLanguage>  ?b   => ?a  <hasOfficialLanguage>  ?b	0.357859532	0.159463487	0.256594724	107	671	417	?a	0.0	0.0	0.0
+?a  <hasNeighbor>  ?f  ?f  <hasOfficialLanguage>  ?b   => ?a  <hasOfficialLanguage>  ?b	0.254180602	0.330434783	0.493506494	76	230	154	?a	0.0	0.0	0.0
+?e  <hasNeighbor>  ?a  ?e  <hasOfficialLanguage>  ?b   => ?a  <hasOfficialLanguage>  ?b	0.254180602	0.331877729	0.493506494	76	229	154	?a	0.0	0.0	0.0
+?e  <dealsWith>  ?a  ?e  <hasOfficialLanguage>  ?b   => ?a  <hasOfficialLanguage>  ?b	0.247491639	0.226993865	0.34741784	74	326	213	?a	0.0	0.0	0.0
+?f  <hasOfficialLanguage>  ?b  ?a  <isLocatedIn>  ?f   => ?a  <hasOfficialLanguage>  ?b	0.180602007	0.003853565	0.692307692	54	14013	78	?a	0.0	0.0	0.0
+?e  <hasOfficialLanguage>  ?b  ?e  <isLocatedIn>  ?a   => ?a  <hasOfficialLanguage>  ?b	0.076923077	0.115	0.793103448	23	200	29	?a	0.0	0.0	0.0
+?f  <hasWonPrize>  ?b  ?a  <isMarriedTo>  ?f   => ?a  <hasWonPrize>  ?b	0.021042208	0.16639478	0.30834341	510	3065	1654	?a	0.0	0.0	0.0
+?a  <hasChild>  ?f  ?f  <hasWonPrize>  ?b   => ?a  <hasWonPrize>  ?b	0.031728349	0.190158259	0.305279873	769	4044	2519	?a	0.0	0.0	0.0
+?a  <hasAcademicAdvisor>  ?f  ?f  <hasWonPrize>  ?b   => ?a  <hasWonPrize>  ?b	0.016256137	0.204675325	0.258530184	394	1925	1524	?a	0.0	0.0	0.0
+?f  <hasWonPrize>  ?b  ?a  <influences>  ?f   => ?a  <hasWonPrize>  ?b	0.021619837	0.075439102	0.165770326	524	6946	3161	?a	0.0	0.0	0.0
+?a  <isAffiliatedTo>  ?b   => ?a  <playsFor>  ?b	0.87495247	0.751775668	0.831691169	283027	376478	340303	?a	0.0	0.0	0.0
+?e  <hasChild>  ?a  ?e  <hasWonPrize>  ?b   => ?a  <hasWonPrize>  ?b	0.033543755	0.201937407	0.311733129	813	4026	2608	?a	0.0	0.0	0.0
+?e  <hasWonPrize>  ?b  ?e  <isMarriedTo>  ?a   => ?a  <hasWonPrize>  ?b	0.021042208	0.166612218	0.307971014	510	3061	1656	?a	0.0	0.0	0.0
+?e  <hasWonPrize>  ?b  ?e  <influences>  ?a   => ?a  <hasWonPrize>  ?b	0.02417791	0.088014419	0.177468201	586	6658	3302	?a	0.0	0.0	0.0
+?e  <hasAcademicAdvisor>  ?a  ?e  <hasWonPrize>  ?b   => ?a  <hasWonPrize>  ?b	0.012790362	0.2014295	0.258333333	310	1539	1200	?a	0.0	0.0	0.0
+?a  <diedIn>  ?f  ?b  <hasCapital>  ?f   => ?a  <isPoliticianOf>  ?b	0.186898763	0.015779703	0.133246244	408	25856	3062	?a	0.0	0.0	0.0
+?b  <hasCapital>  ?f  ?a  <livesIn>  ?f   => ?a  <isPoliticianOf>  ?b	0.041227668	0.04174397	0.223325062	90	2156	403	?a	0.0	0.0	0.0
+?a  <graduatedFrom>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <isPoliticianOf>  ?b	0.338983051	0.041417138	0.203632361	740	17867	3634	?a	0.0	0.0	0.0
+?b  <hasCapital>  ?f  ?a  <wasBornIn>  ?f   => ?a  <isPoliticianOf>  ?b	0.167659185	0.004719232	0.13795703	366	77555	2653	?a	0.0	0.0	0.0
+?a  <hasChild>  ?f  ?f  <isPoliticianOf>  ?b   => ?a  <isPoliticianOf>  ?b	0.427393495	0.723255814	0.874414246	933	1290	1067	?a	0.0	0.0	0.0
+?a  <hasChild>  ?f  ?f  <isCitizenOf>  ?b   => ?a  <isPoliticianOf>  ?b	0.056802565	0.534482759	0.832214765	124	232	149	?a	0.0	0.0	0.0
+?a  <hasChild>  ?f  ?f  <isLeaderOf>  ?b   => ?a  <isPoliticianOf>  ?b	0.049015117	0.211462451	0.393382353	107	506	272	?a	0.0	0.0	0.0
+?a  <hasChild>  ?f  ?f  <livesIn>  ?b   => ?a  <isPoliticianOf>  ?b	0.014200641	0.079896907	0.139013453	31	388	223	?a	0.0	0.0	0.0
+?f  <isLocatedIn>  ?b  ?a  <wasBornIn>  ?f   => ?a  <isPoliticianOf>  ?b	0.451213926	0.006437235	0.258326777	985	153016	3813	?a	0.0	0.0	0.0
+?a  <isLeaderOf>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <isPoliticianOf>  ?b	0.029775538	0.039585871	0.144124169	65	1642	451	?a	0.0	0.0	0.0
+?f  <isLocatedIn>  ?b  ?a  <livesIn>  ?f   => ?a  <isPoliticianOf>  ?b	0.113605131	0.034311013	0.259685864	248	7228	955	?a	0.0	0.0	0.0
+?a  <isMarriedTo>  ?f  ?f  <isPoliticianOf>  ?b   => ?a  <isPoliticianOf>  ?b	0.029775538	0.382352941	0.878378378	65	170	74	?a	0.0	0.0	0.0
+?a  <created>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <isPoliticianOf>  ?b	0.01145213	0.005845219	0.265957447	25	4277	94	?a	0.0	0.0	0.0
+?a  <diedIn>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <isPoliticianOf>  ?b	0.270728355	0.017251445	0.230140187	591	34258	2568	?a	0.0	0.0	0.0
+?e  <hasChild>  ?a  ?e  <isLeaderOf>  ?b   => ?a  <isPoliticianOf>  ?b	0.021530005	0.129834254	0.258241758	47	362	182	?a	0.0	0.0	0.0
+?e  <isMarriedTo>  ?a  ?e  <isPoliticianOf>  ?b   => ?a  <isPoliticianOf>  ?b	0.029775538	0.386904762	0.878378378	65	168	74	?a	0.0	0.0	0.0
+?e  <hasChild>  ?a  ?e  <livesIn>  ?b   => ?a  <isPoliticianOf>  ?b	0.014658727	0.098159509	0.156097561	32	326	205	?a	0.0	0.0	0.0
+?e  <hasChild>  ?a  ?e  <isPoliticianOf>  ?b   => ?a  <isPoliticianOf>  ?b	0.452588181	0.759415834	0.894117647	988	1301	1105	?a	0.0	0.0	0.0
+?a  <isAffiliatedTo>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <isPoliticianOf>  ?b	0.247824095	0.003043481	0.215795772	541	177757	2507	?a	0.0	0.0	0.0
+?e  <hasChild>  ?a  ?e  <isCitizenOf>  ?b   => ?a  <isPoliticianOf>  ?b	0.065506184	0.565217391	0.785714286	143	253	182	?a	0.0	0.0	0.0
+?a  <diedIn>  ?f  ?b  <hasCapital>  ?f   => ?a  <isCitizenOf>  ?b	0.1216916	0.016359839	0.109104978	423	25856	3877	?a	0.0	0.0	0.0
+?f  <isLocatedIn>  ?b  ?a  <worksAt>  ?f   => ?a  <isCitizenOf>  ?b	0.192174914	0.089066667	0.143625027	668	7500	4651	?a	0.0	0.0	0.0
+?b  <hasCapital>  ?f  ?a  <wasBornIn>  ?f   => ?a  <isCitizenOf>  ?b	0.127733026	0.005724969	0.10251674	444	77555	4331	?a	0.0	0.0	0.0
+?a  <diedIn>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <isCitizenOf>  ?b	0.278193326	0.028226983	0.219373866	967	34258	4408	?a	0.0	0.0	0.0
+?a  <graduatedFrom>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <isCitizenOf>  ?b	0.380897583	0.074103095	0.194906521	1324	17867	6793	?a	0.0	0.0	0.0
+?a  <hasAcademicAdvisor>  ?f  ?f  <isCitizenOf>  ?b   => ?a  <isCitizenOf>  ?b	0.078250863	0.365591398	0.537549407	272	744	506	?a	0.0	0.0	0.0
+?a  <hasAcademicAdvisor>  ?f  ?f  <livesIn>  ?b   => ?a  <isCitizenOf>  ?b	0.029344074	0.252475248	0.38490566	102	404	265	?a	0.0	0.0	0.0
+?f  <isLocatedIn>  ?b  ?a  <livesIn>  ?f   => ?a  <isCitizenOf>  ?b	0.104142693	0.050083011	0.140147116	362	7228	2583	?a	0.0	0.0	0.0
+?a  <isLeaderOf>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <isCitizenOf>  ?b	0.013521289	0.02862363	0.223809524	47	1642	210	?a	0.0	0.0	0.0
+?f  <isLocatedIn>  ?b  ?a  <wasBornIn>  ?f   => ?a  <isCitizenOf>  ?b	0.495397008	0.011253725	0.219614845	1722	153016	7841	?a	0.0	0.0	0.0
+?a  <hasChild>  ?f  ?f  <isPoliticianOf>  ?b   => ?a  <isCitizenOf>  ?b	0.034810127	0.09379845	0.796052632	121	1290	152	?a	0.0	0.0	0.0
+?a  <hasChild>  ?f  ?f  <isCitizenOf>  ?b   => ?a  <isCitizenOf>  ?b	0.023878021	0.357758621	0.922222222	83	232	90	?a	0.0	0.0	0.0
+?a  <influences>  ?f  ?f  <isCitizenOf>  ?b   => ?a  <isCitizenOf>  ?b	0.064441887	0.115345005	0.395061728	224	1942	567	?a	0.0	0.0	0.0
+?a  <created>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <isCitizenOf>  ?b	0.042289988	0.034369885	0.360294118	147	4277	408	?a	0.0	0.0	0.0
+?a  <directed>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <isCitizenOf>  ?b	0.011795167	0.015928516	0.5125	41	2574	80	?a	0.0	0.0	0.0
+?e  <hasAcademicAdvisor>  ?a  ?e  <isCitizenOf>  ?b   => ?a  <isCitizenOf>  ?b	0.058688147	0.334975369	0.489208633	204	609	417	?a	0.0	0.0	0.0
+?e  <hasAcademicAdvisor>  ?a  ?e  <livesIn>  ?b   => ?a  <isCitizenOf>  ?b	0.025028769	0.249283668	0.364016736	87	349	239	?a	0.0	0.0	0.0
+?a  <actedIn>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <isCitizenOf>  ?b	0.032796318	0.010026385	0.371335505	114	11370	307	?a	0.0	0.0	0.0
+?e  <hasChild>  ?a  ?e  <isPoliticianOf>  ?b   => ?a  <isCitizenOf>  ?b	0.030494822	0.081475788	0.841269841	106	1301	126	?a	0.0	0.0	0.0
+?e  <hasChild>  ?a  ?e  <isCitizenOf>  ?b   => ?a  <isCitizenOf>  ?b	0.023878021	0.328063241	0.912087912	83	253	91	?a	0.0	0.0	0.0
+?e  <influences>  ?a  ?e  <isCitizenOf>  ?b   => ?a  <isCitizenOf>  ?b	0.07853855	0.133627019	0.362549801	273	2043	753	?a	0.0	0.0	0.0
+?a  <isAffiliatedTo>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <isCitizenOf>  ?b	0.063003452	0.001232019	0.140025575	219	177757	1564	?a	0.0	0.0	0.0
+?a  <hasAcademicAdvisor>  ?f  ?f  <worksAt>  ?b   => ?a  <worksAt>  ?b	0.050395546	0.123032904	0.174442191	172	1398	986	?a	0.0	0.0	0.0
+?f  <graduatedFrom>  ?b  ?a  <hasAcademicAdvisor>  ?f   => ?a  <worksAt>  ?b	0.031643715	0.086261981	0.132678133	108	1252	814	?a	0.0	0.0	0.0
+?f  <graduatedFrom>  ?b  ?a  <influences>  ?f   => ?a  <worksAt>  ?b	0.017872839	0.017665798	0.108928571	61	3453	560	?a	0.0	0.0	0.0
+?e  <graduatedFrom>  ?b  ?e  <hasAcademicAdvisor>  ?a   => ?a  <worksAt>  ?b	0.080867272	0.245115453	0.369477912	276	1126	747	?a	0.0	0.0	0.0
+?e  <hasAcademicAdvisor>  ?a  ?e  <worksAt>  ?b   => ?a  <worksAt>  ?b	0.045707589	0.113372093	0.160824742	156	1376	970	?a	0.0	0.0	0.0
+?e  <influences>  ?a  ?e  <worksAt>  ?b   => ?a  <worksAt>  ?b	0.017872839	0.049877351	0.108928571	61	1223	560	?a	0.0	0.0	0.0
+?a  <hasChild>  ?b  ?b  <isMarriedTo>  ?a   => ?a  <isMarriedTo>  ?b	0.016094987	1	1	61	61	61	?a	0.0	0.0	0.0
+?a  <hasChild>  ?f  ?b  <hasChild>  ?f   => ?a  <isMarriedTo>  ?b	0.237994723	0.107598712	0.238687483	902	8383	3779	?a	0.0	0.0	0.0
+?a  <playsFor>  ?b   => ?a  <isAffiliatedTo>  ?b	0.751775668	0.87495247	0.95304592	283027	323477	296971	?a	0.0	0.0	0.0
+countPairs vars ?a, ?b in ?b <isAffiliatedTo> ?f  ?a <isAffiliatedTo> ?f   has taken 23984 ms
+?a  <hasNeighbor>  ?f  ?f  <participatedIn>  ?b   => ?a  <participatedIn>  ?b	0.123504438	0.170303353	0.170303353	640	3758	3758	?b	0.0	0.0	0.0
+?e  <dealsWith>  ?a  ?e  <participatedIn>  ?b   => ?a  <participatedIn>  ?b	0.177730606	0.163413769	0.163413769	921	5636	5636	?b	0.0	0.0	0.0
+?e  <hasNeighbor>  ?a  ?e  <participatedIn>  ?b   => ?a  <participatedIn>  ?b	0.123504438	0.16998672	0.16998672	640	3765	3765	?b	0.0	0.0	0.0
+?a  <actedIn>  ?b  ?a  <created>  ?b   => ?a  <directed>  ?b	0.039151713	0.454736842	0.546835443	216	475	395	?b	0.0	0.0	0.0
+countPairs vars ?a, ?b in ?b <isAffiliatedTo> ?f  ?a <isAffiliatedTo> ?f   has taken 23534 ms
+countPairs vars ?a, ?b in ?a <isLocatedIn> ?f  ?b <isLocatedIn> ?f   has taken 54558 ms
+?a  <hasAcademicAdvisor>  ?f  ?f  <worksAt>  ?b   => ?a  <graduatedFrom>  ?b	0.052056642	0.276108727	0.302745098	386	1398	1275	?a	0.0	0.0	0.0
+?f  <graduatedFrom>  ?b  ?a  <hasAcademicAdvisor>  ?f   => ?a  <graduatedFrom>  ?b	0.032906271	0.194888179	0.214977974	244	1252	1135	?a	0.0	0.0	0.0
+?f  <graduatedFrom>  ?b  ?a  <hasChild>  ?f   => ?a  <graduatedFrom>  ?b	0.03587323	0.138110073	0.203831418	266	1926	1305	?a	0.0	0.0	0.0
+?e  <graduatedFrom>  ?b  ?e  <hasAcademicAdvisor>  ?a   => ?a  <graduatedFrom>  ?b	0.02440998	0.160746004	0.182643794	181	1126	991	?a	0.0	0.0	0.0
+?e  <graduatedFrom>  ?b  ?e  <hasChild>  ?a   => ?a  <graduatedFrom>  ?b	0.035738368	0.139400316	0.19984917	265	1901	1326	?a	0.0	0.0	0.0
+?e  <influences>  ?a  ?e  <worksAt>  ?b   => ?a  <graduatedFrom>  ?b	0.011058665	0.067048242	0.101610905	82	1223	807	?a	0.0	0.0	0.0
+?e  <hasChild>  ?a  ?e  <wasBornIn>  ?b   => ?a  <wasBornIn>  ?b	0.010282209	0.150032196	0.202961672	466	3106	2296	?a	0.0	0.0	0.0
+?e  <diedIn>  ?b  ?e  <hasChild>  ?a   => ?a  <wasBornIn>  ?b	0.010216015	0.197105151	0.284747847	463	2349	1626	?a	0.0	0.0	0.0
+?a  <hasChild>  ?f  ?f  <hasGender>  ?b   => ?a  <hasGender>  ?b	0.033635382	0.67105657	0.698660019	2242	3341	3209	?a	0.0	0.0	0.0
+?f  <hasGender>  ?b  ?a  <influences>  ?f   => ?a  <hasGender>  ?b	0.030829933	0.803048066	0.805250784	2055	2559	2552	?a	0.0	0.0	0.0
+?a  <hasAcademicAdvisor>  ?f  ?f  <hasGender>  ?b   => ?a  <hasGender>  ?b	0.011566851	0.955390335	0.961346633	771	807	802	?a	0.0	0.0	0.0
+?e  <hasChild>  ?a  ?e  <hasGender>  ?b   => ?a  <hasGender>  ?b	0.036770883	0.657457082	0.678947368	2451	3728	3610	?a	0.0	0.0	0.0
+?e  <hasGender>  ?b  ?e  <influences>  ?a   => ?a  <hasGender>  ?b	0.037085934	0.847736626	0.851826327	2472	2916	2902	?a	0.0	0.0	0.0
+?a  <hasCapital>  ?b  ?b  <isLocatedIn>  ?a   => ?a  <isLocatedIn>  ?b	0.010242117	0.519886364	0.540141677	915	1760	1694	?a	0.0	0.0	0.0
+?b  <hasCapital>  ?a  ?b  <isLocatedIn>  ?a   => ?a  <isLocatedIn>  ?b	0.010242117	0.910447761	0.911354582	915	1005	1004	?a	0.0	0.0	0.0
+?b  <hasCapital>  ?f  ?a  <isLocatedIn>  ?f   => ?a  <isLocatedIn>  ?b	0.027345893	0.146340002	0.146340002	2443	16694	16694	?a	0.0	0.0	0.0
+?a  <hasCapital>  ?f  ?f  <isLocatedIn>  ?b   => ?a  <isLocatedIn>  ?b	0.024413177	0.294769563	0.317421045	2181	7399	6871	?a	0.0	0.0	0.0
+countPairs vars ?a, ?b in ?b <isLocatedIn> ?f  ?a <isLocatedIn> ?f   has taken 67471 ms
+?f  <isLocatedIn>  ?b  ?a  <isLocatedIn>  ?f   => ?a  <isLocatedIn>  ?b	0.391371996	0.231560403	0.231560403	34964	150993	150993	?a	0.0	0.0	0.0
+?e  <hasCapital>  ?a  ?e  <isLocatedIn>  ?b   => ?a  <isLocatedIn>  ?b	0.022778916	0.450819672	0.452021324	2035	4514	4502	?a	0.0	0.0	0.0
+?e  <isLocatedIn>  ?a  ?e  <isLocatedIn>  ?b   => ?a  <isLocatedIn>  ?b	0.175839798	0.147158287	0.15930433	15709	106749	98610	?a	0.0	0.0	0.0
+countPairs vars ?a, ?b in ?b <isLocatedIn> ?f  ?a <isLocatedIn> ?f   has taken 66836 ms
+countPairs vars ?a, ?b in ?b <isLocatedIn> ?f  ?a <isLocatedIn> ?f   has taken 64729 ms
+countPairs vars ?a, ?b in ?b <isLocatedIn> ?f  ?a <isLocatedIn> ?f   has taken 66923 ms
+countPairs vars ?a, ?b in ?b <isLocatedIn> ?f  ?a <isLocatedIn> ?f   has taken 62994 ms
+countPairs vars ?a, ?b in ?b <isLocatedIn> ?f  ?a <isLocatedIn> ?f   has taken 56255 ms
+countPairs vars ?a, ?b in ?b <isLocatedIn> ?f  ?a <isLocatedIn> ?f   has taken 50924 ms
+countPairs vars ?a, ?b in ?b <hasGender> ?f  ?a <hasGender> ?f   has taken 1282588 ms
+countPairs vars ?a, ?b in ?b <hasGender> ?f  ?a <hasGender> ?f   has taken 1288123 ms
+countPairs vars ?a, ?b in ?b <hasGender> ?f  ?a <hasGender> ?f   has taken 1311544 ms
+countPairs vars ?a, ?b in ?b <hasGender> ?f  ?a <hasGender> ?f   has taken 1294902 ms
+countPairs vars ?a, ?b in ?b <hasGender> ?f  ?a <hasGender> ?f   has taken 1288681 ms
+Mining done in 27 min, 27 s
+Total time 27 min, 38 s
+237 rules mined.
