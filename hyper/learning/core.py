@@ -230,13 +230,14 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
             losses += [hist.history['loss'][0] / float(train_Xr_batch.shape[0])]
 
         if visualize is True:
-            import hyper.visualization.visualization as visualization
+            #import hyper.visualization.visualization as visualization
 
-            hinton_diagram = visualization.HintonDiagram()
-            W_emb = predicate_embedding_layer.trainable_weights[0].get_value()
-            print('Embedding dimensions: %s - Max value: %s, Min value: %s'
-                  % (str(W_emb.shape), np.max(W_emb), np.min(W_emb)))
-            print(hinton_diagram(W_emb))
+            #hinton_diagram = visualization.HintonDiagram()
+            #W_emb = predicate_embedding_layer.trainable_weights[0].get_value()
+            #print('Embedding dimensions: %s - Max value: %s, Min value: %s'
+            #      % (str(W_emb.shape), np.max(W_emb), np.min(W_emb)))
+            #print(hinton_diagram(W_emb))
+            pass
 
         logging.info('Loss: %s +/- %s' % (round(np.mean(losses), 4), round(np.std(losses), 4)))
 
