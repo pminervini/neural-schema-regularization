@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-import pylab as P
 
+import os
+import matplotlib.pyplot
+if 'DISPLAY' not in os.environ:
+    matplotlib.use('Pdf')
+
+import pylab as P
 import logging
 
 
