@@ -43,7 +43,6 @@ def to_logfile(c, dir):
     outfile = "%s/exp_yago3_mte10_5k_rules_v1.%s.log" % (dir, summary(c))
     return outfile
 
-
 hyperparameters_space = dict(
     epochs=[500],
     optimizer=['adagrad'],
