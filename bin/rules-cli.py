@@ -18,7 +18,7 @@ def main(argv):
     argparser = argparse.ArgumentParser('Rules Explorer', formatter_class=formatter)
 
     # Rules-related arguments
-    argparser.add_argument('--rules', action='store', type=str, default=None,
+    argparser.add_argument('rules', action='store', type=str, default=None,
                            help='JSON document containing the rules extracted from the Knowledge Graph')
 
     argparser.add_argument('--rules-top-k', action='store', type=int, default=None,
