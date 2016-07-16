@@ -51,10 +51,10 @@ hyperparameters_space = dict(
     model=['TransE'],
     similarity=['l1', 'l2'],
     margin=[1, 2, 5, 10],
-    embedding_size=[20, 50, 100, 200],
+    embedding_size=[20, 50, 100, 200, 300],
 
     rules_threshold=[.9],
-    sample_facts=[.1, .3, .5, .7, .9, 1],
+    sample_facts=[.5, .7, .9, 1],
     rules_lambda=[.0, 10, 100, 1000, 10000]
 )
 
