@@ -50,7 +50,7 @@ hyperparameters_space = dict(
     batches=[10],
     model=['TransE'],
     similarity=['l1', 'l2'],
-    margin=[1, 2, 5, 10],
+    margin=[1],
     embedding_size=[20, 50, 100, 200, 300],
 
     rules_threshold=[.7, .8, .9],
