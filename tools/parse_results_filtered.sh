@@ -9,7 +9,7 @@ ls $@ | wc -w
 BEST_FILT_MR_FILE=`ls $@ | xargs grep "MICRO (validation filtered)" -A 3 | grep global | grep "hits@10:" | awk '{ print $6 " " $0 }' | sort -nr | sed -e ''s/"-INFO"/" "/g'' | tail -n 1 | awk '{ print $2 }'`
 
 #echo "Best MR, Raw:" $BEST_RAW_MR_FILE
-#echo "Best MR, Filt:" $BEST_FILT_MR_FILE
+echo "Best MR, Filt:" $BEST_FILT_MR_FILE
 
 #BEST_RAW_MR=`cat $BEST_RAW_MR_FILE | grep "MICRO (test raw)" -A 3 | grep global | grep "hits@10:" | awk '{ print $6 }' | tr -d ","`
 BEST_FILT_MR=`cat $BEST_FILT_MR_FILE | grep "MICRO (test filtered)" -A 3 | grep global | grep "hits@10:" | awk '{ print $6 }' | tr -d ","`
@@ -27,7 +27,7 @@ echo
 BEST_FILT_MRR_FILE=`ls $@ | xargs grep "MICRO (validation filtered)" -A 3 | grep global | grep "hits@10:" | awk '{ print $10 " " $0 }' | sort -nr | sed -e ''s/"-INFO"/" "/g'' | head -n 1 | awk '{ print $2 }'`
 
 #echo "Best MRR, Raw:" $BEST_RAW_MRR_FILE
-#echo "Best MRR, Filt:" $BEST_FILT_MRR_FILE
+echo "Best MRR, Filt:" $BEST_FILT_MRR_FILE
 
 #BEST_RAW_MRR=`cat $BEST_RAW_MRR_FILE | grep "MICRO (test raw)" -A 3 | grep global | grep "hits@10:" | awk '{ print $10 }' | tr -d ","`
 BEST_FILT_MRR=`cat $BEST_FILT_MRR_FILE | grep "MICRO (test filtered)" -A 3 | grep global | grep "hits@10:" | awk '{ print $10 }' | tr -d ","`
@@ -47,7 +47,7 @@ do
     BEST_FILT_H_FILE=`ls $@ | xargs grep "MICRO (validation filtered)" -A 3 | grep global | grep "hits@$N:" | awk '{ print $12 " " $0 }' | sort -nr | sed -e ''s/"-INFO"/" "/g'' | head -n 1 | awk '{ print $2 }'`
 
     #echo "Best H@$N, Raw:" $BEST_RAW_H_FILE
-    #echo "Best H@$N, Filt:" $BEST_FILT_H_FILE
+    echo "Best H@$N, Filt:" $BEST_FILT_H_FILE
 
     #BEST_RAW_H=`cat $BEST_RAW_H_FILE | grep "MICRO (test raw)" -A 3 | grep global | grep "hits@$N:" | awk '{ print $12 }' | tr -d ","`
     BEST_FILT_H=`cat $BEST_FILT_H_FILE | grep "MICRO (test filtered)" -A 3 | grep global | grep "hits@$N:" | awk '{ print $12 }' | tr -d ","`
