@@ -194,9 +194,9 @@ class ScalingRuleRegularizer(RuleRegularizer):
         return config
 
 
-class ScalingEQRuleRegularizer(RuleRegularizer):
+class DivMultRuleRegularizer(RuleRegularizer):
     def __init__(self, head, tail, *args, **kwargs):
-        super(ScalingEQRuleRegularizer, self).__init__(*args, **kwargs)
+        super(DivMultRuleRegularizer, self).__init__(*args, **kwargs)
         self.head, self.tail = head, tail
 
     def __call__(self, loss):
@@ -217,89 +217,7 @@ class ScalingEQRuleRegularizer(RuleRegularizer):
         return K.in_train_phase(regularized_loss, loss)
 
     def get_config(self):
-        sc = super(ScalingEQRuleRegularizer, self).get_config()
-        config = {"name": self.__class__.__name__}
-        config.update(sc)
-        return config
-
-
-DualScalingRuleRegularizer = ScalingRuleRegularizer
-
-
-class ScalingTranslationRuleRegularizer(RuleRegularizer):
-    def __init__(self, head, tail, *args, **kwargs):
-        super(ScalingTranslationRuleRegularizer, self).__init__(*args, **kwargs)
-        self.head, self.tail = head, tail
-
-    def __call__(self, loss):
-        if not hasattr(self, 'p'):
-            raise Exception('Need to call `set_param` on RuleRegularizer instance before calling the instance.')
-
-        head_embedding = self.p[self.head, :]
-        tail_embedding = None
-
-        N = self.entity_embedding_size
-
-        for hop, is_reversed in self.tail:
-            hop_embedding_scaling = (1. / self.p[hop, :N]) if is_reversed is True else self.p[hop, :N]
-            hop_embedding_translation = (- self.p[hop, N:]) if is_reversed is True else self.p[hop, N:]
-            hop_embedding = K.concatenate([hop_embedding_scaling, hop_embedding_translation], axis=0)
-            tail_embedding = hop_embedding if tail_embedding is None else (tail_embedding * hop_embedding)
-
-        sim = K.reshape(self.similarity(head_embedding, tail_embedding, axis=-1), (1,))[0]
-
-        regularized_loss = loss - sim * self.l
-        return K.in_train_phase(regularized_loss, loss)
-
-    def get_config(self):
-        sc = super(ScalingTranslationRuleRegularizer, self).get_config()
-        config = {"name": self.__class__.__name__}
-        config.update(sc)
-        return config
-
-
-class DiagonalAffineRuleRegularizer(RuleRegularizer):
-    def __init__(self, head, tail, *args, **kwargs):
-        super(DiagonalAffineRuleRegularizer, self).__init__(*args, **kwargs)
-        self.head, self.tail = head, tail
-
-    def __call__(self, loss):
-        if not hasattr(self, 'p'):
-            raise Exception('Need to call `set_param` on RuleRegularizer instance before calling the instance.')
-
-        head_embedding = self.p[self.head, :]
-        tail_embedding = None
-
-        N = self.entity_embedding_size
-
-        for hop, is_reversed in self.tail:
-            # q(p(x)) =
-            #  = W_q (W_p x + b_p) + b_q
-            #  = (W_q W_p) x + (W_q b_p + b_q)
-
-            # W_q
-            hop_embedding_scaling = (1. / self.p[hop, :N]) if is_reversed is True else self.p[hop, :N]
-            # b_q
-            hop_embedding_translation = (- self.p[hop, N:]) if is_reversed is True else self.p[hop, N:]
-
-            if tail_embedding is None:
-                hop_embedding = K.concatenate([hop_embedding_scaling, hop_embedding_translation], axis=0)
-                tail_embedding = hop_embedding
-            else:
-                # W_q W_p
-                tail_embedding_scaling = hop_embedding_scaling * tail_embedding[:N]
-                # W_q b_p + b_q
-                tail_embedding_translation = hop_embedding_scaling * tail_embedding[N:] + hop_embedding_translation
-
-                tail_embedding = K.concatenate([tail_embedding_scaling, tail_embedding_translation], axis=0)
-
-        sim = K.reshape(self.similarity(head_embedding, tail_embedding, axis=-1), (1,))[0]
-
-        regularized_loss = loss - sim * self.l
-        return K.in_train_phase(regularized_loss, loss)
-
-    def get_config(self):
-        sc = super(DiagonalAffineRuleRegularizer, self).get_config()
+        sc = super(DivMultRuleRegularizer, self).get_config()
         config = {"name": self.__class__.__name__}
         config.update(sc)
         return config

@@ -7,9 +7,8 @@ from hyper.io import read_triples, serialize
 from hyper.parsing import knowledgebase
 from hyper import optimizers
 
-from hyper.regularizers import L1, L2, GroupRegularizer, TranslationRuleRegularizer, DualTranslationRuleRegularizer,\
-    ScalingRuleRegularizer, DualScalingRuleRegularizer, ScalingTranslationRuleRegularizer, ScalingEQRuleRegularizer,\
-    DiagonalAffineRuleRegularizer
+from hyper.regularizers import L1, L2, GroupRegularizer, TranslationRuleRegularizer,\
+    ScalingRuleRegularizer, DivMultRuleRegularizer
 
 from keras.constraints import nonneg
 
@@ -280,12 +279,8 @@ def main(argv):
 
         model_to_regularizer = dict(
             TransE=TranslationRuleRegularizer,
-            DualTransE=DualTranslationRuleRegularizer,
             ScalE=ScalingRuleRegularizer,
-            ScalEQ=ScalingEQRuleRegularizer,
-            DualScalE=DualScalingRuleRegularizer,
-            DAffinE=DiagonalAffineRuleRegularizer,
-            ScalTransE=ScalingTranslationRuleRegularizer)
+            DivMult=DivMultRuleRegularizer)
 
         for rule_predicate, rule_feature, rule_weight in pfw_triples:
             if rules_threshold is None or rule_weight >= rules_threshold:

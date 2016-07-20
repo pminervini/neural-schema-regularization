@@ -343,7 +343,7 @@ def manifold_hyperplane_merge_function(args, similarity):
 TransE = TranslatingEmbeddings = translating_merge_function
 DualTransE = DualTranslatingEmbeddings = dual_translating_merge_function
 
-ScalE = ScalEQ = ScalingEmbeddings = scaling_merge_function
+ScalE = ScalEQ = DivMult = ScalingEmbeddings = scaling_merge_function
 DualScalE = DualScalingEmbeddings = dual_scaling_merge_function
 ScalTransE = ScalingTranslatingEmbeddings = scaling_translating_merge_function
 
@@ -362,6 +362,7 @@ DualAffinE = DualAffineEmbeddings = dual_affine_merge_function
 
 ManifoldESphere = manifold_sphere_merge_function
 ManifoldEHyperplane = manifold_hyperplane_merge_function
+
 
 def get_function(function_name):
     this_module = sys.modules[__name__]
