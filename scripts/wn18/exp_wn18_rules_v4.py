@@ -38,7 +38,7 @@ def to_command(c):
 
 
 def to_logfile(c, dir):
-    outfile = "%s/exp_wn18_rules_v3.%s.log" % (dir, summary(c))
+    outfile = "%s/exp_wn18_rules_v4.%s.log" % (dir, summary(c))
     return outfile
 
 
@@ -59,7 +59,7 @@ hyperparameters_space = dict(
 
 configurations = cartesian_product(hyperparameters_space)
 
-dir = 'logs/exp_wn18_rules_v3/'
+dir = 'logs/exp_wn18_rules_v4/'
 
 for c in configurations:
     logfile = to_logfile(c, dir)
