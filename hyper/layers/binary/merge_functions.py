@@ -343,7 +343,7 @@ def manifold_hyperplane_merge_function(args, similarity):
 TransE = TranslatingEmbeddings = translating_merge_function
 DualTransE = DualTranslatingEmbeddings = dual_translating_merge_function
 
-ScalE = ScalEQ = DivMult = ScalingEmbeddings = scaling_merge_function
+ScalE = ScalEQ = DistMult = ScalingEmbeddings = scaling_merge_function
 DualScalE = DualScalingEmbeddings = dual_scaling_merge_function
 ScalTransE = ScalingTranslatingEmbeddings = scaling_translating_merge_function
 
