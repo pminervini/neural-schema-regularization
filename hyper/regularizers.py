@@ -194,9 +194,9 @@ class ScalingRuleRegularizer(RuleRegularizer):
         return config
 
 
-class DivMultRuleRegularizer(RuleRegularizer):
+class DistMultRuleRegularizer(RuleRegularizer):
     def __init__(self, head, tail, *args, **kwargs):
-        super(DivMultRuleRegularizer, self).__init__(*args, **kwargs)
+        super(DistMultRuleRegularizer, self).__init__(*args, **kwargs)
         self.head, self.tail = head, tail
 
     def __call__(self, loss):
@@ -217,7 +217,7 @@ class DivMultRuleRegularizer(RuleRegularizer):
         return K.in_train_phase(regularized_loss, loss)
 
     def get_config(self):
-        sc = super(DivMultRuleRegularizer, self).get_config()
+        sc = super(DistMultRuleRegularizer, self).get_config()
         config = {"name": self.__class__.__name__}
         config.update(sc)
         return config
