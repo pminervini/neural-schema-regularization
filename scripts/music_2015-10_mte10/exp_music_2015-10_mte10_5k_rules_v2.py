@@ -40,7 +40,7 @@ def to_command(c):
 
 
 def to_logfile(c, dir):
-    outfile = "%s/exp_music_2015-10_mte10_5k_rules_v1.%s.log" % (dir, summary(c))
+    outfile = "%s/exp_music_2015-10_mte10_5k_rules_v2.%s.log" % (dir, summary(c))
     return outfile
 
 hyperparameters_space = dict(
@@ -60,7 +60,7 @@ hyperparameters_space = dict(
 
 configurations = cartesian_product(hyperparameters_space)
 
-dir = 'logs/exp_music_2015-10_mte10_5k_rules_v1/'
+dir = 'logs/exp_music_2015-10_mte10_5k_rules_v2/'
 
 for c in configurations:
     logfile = to_logfile(c, dir)
