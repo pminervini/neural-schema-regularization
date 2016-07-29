@@ -1,25 +1,5 @@
-Traceback (most recent call last):
-  File "./bin/hyper-cli.py", line 8, in <module>
-    from hyper import optimizers
-  File "<frozen importlib._bootstrap>", line 2237, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 2226, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 1191, in _load_unlocked
-  File "<frozen importlib._bootstrap>", line 1161, in _load_backward_compatible
-  File "/home/insight/.local/lib/python3.4/site-packages/hyper-0.0.1-py3.4.egg/hyper/optimizers.py", line 3, in <module>
-  File "/usr/local/lib/python3.4/dist-packages/keras/__init__.py", line 2, in <module>
-    from . import backend
-  File "/usr/local/lib/python3.4/dist-packages/keras/backend/__init__.py", line 26, in <module>
-    _config = json.load(open(_config_path))
-  File "/usr/lib/python3.4/json/__init__.py", line 268, in load
-    parse_constant=parse_constant, object_pairs_hook=object_pairs_hook, **kw)
-  File "/usr/lib/python3.4/json/__init__.py", line 318, in loads
-    return _default_decoder.decode(s)
-  File "/usr/lib/python3.4/json/decoder.py", line 343, in decode
-    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
-  File "/usr/lib/python3.4/json/decoder.py", line 361, in raw_decode
-    raise ValueError(errmsg("Expecting value", s, err.value)) from None
-ValueError: Expecting value: line 1 column 1 (char 0)
 Using Theano backend.
+Using gpu device 0: GeForce GTX TITAN X (CNMeM is disabled, cuDNN not available)
 INFO:root:Acquiring data/wn18/wordnet-mlj12-train.txt ..
 INFO:root:Acquiring data/wn18/wordnet-mlj12-valid.txt ..
 INFO:root:Acquiring data/wn18/wordnet-mlj12-test.txt ..
@@ -35,1066 +15,1069 @@ INFO:root:[Rules] Adding Head: 8, Tail: [(9, True)]
 INFO:root:[Rules] Adding Head: 2, Tail: [(2, True)]
 INFO:root:Samples: 141442, no. batches: 10 -> batch size: 14145
 INFO:root:Epoch no. 1 of 500 (samples: 141442)
-INFO:root:Loss: 6968.5384 +/- 317.4187
+INFO:root:Loss: 6968.5416 +/- 317.4159
 INFO:root:Epoch no. 2 of 500 (samples: 141442)
-INFO:root:Loss: 6723.1388 +/- 17.1746
+INFO:root:Loss: 6723.137 +/- 17.1754
 INFO:root:Epoch no. 3 of 500 (samples: 141442)
-INFO:root:Loss: 6633.6284 +/- 13.446
+INFO:root:Loss: 6633.6261 +/- 13.4471
 INFO:root:Epoch no. 4 of 500 (samples: 141442)
-INFO:root:Loss: 6560.7469 +/- 8.8957
+INFO:root:Loss: 6560.7451 +/- 8.8984
 INFO:root:Epoch no. 5 of 500 (samples: 141442)
-INFO:root:Loss: 6499.1199 +/- 5.8355
+INFO:root:Loss: 6499.1252 +/- 5.8401
 INFO:root:Epoch no. 6 of 500 (samples: 141442)
-INFO:root:Loss: 6445.5468 +/- 5.0448
+INFO:root:Loss: 6445.5469 +/- 5.0473
 INFO:root:Epoch no. 7 of 500 (samples: 141442)
-INFO:root:Loss: 6396.4849 +/- 5.2501
+INFO:root:Loss: 6396.4846 +/- 5.2533
 INFO:root:Epoch no. 8 of 500 (samples: 141442)
-INFO:root:Loss: 6350.7907 +/- 5.1006
+INFO:root:Loss: 6350.7901 +/- 5.1054
 INFO:root:Epoch no. 9 of 500 (samples: 141442)
-INFO:root:Loss: 6307.5062 +/- 7.1517
+INFO:root:Loss: 6307.5042 +/- 7.1493
 INFO:root:Epoch no. 10 of 500 (samples: 141442)
-INFO:root:Loss: 6266.0873 +/- 4.6282
+INFO:root:Loss: 6266.0885 +/- 4.6277
 INFO:root:Epoch no. 11 of 500 (samples: 141442)
-INFO:root:Loss: 6226.0824 +/- 3.7682
+INFO:root:Loss: 6226.0818 +/- 3.7664
 INFO:root:Epoch no. 12 of 500 (samples: 141442)
-INFO:root:Loss: 6187.5789 +/- 7.0755
+INFO:root:Loss: 6187.5786 +/- 7.0792
 INFO:root:Epoch no. 13 of 500 (samples: 141442)
-INFO:root:Loss: 6149.7581 +/- 3.6907
+INFO:root:Loss: 6149.7578 +/- 3.6906
 INFO:root:Epoch no. 14 of 500 (samples: 141442)
-INFO:root:Loss: 6113.4092 +/- 4.7486
+INFO:root:Loss: 6113.4119 +/- 4.7487
 INFO:root:Epoch no. 15 of 500 (samples: 141442)
-INFO:root:Loss: 6077.6417 +/- 9.4463
+INFO:root:Loss: 6077.6411 +/- 9.445
 INFO:root:Epoch no. 16 of 500 (samples: 141442)
-INFO:root:Loss: 6042.5544 +/- 6.6415
+INFO:root:Loss: 6042.5565 +/- 6.6394
 INFO:root:Epoch no. 17 of 500 (samples: 141442)
-INFO:root:Loss: 6008.8373 +/- 6.8592
+INFO:root:Loss: 6008.8418 +/- 6.8579
 INFO:root:Epoch no. 18 of 500 (samples: 141442)
-INFO:root:Loss: 5975.5523 +/- 9.9261
+INFO:root:Loss: 5975.5552 +/- 9.9274
 INFO:root:Epoch no. 19 of 500 (samples: 141442)
-INFO:root:Loss: 5942.6592 +/- 4.152
+INFO:root:Loss: 5942.6578 +/- 4.1496
 INFO:root:Epoch no. 20 of 500 (samples: 141442)
-INFO:root:Loss: 5910.8156 +/- 7.1847
+INFO:root:Loss: 5910.8149 +/- 7.1849
 INFO:root:Epoch no. 21 of 500 (samples: 141442)
-INFO:root:Loss: 5880.0821 +/- 9.1289
+INFO:root:Loss: 5880.0819 +/- 9.1318
 INFO:root:Epoch no. 22 of 500 (samples: 141442)
-INFO:root:Loss: 5848.912 +/- 5.8518
+INFO:root:Loss: 5848.9109 +/- 5.8537
 INFO:root:Epoch no. 23 of 500 (samples: 141442)
-INFO:root:Loss: 5819.5725 +/- 7.0262
+INFO:root:Loss: 5819.5717 +/- 7.0255
 INFO:root:Epoch no. 24 of 500 (samples: 141442)
-INFO:root:Loss: 5790.6022 +/- 7.796
+INFO:root:Loss: 5790.6011 +/- 7.7975
 INFO:root:Epoch no. 25 of 500 (samples: 141442)
-INFO:root:Loss: 5761.5123 +/- 7.2359
+INFO:root:Loss: 5761.5103 +/- 7.2378
 INFO:root:Epoch no. 26 of 500 (samples: 141442)
-INFO:root:Loss: 5733.0241 +/- 10.6959
+INFO:root:Loss: 5733.0255 +/- 10.6926
 INFO:root:Epoch no. 27 of 500 (samples: 141442)
-INFO:root:Loss: 5706.1231 +/- 5.8123
+INFO:root:Loss: 5706.1242 +/- 5.8131
 INFO:root:Epoch no. 28 of 500 (samples: 141442)
-INFO:root:Loss: 5678.5339 +/- 7.6805
+INFO:root:Loss: 5678.5379 +/- 7.6778
 INFO:root:Epoch no. 29 of 500 (samples: 141442)
-INFO:root:Loss: 5651.2795 +/- 7.0515
+INFO:root:Loss: 5651.2798 +/- 7.0515
 INFO:root:Epoch no. 30 of 500 (samples: 141442)
-INFO:root:Loss: 5624.9494 +/- 11.6904
+INFO:root:Loss: 5624.9507 +/- 11.6876
 INFO:root:Epoch no. 31 of 500 (samples: 141442)
-INFO:root:Loss: 5598.7161 +/- 6.8774
+INFO:root:Loss: 5598.7145 +/- 6.8764
 INFO:root:Epoch no. 32 of 500 (samples: 141442)
-INFO:root:Loss: 5573.8638 +/- 9.3952
+INFO:root:Loss: 5573.8637 +/- 9.395
 INFO:root:Epoch no. 33 of 500 (samples: 141442)
-INFO:root:Loss: 5548.6151 +/- 8.2609
+INFO:root:Loss: 5548.6158 +/- 8.2623
 INFO:root:Epoch no. 34 of 500 (samples: 141442)
-INFO:root:Loss: 5523.6981 +/- 9.7023
+INFO:root:Loss: 5523.7006 +/- 9.7024
 INFO:root:Epoch no. 35 of 500 (samples: 141442)
-INFO:root:Loss: 5500.9585 +/- 8.5653
+INFO:root:Loss: 5500.9598 +/- 8.5689
 INFO:root:Epoch no. 36 of 500 (samples: 141442)
-INFO:root:Loss: 5476.6307 +/- 11.3667
+INFO:root:Loss: 5476.6335 +/- 11.3683
 INFO:root:Epoch no. 37 of 500 (samples: 141442)
-INFO:root:Loss: 5452.6145 +/- 9.9681
+INFO:root:Loss: 5452.6162 +/- 9.9677
 INFO:root:Epoch no. 38 of 500 (samples: 141442)
-INFO:root:Loss: 5429.7781 +/- 11.1619
+INFO:root:Loss: 5429.7771 +/- 11.1572
 INFO:root:Epoch no. 39 of 500 (samples: 141442)
-INFO:root:Loss: 5406.3625 +/- 15.3336
+INFO:root:Loss: 5406.3629 +/- 15.3381
 INFO:root:Epoch no. 40 of 500 (samples: 141442)
-INFO:root:Loss: 5384.2195 +/- 9.9508
+INFO:root:Loss: 5384.2194 +/- 9.9528
 INFO:root:Epoch no. 41 of 500 (samples: 141442)
-INFO:root:Loss: 5361.6001 +/- 11.205
+INFO:root:Loss: 5361.599 +/- 11.2067
 INFO:root:Epoch no. 42 of 500 (samples: 141442)
-INFO:root:Loss: 5337.9763 +/- 9.5597
+INFO:root:Loss: 5337.9761 +/- 9.5592
 INFO:root:Epoch no. 43 of 500 (samples: 141442)
-INFO:root:Loss: 5316.6235 +/- 9.68
+INFO:root:Loss: 5316.6196 +/- 9.6819
 INFO:root:Epoch no. 44 of 500 (samples: 141442)
-INFO:root:Loss: 5293.8417 +/- 11.814
+INFO:root:Loss: 5293.8446 +/- 11.8131
 INFO:root:Epoch no. 45 of 500 (samples: 141442)
-INFO:root:Loss: 5271.4048 +/- 6.9852
+INFO:root:Loss: 5271.4058 +/- 6.9851
 INFO:root:Epoch no. 46 of 500 (samples: 141442)
-INFO:root:Loss: 5249.4992 +/- 10.6997
+INFO:root:Loss: 5249.5006 +/- 10.7037
 INFO:root:Epoch no. 47 of 500 (samples: 141442)
-INFO:root:Loss: 5227.5335 +/- 14.0424
+INFO:root:Loss: 5227.5295 +/- 14.0387
 INFO:root:Epoch no. 48 of 500 (samples: 141442)
-INFO:root:Loss: 5205.5403 +/- 8.5893
+INFO:root:Loss: 5205.539 +/- 8.5896
 INFO:root:Epoch no. 49 of 500 (samples: 141442)
-INFO:root:Loss: 5184.3962 +/- 13.7567
+INFO:root:Loss: 5184.3983 +/- 13.7581
 INFO:root:Epoch no. 50 of 500 (samples: 141442)
-INFO:root:Loss: 5163.2847 +/- 14.4123
+INFO:root:Loss: 5163.2855 +/- 14.4133
 INFO:root:Epoch no. 51 of 500 (samples: 141442)
-INFO:root:Loss: 5141.6726 +/- 12.0744
+INFO:root:Loss: 5141.6716 +/- 12.0711
 INFO:root:Epoch no. 52 of 500 (samples: 141442)
-INFO:root:Loss: 5120.6559 +/- 18.2953
+INFO:root:Loss: 5120.656 +/- 18.2946
 INFO:root:Epoch no. 53 of 500 (samples: 141442)
-INFO:root:Loss: 5099.6062 +/- 7.4838
+INFO:root:Loss: 5099.6062 +/- 7.4808
 INFO:root:Epoch no. 54 of 500 (samples: 141442)
-INFO:root:Loss: 5078.9126 +/- 14.6869
+INFO:root:Loss: 5078.9098 +/- 14.6872
 INFO:root:Epoch no. 55 of 500 (samples: 141442)
-INFO:root:Loss: 5057.7479 +/- 17.8638
+INFO:root:Loss: 5057.7469 +/- 17.8592
 INFO:root:Epoch no. 56 of 500 (samples: 141442)
-INFO:root:Loss: 5038.294 +/- 11.0966
+INFO:root:Loss: 5038.2938 +/- 11.094
 INFO:root:Epoch no. 57 of 500 (samples: 141442)
-INFO:root:Loss: 5017.9262 +/- 11.5358
+INFO:root:Loss: 5017.9296 +/- 11.534
 INFO:root:Epoch no. 58 of 500 (samples: 141442)
-INFO:root:Loss: 4998.0195 +/- 11.9913
+INFO:root:Loss: 4998.0181 +/- 11.9912
 INFO:root:Epoch no. 59 of 500 (samples: 141442)
-INFO:root:Loss: 4978.3374 +/- 15.1091
+INFO:root:Loss: 4978.3385 +/- 15.1093
 INFO:root:Epoch no. 60 of 500 (samples: 141442)
-INFO:root:Loss: 4958.4372 +/- 12.9695
+INFO:root:Loss: 4958.4372 +/- 12.9705
 INFO:root:Epoch no. 61 of 500 (samples: 141442)
-INFO:root:Loss: 4938.7976 +/- 14.4306
+INFO:root:Loss: 4938.7967 +/- 14.4322
 INFO:root:Epoch no. 62 of 500 (samples: 141442)
-INFO:root:Loss: 4919.151 +/- 14.1423
+INFO:root:Loss: 4919.1547 +/- 14.1445
 INFO:root:Epoch no. 63 of 500 (samples: 141442)
-INFO:root:Loss: 4899.4467 +/- 10.3966
+INFO:root:Loss: 4899.4442 +/- 10.3941
 INFO:root:Epoch no. 64 of 500 (samples: 141442)
-INFO:root:Loss: 4879.9976 +/- 11.0175
+INFO:root:Loss: 4879.9991 +/- 11.0174
 INFO:root:Epoch no. 65 of 500 (samples: 141442)
-INFO:root:Loss: 4861.4139 +/- 14.9641
+INFO:root:Loss: 4861.414 +/- 14.9659
 INFO:root:Epoch no. 66 of 500 (samples: 141442)
-INFO:root:Loss: 4842.595 +/- 8.847
+INFO:root:Loss: 4842.5962 +/- 8.8472
 INFO:root:Epoch no. 67 of 500 (samples: 141442)
-INFO:root:Loss: 4822.7547 +/- 16.5207
+INFO:root:Loss: 4822.7555 +/- 16.5185
 INFO:root:Epoch no. 68 of 500 (samples: 141442)
-INFO:root:Loss: 4804.4035 +/- 15.0592
+INFO:root:Loss: 4804.4022 +/- 15.0572
 INFO:root:Epoch no. 69 of 500 (samples: 141442)
-INFO:root:Loss: 4785.5579 +/- 14.1454
+INFO:root:Loss: 4785.5573 +/- 14.1443
 INFO:root:Epoch no. 70 of 500 (samples: 141442)
-INFO:root:Loss: 4767.7717 +/- 9.6971
+INFO:root:Loss: 4767.769 +/- 9.6966
 INFO:root:Epoch no. 71 of 500 (samples: 141442)
-INFO:root:Loss: 4748.5481 +/- 13.1655
+INFO:root:Loss: 4748.5474 +/- 13.1657
 INFO:root:Epoch no. 72 of 500 (samples: 141442)
-INFO:root:Loss: 4730.2072 +/- 12.5387
+INFO:root:Loss: 4730.2099 +/- 12.5347
 INFO:root:Epoch no. 73 of 500 (samples: 141442)
-INFO:root:Loss: 4712.6088 +/- 15.2912
+INFO:root:Loss: 4712.6079 +/- 15.295
 INFO:root:Epoch no. 74 of 500 (samples: 141442)
-INFO:root:Loss: 4693.3969 +/- 10.8223
+INFO:root:Loss: 4693.3994 +/- 10.8217
 INFO:root:Epoch no. 75 of 500 (samples: 141442)
-INFO:root:Loss: 4676.1517 +/- 15.0599
+INFO:root:Loss: 4676.1542 +/- 15.055
 INFO:root:Epoch no. 76 of 500 (samples: 141442)
-INFO:root:Loss: 4657.4322 +/- 11.8631
+INFO:root:Loss: 4657.4364 +/- 11.8642
 INFO:root:Epoch no. 77 of 500 (samples: 141442)
-INFO:root:Loss: 4640.6137 +/- 10.6538
+INFO:root:Loss: 4640.6132 +/- 10.6519
 INFO:root:Epoch no. 78 of 500 (samples: 141442)
-INFO:root:Loss: 4622.8684 +/- 11.1043
+INFO:root:Loss: 4622.8713 +/- 11.1061
 INFO:root:Epoch no. 79 of 500 (samples: 141442)
-INFO:root:Loss: 4604.6134 +/- 13.2677
+INFO:root:Loss: 4604.6126 +/- 13.2636
 INFO:root:Epoch no. 80 of 500 (samples: 141442)
-INFO:root:Loss: 4587.6065 +/- 15.094
+INFO:root:Loss: 4587.6036 +/- 15.0943
 INFO:root:Epoch no. 81 of 500 (samples: 141442)
-INFO:root:Loss: 4568.9665 +/- 13.308
+INFO:root:Loss: 4568.9701 +/- 13.3078
 INFO:root:Epoch no. 82 of 500 (samples: 141442)
-INFO:root:Loss: 4551.8931 +/- 16.3228
+INFO:root:Loss: 4551.8957 +/- 16.324
 INFO:root:Epoch no. 83 of 500 (samples: 141442)
-INFO:root:Loss: 4534.3736 +/- 13.3326
+INFO:root:Loss: 4534.3732 +/- 13.3314
 INFO:root:Epoch no. 84 of 500 (samples: 141442)
-INFO:root:Loss: 4517.8337 +/- 16.6266
+INFO:root:Loss: 4517.8326 +/- 16.6247
 INFO:root:Epoch no. 85 of 500 (samples: 141442)
-INFO:root:Loss: 4499.722 +/- 16.6
+INFO:root:Loss: 4499.7278 +/- 16.5998
 INFO:root:Epoch no. 86 of 500 (samples: 141442)
-INFO:root:Loss: 4483.819 +/- 12.6184
+INFO:root:Loss: 4483.8189 +/- 12.6154
 INFO:root:Epoch no. 87 of 500 (samples: 141442)
-INFO:root:Loss: 4466.0399 +/- 17.4827
+INFO:root:Loss: 4466.0434 +/- 17.4838
 INFO:root:Epoch no. 88 of 500 (samples: 141442)
-INFO:root:Loss: 4449.6747 +/- 12.2126
+INFO:root:Loss: 4449.6718 +/- 12.211
 INFO:root:Epoch no. 89 of 500 (samples: 141442)
-INFO:root:Loss: 4432.6005 +/- 15.4467
+INFO:root:Loss: 4432.6029 +/- 15.4495
 INFO:root:Epoch no. 90 of 500 (samples: 141442)
-INFO:root:Loss: 4415.7493 +/- 13.4979
+INFO:root:Loss: 4415.7502 +/- 13.495
 INFO:root:Epoch no. 91 of 500 (samples: 141442)
-INFO:root:Loss: 4398.6906 +/- 13.9312
+INFO:root:Loss: 4398.6896 +/- 13.9303
 INFO:root:Epoch no. 92 of 500 (samples: 141442)
-INFO:root:Loss: 4381.4506 +/- 16.1029
+INFO:root:Loss: 4381.4488 +/- 16.1019
 INFO:root:Epoch no. 93 of 500 (samples: 141442)
-INFO:root:Loss: 4366.9684 +/- 19.0728
+INFO:root:Loss: 4366.9676 +/- 19.0723
 INFO:root:Epoch no. 94 of 500 (samples: 141442)
-INFO:root:Loss: 4348.8948 +/- 15.5887
+INFO:root:Loss: 4348.8965 +/- 15.5883
 INFO:root:Epoch no. 95 of 500 (samples: 141442)
-INFO:root:Loss: 4334.264 +/- 21.4743
+INFO:root:Loss: 4334.2633 +/- 21.4747
 INFO:root:Epoch no. 96 of 500 (samples: 141442)
-INFO:root:Loss: 4316.7805 +/- 11.9693
+INFO:root:Loss: 4316.7797 +/- 11.9724
 INFO:root:Epoch no. 97 of 500 (samples: 141442)
-INFO:root:Loss: 4300.6167 +/- 13.5225
+INFO:root:Loss: 4300.6173 +/- 13.5257
 INFO:root:Epoch no. 98 of 500 (samples: 141442)
-INFO:root:Loss: 4283.9205 +/- 13.594
+INFO:root:Loss: 4283.9228 +/- 13.5965
 INFO:root:Epoch no. 99 of 500 (samples: 141442)
-INFO:root:Loss: 4269.7739 +/- 15.3734
+INFO:root:Loss: 4269.7744 +/- 15.3694
 INFO:root:Epoch no. 100 of 500 (samples: 141442)
-INFO:root:Loss: 4252.7045 +/- 15.4923
+INFO:root:Loss: 4252.7078 +/- 15.495
 INFO:root:Epoch no. 101 of 500 (samples: 141442)
-INFO:root:Loss: 4237.3277 +/- 16.8053
+INFO:root:Loss: 4237.3283 +/- 16.8058
 INFO:root:Epoch no. 102 of 500 (samples: 141442)
-INFO:root:Loss: 4220.4082 +/- 13.2329
+INFO:root:Loss: 4220.4056 +/- 13.2328
 INFO:root:Epoch no. 103 of 500 (samples: 141442)
-INFO:root:Loss: 4206.9075 +/- 13.3628
+INFO:root:Loss: 4206.9076 +/- 13.3675
 INFO:root:Epoch no. 104 of 500 (samples: 141442)
-INFO:root:Loss: 4190.7276 +/- 11.3262
+INFO:root:Loss: 4190.729 +/- 11.3294
 INFO:root:Epoch no. 105 of 500 (samples: 141442)
-INFO:root:Loss: 4175.0203 +/- 17.0734
+INFO:root:Loss: 4175.0262 +/- 17.0719
 INFO:root:Epoch no. 106 of 500 (samples: 141442)
-INFO:root:Loss: 4158.7876 +/- 16.6312
+INFO:root:Loss: 4158.7904 +/- 16.6312
 INFO:root:Epoch no. 107 of 500 (samples: 141442)
-INFO:root:Loss: 4143.418 +/- 13.5723
+INFO:root:Loss: 4143.4188 +/- 13.57
 INFO:root:Epoch no. 108 of 500 (samples: 141442)
-INFO:root:Loss: 4128.4982 +/- 27.502
+INFO:root:Loss: 4128.4972 +/- 27.498
 INFO:root:Epoch no. 109 of 500 (samples: 141442)
-INFO:root:Loss: 4114.0768 +/- 16.551
+INFO:root:Loss: 4114.0751 +/- 16.5522
 INFO:root:Epoch no. 110 of 500 (samples: 141442)
-INFO:root:Loss: 4098.0183 +/- 11.2512
+INFO:root:Loss: 4098.0214 +/- 11.2494
 INFO:root:Epoch no. 111 of 500 (samples: 141442)
-INFO:root:Loss: 4083.0196 +/- 13.4696
+INFO:root:Loss: 4083.0264 +/- 13.4717
 INFO:root:Epoch no. 112 of 500 (samples: 141442)
-INFO:root:Loss: 4066.9257 +/- 15.0008
+INFO:root:Loss: 4066.9283 +/- 15.0
 INFO:root:Epoch no. 113 of 500 (samples: 141442)
-INFO:root:Loss: 4053.5815 +/- 15.1053
+INFO:root:Loss: 4053.5836 +/- 15.1052
 INFO:root:Epoch no. 114 of 500 (samples: 141442)
-INFO:root:Loss: 4038.2974 +/- 13.3205
+INFO:root:Loss: 4038.3005 +/- 13.3214
 INFO:root:Epoch no. 115 of 500 (samples: 141442)
-INFO:root:Loss: 4022.3185 +/- 13.316
+INFO:root:Loss: 4022.322 +/- 13.3197
 INFO:root:Epoch no. 116 of 500 (samples: 141442)
-INFO:root:Loss: 4007.7017 +/- 18.0699
+INFO:root:Loss: 4007.7043 +/- 18.0693
 INFO:root:Epoch no. 117 of 500 (samples: 141442)
-INFO:root:Loss: 3992.7183 +/- 20.2185
+INFO:root:Loss: 3992.7199 +/- 20.2194
 INFO:root:Epoch no. 118 of 500 (samples: 141442)
-INFO:root:Loss: 3979.371 +/- 19.5452
+INFO:root:Loss: 3979.3732 +/- 19.5463
 INFO:root:Epoch no. 119 of 500 (samples: 141442)
-INFO:root:Loss: 3963.8521 +/- 22.0725
+INFO:root:Loss: 3963.8543 +/- 22.0727
 INFO:root:Epoch no. 120 of 500 (samples: 141442)
-INFO:root:Loss: 3947.4211 +/- 15.2825
+INFO:root:Loss: 3947.4227 +/- 15.2854
 INFO:root:Epoch no. 121 of 500 (samples: 141442)
-INFO:root:Loss: 3934.7996 +/- 17.2924
+INFO:root:Loss: 3934.8022 +/- 17.2925
 INFO:root:Epoch no. 122 of 500 (samples: 141442)
-INFO:root:Loss: 3918.2326 +/- 15.0218
+INFO:root:Loss: 3918.2296 +/- 15.0215
 INFO:root:Epoch no. 123 of 500 (samples: 141442)
-INFO:root:Loss: 3905.7851 +/- 11.7221
+INFO:root:Loss: 3905.7815 +/- 11.725
 INFO:root:Epoch no. 124 of 500 (samples: 141442)
-INFO:root:Loss: 3890.9212 +/- 18.4936
+INFO:root:Loss: 3890.9186 +/- 18.4939
 INFO:root:Epoch no. 125 of 500 (samples: 141442)
-INFO:root:Loss: 3876.3069 +/- 17.862
+INFO:root:Loss: 3876.3048 +/- 17.8629
 INFO:root:Epoch no. 126 of 500 (samples: 141442)
-INFO:root:Loss: 3862.2069 +/- 12.4757
+INFO:root:Loss: 3862.2079 +/- 12.4758
 INFO:root:Epoch no. 127 of 500 (samples: 141442)
-INFO:root:Loss: 3847.2599 +/- 15.1187
+INFO:root:Loss: 3847.2581 +/- 15.116
 INFO:root:Epoch no. 128 of 500 (samples: 141442)
-INFO:root:Loss: 3832.7291 +/- 17.0613
+INFO:root:Loss: 3832.7295 +/- 17.0625
 INFO:root:Epoch no. 129 of 500 (samples: 141442)
-INFO:root:Loss: 3820.0244 +/- 13.7832
+INFO:root:Loss: 3820.0204 +/- 13.7819
 INFO:root:Epoch no. 130 of 500 (samples: 141442)
-INFO:root:Loss: 3805.5787 +/- 18.5715
+INFO:root:Loss: 3805.576 +/- 18.5744
 INFO:root:Epoch no. 131 of 500 (samples: 141442)
-INFO:root:Loss: 3790.5503 +/- 15.9477
+INFO:root:Loss: 3790.5535 +/- 15.9504
 INFO:root:Epoch no. 132 of 500 (samples: 141442)
-INFO:root:Loss: 3775.9512 +/- 19.323
+INFO:root:Loss: 3775.947 +/- 19.3236
 INFO:root:Epoch no. 133 of 500 (samples: 141442)
-INFO:root:Loss: 3762.4046 +/- 12.21
+INFO:root:Loss: 3762.4063 +/- 12.209
 INFO:root:Epoch no. 134 of 500 (samples: 141442)
-INFO:root:Loss: 3748.157 +/- 15.3701
+INFO:root:Loss: 3748.1539 +/- 15.3705
 INFO:root:Epoch no. 135 of 500 (samples: 141442)
-INFO:root:Loss: 3735.154 +/- 21.0809
+INFO:root:Loss: 3735.1554 +/- 21.0819
 INFO:root:Epoch no. 136 of 500 (samples: 141442)
-INFO:root:Loss: 3721.4361 +/- 20.3786
+INFO:root:Loss: 3721.4358 +/- 20.3789
 INFO:root:Epoch no. 137 of 500 (samples: 141442)
-INFO:root:Loss: 3706.9901 +/- 24.8026
+INFO:root:Loss: 3706.9898 +/- 24.8011
 INFO:root:Epoch no. 138 of 500 (samples: 141442)
-INFO:root:Loss: 3692.6966 +/- 17.7544
+INFO:root:Loss: 3692.6955 +/- 17.7538
 INFO:root:Epoch no. 139 of 500 (samples: 141442)
-INFO:root:Loss: 3679.6915 +/- 18.6999
+INFO:root:Loss: 3679.6921 +/- 18.7033
 INFO:root:Epoch no. 140 of 500 (samples: 141442)
-INFO:root:Loss: 3666.9344 +/- 18.1788
+INFO:root:Loss: 3666.9327 +/- 18.1823
 INFO:root:Epoch no. 141 of 500 (samples: 141442)
-INFO:root:Loss: 3652.2912 +/- 13.2504
+INFO:root:Loss: 3652.2896 +/- 13.2472
 INFO:root:Epoch no. 142 of 500 (samples: 141442)
-INFO:root:Loss: 3639.6082 +/- 22.1406
+INFO:root:Loss: 3639.6022 +/- 22.1373
 INFO:root:Epoch no. 143 of 500 (samples: 141442)
-INFO:root:Loss: 3626.5826 +/- 17.3237
+INFO:root:Loss: 3626.5829 +/- 17.3196
 INFO:root:Epoch no. 144 of 500 (samples: 141442)
-INFO:root:Loss: 3614.9694 +/- 17.8174
+INFO:root:Loss: 3614.9701 +/- 17.8178
 INFO:root:Epoch no. 145 of 500 (samples: 141442)
-INFO:root:Loss: 3598.9583 +/- 20.8524
+INFO:root:Loss: 3598.9586 +/- 20.8527
 INFO:root:Epoch no. 146 of 500 (samples: 141442)
-INFO:root:Loss: 3583.884 +/- 15.399
+INFO:root:Loss: 3583.8798 +/- 15.4009
 INFO:root:Epoch no. 147 of 500 (samples: 141442)
-INFO:root:Loss: 3572.8914 +/- 17.5683
+INFO:root:Loss: 3572.8924 +/- 17.5677
 INFO:root:Epoch no. 148 of 500 (samples: 141442)
-INFO:root:Loss: 3559.7292 +/- 12.0297
+INFO:root:Loss: 3559.7285 +/- 12.0297
 INFO:root:Epoch no. 149 of 500 (samples: 141442)
-INFO:root:Loss: 3546.7656 +/- 14.4904
+INFO:root:Loss: 3546.7633 +/- 14.4928
 INFO:root:Epoch no. 150 of 500 (samples: 141442)
-INFO:root:Loss: 3534.6531 +/- 20.8574
+INFO:root:Loss: 3534.6527 +/- 20.8622
 INFO:root:Epoch no. 151 of 500 (samples: 141442)
-INFO:root:Loss: 3519.2035 +/- 12.1526
+INFO:root:Loss: 3519.2056 +/- 12.154
 INFO:root:Epoch no. 152 of 500 (samples: 141442)
-INFO:root:Loss: 3507.8205 +/- 14.4216
+INFO:root:Loss: 3507.8234 +/- 14.4207
 INFO:root:Epoch no. 153 of 500 (samples: 141442)
-INFO:root:Loss: 3494.8131 +/- 20.3019
+INFO:root:Loss: 3494.8109 +/- 20.2974
 INFO:root:Epoch no. 154 of 500 (samples: 141442)
-INFO:root:Loss: 3481.8525 +/- 17.3867
+INFO:root:Loss: 3481.8486 +/- 17.3889
 INFO:root:Epoch no. 155 of 500 (samples: 141442)
-INFO:root:Loss: 3467.3759 +/- 17.2848
+INFO:root:Loss: 3467.3746 +/- 17.2838
 INFO:root:Epoch no. 156 of 500 (samples: 141442)
-INFO:root:Loss: 3456.0027 +/- 17.6698
+INFO:root:Loss: 3455.9919 +/- 17.6727
 INFO:root:Epoch no. 157 of 500 (samples: 141442)
-INFO:root:Loss: 3443.4043 +/- 9.0245
+INFO:root:Loss: 3443.4004 +/- 9.0274
 INFO:root:Epoch no. 158 of 500 (samples: 141442)
-INFO:root:Loss: 3429.5361 +/- 14.1329
+INFO:root:Loss: 3429.5357 +/- 14.1392
 INFO:root:Epoch no. 159 of 500 (samples: 141442)
-INFO:root:Loss: 3416.509 +/- 18.3845
+INFO:root:Loss: 3416.5005 +/- 18.377
 INFO:root:Epoch no. 160 of 500 (samples: 141442)
-INFO:root:Loss: 3404.5531 +/- 17.4824
+INFO:root:Loss: 3404.5469 +/- 17.489
 INFO:root:Epoch no. 161 of 500 (samples: 141442)
-INFO:root:Loss: 3392.5156 +/- 21.382
+INFO:root:Loss: 3392.5119 +/- 21.3735
 INFO:root:Epoch no. 162 of 500 (samples: 141442)
-INFO:root:Loss: 3379.344 +/- 21.0027
+INFO:root:Loss: 3379.3371 +/- 21.0024
 INFO:root:Epoch no. 163 of 500 (samples: 141442)
-INFO:root:Loss: 3365.0944 +/- 24.7646
+INFO:root:Loss: 3365.0902 +/- 24.7667
 INFO:root:Epoch no. 164 of 500 (samples: 141442)
-INFO:root:Loss: 3355.4168 +/- 14.6336
+INFO:root:Loss: 3355.4132 +/- 14.6299
 INFO:root:Epoch no. 165 of 500 (samples: 141442)
-INFO:root:Loss: 3341.0696 +/- 19.6519
+INFO:root:Loss: 3341.0705 +/- 19.6486
 INFO:root:Epoch no. 166 of 500 (samples: 141442)
-INFO:root:Loss: 3328.7576 +/- 24.0724
+INFO:root:Loss: 3328.7584 +/- 24.0753
 INFO:root:Epoch no. 167 of 500 (samples: 141442)
-INFO:root:Loss: 3316.8856 +/- 13.7637
+INFO:root:Loss: 3316.8828 +/- 13.7633
 INFO:root:Epoch no. 168 of 500 (samples: 141442)
-INFO:root:Loss: 3301.7465 +/- 23.7183
+INFO:root:Loss: 3301.742 +/- 23.7248
 INFO:root:Epoch no. 169 of 500 (samples: 141442)
-INFO:root:Loss: 3291.6561 +/- 17.9638
+INFO:root:Loss: 3291.6472 +/- 17.9628
 INFO:root:Epoch no. 170 of 500 (samples: 141442)
-INFO:root:Loss: 3279.1057 +/- 20.5727
+INFO:root:Loss: 3279.0977 +/- 20.5668
 INFO:root:Epoch no. 171 of 500 (samples: 141442)
-INFO:root:Loss: 3264.3525 +/- 16.7393
+INFO:root:Loss: 3264.3493 +/- 16.7419
 INFO:root:Epoch no. 172 of 500 (samples: 141442)
-INFO:root:Loss: 3251.9443 +/- 19.7489
+INFO:root:Loss: 3251.9441 +/- 19.7449
 INFO:root:Epoch no. 173 of 500 (samples: 141442)
-INFO:root:Loss: 3240.7339 +/- 21.8495
+INFO:root:Loss: 3240.7276 +/- 21.8531
 INFO:root:Epoch no. 174 of 500 (samples: 141442)
-INFO:root:Loss: 3226.5833 +/- 20.4368
+INFO:root:Loss: 3226.5825 +/- 20.4371
 INFO:root:Epoch no. 175 of 500 (samples: 141442)
-INFO:root:Loss: 3212.7773 +/- 15.2108
+INFO:root:Loss: 3212.7659 +/- 15.2172
 INFO:root:Epoch no. 176 of 500 (samples: 141442)
-INFO:root:Loss: 3204.5875 +/- 23.3617
+INFO:root:Loss: 3204.5763 +/- 23.3631
 INFO:root:Epoch no. 177 of 500 (samples: 141442)
-INFO:root:Loss: 3191.4477 +/- 11.315
+INFO:root:Loss: 3191.4434 +/- 11.3139
 INFO:root:Epoch no. 178 of 500 (samples: 141442)
-INFO:root:Loss: 3177.9199 +/- 19.8989
+INFO:root:Loss: 3177.9242 +/- 19.8994
 INFO:root:Epoch no. 179 of 500 (samples: 141442)
-INFO:root:Loss: 3166.136 +/- 18.3621
+INFO:root:Loss: 3166.1359 +/- 18.3512
 INFO:root:Epoch no. 180 of 500 (samples: 141442)
-INFO:root:Loss: 3152.5649 +/- 19.5534
+INFO:root:Loss: 3152.5578 +/- 19.5595
 INFO:root:Epoch no. 181 of 500 (samples: 141442)
-INFO:root:Loss: 3138.3123 +/- 21.4876
+INFO:root:Loss: 3138.3021 +/- 21.4934
 INFO:root:Epoch no. 182 of 500 (samples: 141442)
-INFO:root:Loss: 3127.8474 +/- 19.2979
+INFO:root:Loss: 3127.8375 +/- 19.2864
 INFO:root:Epoch no. 183 of 500 (samples: 141442)
-INFO:root:Loss: 3114.6965 +/- 14.5938
+INFO:root:Loss: 3114.6943 +/- 14.5917
 INFO:root:Epoch no. 184 of 500 (samples: 141442)
-INFO:root:Loss: 3102.4043 +/- 22.9972
+INFO:root:Loss: 3102.3935 +/- 22.9963
 INFO:root:Epoch no. 185 of 500 (samples: 141442)
-INFO:root:Loss: 3091.1289 +/- 13.1472
+INFO:root:Loss: 3091.1343 +/- 13.1504
 INFO:root:Epoch no. 186 of 500 (samples: 141442)
-INFO:root:Loss: 3077.9812 +/- 16.8205
+INFO:root:Loss: 3077.9742 +/- 16.8154
 INFO:root:Epoch no. 187 of 500 (samples: 141442)
-INFO:root:Loss: 3066.08 +/- 18.4355
+INFO:root:Loss: 3066.0749 +/- 18.437
 INFO:root:Epoch no. 188 of 500 (samples: 141442)
-INFO:root:Loss: 3052.8867 +/- 14.016
+INFO:root:Loss: 3052.8834 +/- 14.0131
 INFO:root:Epoch no. 189 of 500 (samples: 141442)
-INFO:root:Loss: 3042.6312 +/- 26.7266
+INFO:root:Loss: 3042.6152 +/- 26.7247
 INFO:root:Epoch no. 190 of 500 (samples: 141442)
-INFO:root:Loss: 3029.9119 +/- 16.5421
+INFO:root:Loss: 3029.8994 +/- 16.5558
 INFO:root:Epoch no. 191 of 500 (samples: 141442)
-INFO:root:Loss: 3019.5091 +/- 16.7061
+INFO:root:Loss: 3019.5086 +/- 16.7147
 INFO:root:Epoch no. 192 of 500 (samples: 141442)
-INFO:root:Loss: 3006.5432 +/- 24.7696
+INFO:root:Loss: 3006.5384 +/- 24.7721
 INFO:root:Epoch no. 193 of 500 (samples: 141442)
-INFO:root:Loss: 2993.9808 +/- 11.0485
+INFO:root:Loss: 2993.9718 +/- 11.0456
 INFO:root:Epoch no. 194 of 500 (samples: 141442)
-INFO:root:Loss: 2982.5496 +/- 22.8229
+INFO:root:Loss: 2982.5482 +/- 22.8108
 INFO:root:Epoch no. 195 of 500 (samples: 141442)
-INFO:root:Loss: 2968.8577 +/- 21.256
+INFO:root:Loss: 2968.8431 +/- 21.2585
 INFO:root:Epoch no. 196 of 500 (samples: 141442)
-INFO:root:Loss: 2957.5683 +/- 22.3074
+INFO:root:Loss: 2957.5695 +/- 22.3082
 INFO:root:Epoch no. 197 of 500 (samples: 141442)
-INFO:root:Loss: 2946.8534 +/- 14.6888
+INFO:root:Loss: 2946.8463 +/- 14.6908
 INFO:root:Epoch no. 198 of 500 (samples: 141442)
-INFO:root:Loss: 2934.8258 +/- 14.4308
+INFO:root:Loss: 2934.8328 +/- 14.4231
 INFO:root:Epoch no. 199 of 500 (samples: 141442)
-INFO:root:Loss: 2922.526 +/- 22.2861
+INFO:root:Loss: 2922.5333 +/- 22.2971
 INFO:root:Epoch no. 200 of 500 (samples: 141442)
-INFO:root:Loss: 2911.9623 +/- 14.9117
+INFO:root:Loss: 2911.9458 +/- 14.9162
 INFO:root:Epoch no. 201 of 500 (samples: 141442)
-INFO:root:Loss: 2900.4215 +/- 14.7102
+INFO:root:Loss: 2900.4356 +/- 14.72
 INFO:root:Epoch no. 202 of 500 (samples: 141442)
-INFO:root:Loss: 2889.3723 +/- 19.6723
+INFO:root:Loss: 2889.38 +/- 19.6835
 INFO:root:Epoch no. 203 of 500 (samples: 141442)
-INFO:root:Loss: 2877.3273 +/- 23.6656
+INFO:root:Loss: 2877.3284 +/- 23.6668
 INFO:root:Epoch no. 204 of 500 (samples: 141442)
-INFO:root:Loss: 2865.7221 +/- 22.0673
+INFO:root:Loss: 2865.719 +/- 22.0894
 INFO:root:Epoch no. 205 of 500 (samples: 141442)
-INFO:root:Loss: 2854.3688 +/- 15.6751
+INFO:root:Loss: 2854.3784 +/- 15.6731
 INFO:root:Epoch no. 206 of 500 (samples: 141442)
-INFO:root:Loss: 2842.65 +/- 23.3082
+INFO:root:Loss: 2842.6443 +/- 23.3231
 INFO:root:Epoch no. 207 of 500 (samples: 141442)
-INFO:root:Loss: 2833.1417 +/- 15.3617
+INFO:root:Loss: 2833.1497 +/- 15.3686
 INFO:root:Epoch no. 208 of 500 (samples: 141442)
-INFO:root:Loss: 2821.9487 +/- 17.8744
+INFO:root:Loss: 2821.9574 +/- 17.8654
 INFO:root:Epoch no. 209 of 500 (samples: 141442)
-INFO:root:Loss: 2807.7627 +/- 11.2273
+INFO:root:Loss: 2807.7738 +/- 11.2306
 INFO:root:Epoch no. 210 of 500 (samples: 141442)
-INFO:root:Loss: 2797.9964 +/- 20.1468
+INFO:root:Loss: 2798.0094 +/- 20.153
 INFO:root:Epoch no. 211 of 500 (samples: 141442)
-INFO:root:Loss: 2789.7041 +/- 12.6798
+INFO:root:Loss: 2789.7252 +/- 12.682
 INFO:root:Epoch no. 212 of 500 (samples: 141442)
-INFO:root:Loss: 2776.3259 +/- 16.8701
+INFO:root:Loss: 2776.3467 +/- 16.8615
 INFO:root:Epoch no. 213 of 500 (samples: 141442)
-INFO:root:Loss: 2765.7756 +/- 17.7976
+INFO:root:Loss: 2765.7618 +/- 17.8007
 INFO:root:Epoch no. 214 of 500 (samples: 141442)
-INFO:root:Loss: 2754.3335 +/- 16.4234
+INFO:root:Loss: 2754.3493 +/- 16.4379
 INFO:root:Epoch no. 215 of 500 (samples: 141442)
-INFO:root:Loss: 2746.4736 +/- 18.9147
+INFO:root:Loss: 2746.4809 +/- 18.9066
 INFO:root:Epoch no. 216 of 500 (samples: 141442)
-INFO:root:Loss: 2735.3647 +/- 17.3512
+INFO:root:Loss: 2735.3621 +/- 17.3409
 INFO:root:Epoch no. 217 of 500 (samples: 141442)
-INFO:root:Loss: 2724.7212 +/- 15.6865
+INFO:root:Loss: 2724.7329 +/- 15.6875
 INFO:root:Epoch no. 218 of 500 (samples: 141442)
-INFO:root:Loss: 2713.9476 +/- 16.1798
+INFO:root:Loss: 2713.9611 +/- 16.1756
 INFO:root:Epoch no. 219 of 500 (samples: 141442)
-INFO:root:Loss: 2703.5343 +/- 27.0775
+INFO:root:Loss: 2703.5284 +/- 27.076
 INFO:root:Epoch no. 220 of 500 (samples: 141442)
-INFO:root:Loss: 2691.8793 +/- 17.1425
+INFO:root:Loss: 2691.8966 +/- 17.1523
 INFO:root:Epoch no. 221 of 500 (samples: 141442)
-INFO:root:Loss: 2681.3207 +/- 14.4424
+INFO:root:Loss: 2681.3395 +/- 14.422
 INFO:root:Epoch no. 222 of 500 (samples: 141442)
-INFO:root:Loss: 2672.0252 +/- 17.1864
+INFO:root:Loss: 2672.0236 +/- 17.1724
 INFO:root:Epoch no. 223 of 500 (samples: 141442)
-INFO:root:Loss: 2660.4294 +/- 17.1368
+INFO:root:Loss: 2660.4539 +/- 17.1625
 INFO:root:Epoch no. 224 of 500 (samples: 141442)
-INFO:root:Loss: 2652.0451 +/- 20.6133
+INFO:root:Loss: 2652.0531 +/- 20.6198
 INFO:root:Epoch no. 225 of 500 (samples: 141442)
-INFO:root:Loss: 2639.4575 +/- 18.4362
+INFO:root:Loss: 2639.459 +/- 18.4275
 INFO:root:Epoch no. 226 of 500 (samples: 141442)
-INFO:root:Loss: 2632.7963 +/- 15.5503
+INFO:root:Loss: 2632.7863 +/- 15.5478
 INFO:root:Epoch no. 227 of 500 (samples: 141442)
-INFO:root:Loss: 2622.0557 +/- 20.946
+INFO:root:Loss: 2622.0106 +/- 20.934
 INFO:root:Epoch no. 228 of 500 (samples: 141442)
-INFO:root:Loss: 2610.7936 +/- 22.0025
+INFO:root:Loss: 2610.801 +/- 22.0409
 INFO:root:Epoch no. 229 of 500 (samples: 141442)
-INFO:root:Loss: 2602.2455 +/- 20.4671
+INFO:root:Loss: 2602.2324 +/- 20.4399
 INFO:root:Epoch no. 230 of 500 (samples: 141442)
-INFO:root:Loss: 2591.5759 +/- 21.3305
+INFO:root:Loss: 2591.559 +/- 21.3246
 INFO:root:Epoch no. 231 of 500 (samples: 141442)
-INFO:root:Loss: 2583.2202 +/- 12.402
+INFO:root:Loss: 2583.167 +/- 12.3582
 INFO:root:Epoch no. 232 of 500 (samples: 141442)
-INFO:root:Loss: 2573.4336 +/- 13.8266
+INFO:root:Loss: 2573.4084 +/- 13.8513
 INFO:root:Epoch no. 233 of 500 (samples: 141442)
-INFO:root:Loss: 2563.7862 +/- 14.2098
+INFO:root:Loss: 2563.7492 +/- 14.2208
 INFO:root:Epoch no. 234 of 500 (samples: 141442)
-INFO:root:Loss: 2553.9171 +/- 21.901
+INFO:root:Loss: 2553.8572 +/- 21.8929
 INFO:root:Epoch no. 235 of 500 (samples: 141442)
-INFO:root:Loss: 2543.4246 +/- 14.4426
+INFO:root:Loss: 2543.3958 +/- 14.4347
 INFO:root:Epoch no. 236 of 500 (samples: 141442)
-INFO:root:Loss: 2536.0208 +/- 9.9597
+INFO:root:Loss: 2535.9821 +/- 9.9616
 INFO:root:Epoch no. 237 of 500 (samples: 141442)
-INFO:root:Loss: 2526.3758 +/- 14.361
+INFO:root:Loss: 2526.3409 +/- 14.3458
 INFO:root:Epoch no. 238 of 500 (samples: 141442)
-INFO:root:Loss: 2518.338 +/- 15.6296
+INFO:root:Loss: 2518.29 +/- 15.6267
 INFO:root:Epoch no. 239 of 500 (samples: 141442)
-INFO:root:Loss: 2509.0369 +/- 18.0509
+INFO:root:Loss: 2509.0123 +/- 18.0356
 INFO:root:Epoch no. 240 of 500 (samples: 141442)
-INFO:root:Loss: 2498.9068 +/- 25.881
+INFO:root:Loss: 2498.8456 +/- 25.8864
 INFO:root:Epoch no. 241 of 500 (samples: 141442)
-INFO:root:Loss: 2489.79 +/- 18.3242
+INFO:root:Loss: 2489.7437 +/- 18.3141
 INFO:root:Epoch no. 242 of 500 (samples: 141442)
-INFO:root:Loss: 2480.8814 +/- 8.4068
+INFO:root:Loss: 2480.8726 +/- 8.4461
 INFO:root:Epoch no. 243 of 500 (samples: 141442)
-INFO:root:Loss: 2472.4062 +/- 14.6485
+INFO:root:Loss: 2472.3942 +/- 14.6887
 INFO:root:Epoch no. 244 of 500 (samples: 141442)
-INFO:root:Loss: 2465.058 +/- 17.3361
+INFO:root:Loss: 2465.031 +/- 17.341
 INFO:root:Epoch no. 245 of 500 (samples: 141442)
-INFO:root:Loss: 2456.0395 +/- 18.1279
+INFO:root:Loss: 2456.0126 +/- 18.1472
 INFO:root:Epoch no. 246 of 500 (samples: 141442)
-INFO:root:Loss: 2447.2194 +/- 14.8068
+INFO:root:Loss: 2447.2027 +/- 14.7617
 INFO:root:Epoch no. 247 of 500 (samples: 141442)
-INFO:root:Loss: 2440.5558 +/- 16.7107
+INFO:root:Loss: 2440.4995 +/- 16.6963
 INFO:root:Epoch no. 248 of 500 (samples: 141442)
-INFO:root:Loss: 2430.8108 +/- 21.9209
+INFO:root:Loss: 2430.7784 +/- 21.8879
 INFO:root:Epoch no. 249 of 500 (samples: 141442)
-INFO:root:Loss: 2423.1582 +/- 18.0825
+INFO:root:Loss: 2423.1215 +/- 18.0829
 INFO:root:Epoch no. 250 of 500 (samples: 141442)
-INFO:root:Loss: 2415.8834 +/- 18.2748
+INFO:root:Loss: 2415.8166 +/- 18.2866
 INFO:root:Epoch no. 251 of 500 (samples: 141442)
-INFO:root:Loss: 2407.8416 +/- 13.2138
+INFO:root:Loss: 2407.7359 +/- 13.2132
 INFO:root:Epoch no. 252 of 500 (samples: 141442)
-INFO:root:Loss: 2400.2061 +/- 17.3864
+INFO:root:Loss: 2400.0882 +/- 17.3487
 INFO:root:Epoch no. 253 of 500 (samples: 141442)
-INFO:root:Loss: 2391.2225 +/- 21.8413
+INFO:root:Loss: 2391.1081 +/- 21.8229
 INFO:root:Epoch no. 254 of 500 (samples: 141442)
-INFO:root:Loss: 2384.485 +/- 20.4009
+INFO:root:Loss: 2384.3334 +/- 20.3985
 INFO:root:Epoch no. 255 of 500 (samples: 141442)
-INFO:root:Loss: 2378.8601 +/- 16.7138
+INFO:root:Loss: 2378.7218 +/- 16.6914
 INFO:root:Epoch no. 256 of 500 (samples: 141442)
-INFO:root:Loss: 2370.3949 +/- 13.2175
+INFO:root:Loss: 2370.2245 +/- 13.2027
 INFO:root:Epoch no. 257 of 500 (samples: 141442)
-INFO:root:Loss: 2364.4382 +/- 18.7149
+INFO:root:Loss: 2364.3334 +/- 18.7273
 INFO:root:Epoch no. 258 of 500 (samples: 141442)
-INFO:root:Loss: 2358.489 +/- 17.5539
+INFO:root:Loss: 2358.3446 +/- 17.5744
 INFO:root:Epoch no. 259 of 500 (samples: 141442)
-INFO:root:Loss: 2353.5365 +/- 21.4441
+INFO:root:Loss: 2353.4222 +/- 21.4215
 INFO:root:Epoch no. 260 of 500 (samples: 141442)
-INFO:root:Loss: 2344.214 +/- 11.489
+INFO:root:Loss: 2344.1045 +/- 11.4674
 INFO:root:Epoch no. 261 of 500 (samples: 141442)
-INFO:root:Loss: 2339.5265 +/- 19.8562
+INFO:root:Loss: 2339.4269 +/- 19.8552
 INFO:root:Epoch no. 262 of 500 (samples: 141442)
-INFO:root:Loss: 2334.7605 +/- 15.3262
+INFO:root:Loss: 2334.6782 +/- 15.3612
 INFO:root:Epoch no. 263 of 500 (samples: 141442)
-INFO:root:Loss: 2328.8995 +/- 17.3402
+INFO:root:Loss: 2328.7292 +/- 17.3216
 INFO:root:Epoch no. 264 of 500 (samples: 141442)
-INFO:root:Loss: 2321.1479 +/- 15.0641
+INFO:root:Loss: 2321.0068 +/- 15.0687
 INFO:root:Epoch no. 265 of 500 (samples: 141442)
-INFO:root:Loss: 2316.6183 +/- 14.461
+INFO:root:Loss: 2316.4724 +/- 14.4503
 INFO:root:Epoch no. 266 of 500 (samples: 141442)
-INFO:root:Loss: 2309.1569 +/- 11.6925
+INFO:root:Loss: 2309.0317 +/- 11.7152
 INFO:root:Epoch no. 267 of 500 (samples: 141442)
-INFO:root:Loss: 2303.0108 +/- 17.0795
+INFO:root:Loss: 2302.8652 +/- 17.0956
 INFO:root:Epoch no. 268 of 500 (samples: 141442)
-INFO:root:Loss: 2297.816 +/- 22.7892
+INFO:root:Loss: 2297.6573 +/- 22.7819
 INFO:root:Epoch no. 269 of 500 (samples: 141442)
-INFO:root:Loss: 2291.5123 +/- 20.439
+INFO:root:Loss: 2291.3581 +/- 20.4561
 INFO:root:Epoch no. 270 of 500 (samples: 141442)
-INFO:root:Loss: 2283.5961 +/- 16.2458
+INFO:root:Loss: 2283.4699 +/- 16.2632
 INFO:root:Epoch no. 271 of 500 (samples: 141442)
-INFO:root:Loss: 2276.2977 +/- 20.9339
+INFO:root:Loss: 2276.1952 +/- 20.9616
 INFO:root:Epoch no. 272 of 500 (samples: 141442)
-INFO:root:Loss: 2268.7687 +/- 12.9223
+INFO:root:Loss: 2268.6677 +/- 12.8748
 INFO:root:Epoch no. 273 of 500 (samples: 141442)
-INFO:root:Loss: 2263.0325 +/- 23.3243
+INFO:root:Loss: 2262.9451 +/- 23.3191
 INFO:root:Epoch no. 274 of 500 (samples: 141442)
-INFO:root:Loss: 2256.2059 +/- 15.426
+INFO:root:Loss: 2256.0839 +/- 15.4807
 INFO:root:Epoch no. 275 of 500 (samples: 141442)
-INFO:root:Loss: 2248.6652 +/- 16.3722
+INFO:root:Loss: 2248.5521 +/- 16.3782
 INFO:root:Epoch no. 276 of 500 (samples: 141442)
-INFO:root:Loss: 2241.0802 +/- 12.0587
+INFO:root:Loss: 2240.9691 +/- 12.0316
 INFO:root:Epoch no. 277 of 500 (samples: 141442)
-INFO:root:Loss: 2234.4 +/- 17.9737
+INFO:root:Loss: 2234.2627 +/- 18.0152
 INFO:root:Epoch no. 278 of 500 (samples: 141442)
-INFO:root:Loss: 2226.573 +/- 13.2575
+INFO:root:Loss: 2226.4835 +/- 13.2207
 INFO:root:Epoch no. 279 of 500 (samples: 141442)
-INFO:root:Loss: 2219.0838 +/- 13.2773
+INFO:root:Loss: 2219.0419 +/- 13.3032
 INFO:root:Epoch no. 280 of 500 (samples: 141442)
-INFO:root:Loss: 2210.3962 +/- 11.5557
+INFO:root:Loss: 2210.3124 +/- 11.578
 INFO:root:Epoch no. 281 of 500 (samples: 141442)
-INFO:root:Loss: 2204.1274 +/- 20.5002
+INFO:root:Loss: 2204.0467 +/- 20.4427
 INFO:root:Epoch no. 282 of 500 (samples: 141442)
-INFO:root:Loss: 2196.9113 +/- 16.1275
+INFO:root:Loss: 2196.8836 +/- 16.1623
 INFO:root:Epoch no. 283 of 500 (samples: 141442)
-INFO:root:Loss: 2186.8791 +/- 24.3029
+INFO:root:Loss: 2186.8433 +/- 24.2622
 INFO:root:Epoch no. 284 of 500 (samples: 141442)
-INFO:root:Loss: 2179.2429 +/- 19.7936
+INFO:root:Loss: 2179.2777 +/- 19.7991
 INFO:root:Epoch no. 285 of 500 (samples: 141442)
-INFO:root:Loss: 2171.0879 +/- 18.7875
+INFO:root:Loss: 2171.0725 +/- 18.787
 INFO:root:Epoch no. 286 of 500 (samples: 141442)
-INFO:root:Loss: 2163.1864 +/- 17.5797
+INFO:root:Loss: 2163.1426 +/- 17.4887
 INFO:root:Epoch no. 287 of 500 (samples: 141442)
-INFO:root:Loss: 2156.4709 +/- 13.1382
+INFO:root:Loss: 2156.4549 +/- 13.1363
 INFO:root:Epoch no. 288 of 500 (samples: 141442)
-INFO:root:Loss: 2146.6319 +/- 19.6968
+INFO:root:Loss: 2146.5641 +/- 19.658
 INFO:root:Epoch no. 289 of 500 (samples: 141442)
-INFO:root:Loss: 2139.4268 +/- 12.7448
+INFO:root:Loss: 2139.3749 +/- 12.8217
 INFO:root:Epoch no. 290 of 500 (samples: 141442)
-INFO:root:Loss: 2133.9645 +/- 17.3592
+INFO:root:Loss: 2133.7992 +/- 17.4728
 INFO:root:Epoch no. 291 of 500 (samples: 141442)
-INFO:root:Loss: 2123.4177 +/- 16.7502
+INFO:root:Loss: 2123.2527 +/- 16.7926
 INFO:root:Epoch no. 292 of 500 (samples: 141442)
-INFO:root:Loss: 2115.3573 +/- 16.9259
+INFO:root:Loss: 2115.2283 +/- 16.9638
 INFO:root:Epoch no. 293 of 500 (samples: 141442)
-INFO:root:Loss: 2109.3468 +/- 9.737
+INFO:root:Loss: 2109.2251 +/- 9.7396
 INFO:root:Epoch no. 294 of 500 (samples: 141442)
-INFO:root:Loss: 2101.2179 +/- 18.0978
+INFO:root:Loss: 2101.0458 +/- 18.1255
 INFO:root:Epoch no. 295 of 500 (samples: 141442)
-INFO:root:Loss: 2094.401 +/- 23.2377
+INFO:root:Loss: 2094.2274 +/- 23.253
 INFO:root:Epoch no. 296 of 500 (samples: 141442)
-INFO:root:Loss: 2084.7629 +/- 11.5948
+INFO:root:Loss: 2084.5568 +/- 11.6434
 INFO:root:Epoch no. 297 of 500 (samples: 141442)
-INFO:root:Loss: 2078.2756 +/- 16.4586
+INFO:root:Loss: 2078.1858 +/- 16.4169
 INFO:root:Epoch no. 298 of 500 (samples: 141442)
-INFO:root:Loss: 2069.6479 +/- 17.0349
+INFO:root:Loss: 2069.4836 +/- 17.049
 INFO:root:Epoch no. 299 of 500 (samples: 141442)
-INFO:root:Loss: 2062.3275 +/- 9.0047
+INFO:root:Loss: 2062.2418 +/- 8.9327
 INFO:root:Epoch no. 300 of 500 (samples: 141442)
-INFO:root:Loss: 2052.5655 +/- 18.5534
+INFO:root:Loss: 2052.4721 +/- 18.5473
 INFO:root:Epoch no. 301 of 500 (samples: 141442)
-INFO:root:Loss: 2047.5201 +/- 14.514
+INFO:root:Loss: 2047.3622 +/- 14.4818
 INFO:root:Epoch no. 302 of 500 (samples: 141442)
-INFO:root:Loss: 2040.2851 +/- 19.0731
+INFO:root:Loss: 2040.2053 +/- 19.0731
 INFO:root:Epoch no. 303 of 500 (samples: 141442)
-INFO:root:Loss: 2031.8976 +/- 14.2787
+INFO:root:Loss: 2031.8095 +/- 14.2803
 INFO:root:Epoch no. 304 of 500 (samples: 141442)
-INFO:root:Loss: 2024.3533 +/- 24.1536
+INFO:root:Loss: 2024.3186 +/- 24.2247
 INFO:root:Epoch no. 305 of 500 (samples: 141442)
-INFO:root:Loss: 2016.5856 +/- 13.8167
+INFO:root:Loss: 2016.5601 +/- 13.7618
 INFO:root:Epoch no. 306 of 500 (samples: 141442)
-INFO:root:Loss: 2009.1758 +/- 17.7126
+INFO:root:Loss: 2009.1589 +/- 17.7526
 INFO:root:Epoch no. 307 of 500 (samples: 141442)
-INFO:root:Loss: 2002.3253 +/- 20.3428
+INFO:root:Loss: 2002.3107 +/- 20.3572
 INFO:root:Epoch no. 308 of 500 (samples: 141442)
-INFO:root:Loss: 1996.5232 +/- 17.3737
+INFO:root:Loss: 1996.5242 +/- 17.3654
 INFO:root:Epoch no. 309 of 500 (samples: 141442)
-INFO:root:Loss: 1990.2838 +/- 17.9566
+INFO:root:Loss: 1990.3189 +/- 17.9671
 INFO:root:Epoch no. 310 of 500 (samples: 141442)
-INFO:root:Loss: 1982.9156 +/- 11.5033
+INFO:root:Loss: 1983.0191 +/- 11.4389
 INFO:root:Epoch no. 311 of 500 (samples: 141442)
-INFO:root:Loss: 1977.9608 +/- 18.1307
+INFO:root:Loss: 1978.0009 +/- 18.1375
 INFO:root:Epoch no. 312 of 500 (samples: 141442)
-INFO:root:Loss: 1970.0044 +/- 9.5175
+INFO:root:Loss: 1970.0403 +/- 9.4571
 INFO:root:Epoch no. 313 of 500 (samples: 141442)
-INFO:root:Loss: 1964.352 +/- 15.955
+INFO:root:Loss: 1964.4253 +/- 15.9634
 INFO:root:Epoch no. 314 of 500 (samples: 141442)
-INFO:root:Loss: 1955.7893 +/- 21.7681
+INFO:root:Loss: 1955.8785 +/- 21.7911
 INFO:root:Epoch no. 315 of 500 (samples: 141442)
-INFO:root:Loss: 1948.604 +/- 19.4006
+INFO:root:Loss: 1948.6675 +/- 19.4362
 INFO:root:Epoch no. 316 of 500 (samples: 141442)
-INFO:root:Loss: 1941.4748 +/- 15.8779
+INFO:root:Loss: 1941.5 +/- 15.8663
 INFO:root:Epoch no. 317 of 500 (samples: 141442)
-INFO:root:Loss: 1937.2785 +/- 15.9624
+INFO:root:Loss: 1937.2882 +/- 15.9992
 INFO:root:Epoch no. 318 of 500 (samples: 141442)
-INFO:root:Loss: 1931.372 +/- 11.9111
+INFO:root:Loss: 1931.4343 +/- 11.9546
 INFO:root:Epoch no. 319 of 500 (samples: 141442)
-INFO:root:Loss: 1924.1127 +/- 15.7497
+INFO:root:Loss: 1924.1352 +/- 15.7409
 INFO:root:Epoch no. 320 of 500 (samples: 141442)
-INFO:root:Loss: 1916.7373 +/- 14.4873
+INFO:root:Loss: 1916.8172 +/- 14.4183
 INFO:root:Epoch no. 321 of 500 (samples: 141442)
-INFO:root:Loss: 1912.721 +/- 16.1713
+INFO:root:Loss: 1912.7934 +/- 16.163
 INFO:root:Epoch no. 322 of 500 (samples: 141442)
-INFO:root:Loss: 1905.4657 +/- 18.2641
+INFO:root:Loss: 1905.4726 +/- 18.291
 INFO:root:Epoch no. 323 of 500 (samples: 141442)
-INFO:root:Loss: 1898.5783 +/- 21.7332
+INFO:root:Loss: 1898.5732 +/- 21.7228
 INFO:root:Epoch no. 324 of 500 (samples: 141442)
-INFO:root:Loss: 1891.772 +/- 17.1524
+INFO:root:Loss: 1891.7988 +/- 17.1589
 INFO:root:Epoch no. 325 of 500 (samples: 141442)
-INFO:root:Loss: 1888.0684 +/- 19.3279
+INFO:root:Loss: 1888.0743 +/- 19.3855
 INFO:root:Epoch no. 326 of 500 (samples: 141442)
-INFO:root:Loss: 1880.1687 +/- 16.8235
+INFO:root:Loss: 1880.2465 +/- 16.9191
 INFO:root:Epoch no. 327 of 500 (samples: 141442)
-INFO:root:Loss: 1874.7403 +/- 19.8786
+INFO:root:Loss: 1874.741 +/- 19.8715
 INFO:root:Epoch no. 328 of 500 (samples: 141442)
-INFO:root:Loss: 1870.2814 +/- 13.5261
+INFO:root:Loss: 1870.1965 +/- 13.512
 INFO:root:Epoch no. 329 of 500 (samples: 141442)
-INFO:root:Loss: 1864.4205 +/- 18.8966
+INFO:root:Loss: 1864.4279 +/- 18.8869
 INFO:root:Epoch no. 330 of 500 (samples: 141442)
-INFO:root:Loss: 1858.7182 +/- 21.0806
+INFO:root:Loss: 1858.7343 +/- 21.0559
 INFO:root:Epoch no. 331 of 500 (samples: 141442)
-INFO:root:Loss: 1852.2408 +/- 16.8987
+INFO:root:Loss: 1852.2252 +/- 16.9181
 INFO:root:Epoch no. 332 of 500 (samples: 141442)
-INFO:root:Loss: 1845.4335 +/- 17.332
+INFO:root:Loss: 1845.5191 +/- 17.3794
 INFO:root:Epoch no. 333 of 500 (samples: 141442)
-INFO:root:Loss: 1839.3851 +/- 18.2903
+INFO:root:Loss: 1839.4188 +/- 18.3641
 INFO:root:Epoch no. 334 of 500 (samples: 141442)
-INFO:root:Loss: 1834.2652 +/- 15.2817
+INFO:root:Loss: 1834.3704 +/- 15.2825
 INFO:root:Epoch no. 335 of 500 (samples: 141442)
-INFO:root:Loss: 1829.5744 +/- 14.0233
+INFO:root:Loss: 1829.6202 +/- 13.975
 INFO:root:Epoch no. 336 of 500 (samples: 141442)
-INFO:root:Loss: 1823.0351 +/- 16.0871
+INFO:root:Loss: 1823.1078 +/- 16.15
 INFO:root:Epoch no. 337 of 500 (samples: 141442)
-INFO:root:Loss: 1818.9636 +/- 17.9374
+INFO:root:Loss: 1819.0317 +/- 17.8698
 INFO:root:Epoch no. 338 of 500 (samples: 141442)
-INFO:root:Loss: 1812.1721 +/- 16.1819
+INFO:root:Loss: 1812.1729 +/- 16.2232
 INFO:root:Epoch no. 339 of 500 (samples: 141442)
-INFO:root:Loss: 1807.6582 +/- 14.5943
+INFO:root:Loss: 1807.7403 +/- 14.6288
 INFO:root:Epoch no. 340 of 500 (samples: 141442)
-INFO:root:Loss: 1801.8732 +/- 16.7926
+INFO:root:Loss: 1801.9331 +/- 16.8804
 INFO:root:Epoch no. 341 of 500 (samples: 141442)
-INFO:root:Loss: 1796.4866 +/- 15.1165
+INFO:root:Loss: 1796.4851 +/- 15.1479
 INFO:root:Epoch no. 342 of 500 (samples: 141442)
-INFO:root:Loss: 1788.9642 +/- 12.1999
+INFO:root:Loss: 1789.0207 +/- 12.2389
 INFO:root:Epoch no. 343 of 500 (samples: 141442)
-INFO:root:Loss: 1784.3522 +/- 18.9168
+INFO:root:Loss: 1784.4404 +/- 18.9516
 INFO:root:Epoch no. 344 of 500 (samples: 141442)
-INFO:root:Loss: 1778.931 +/- 12.117
+INFO:root:Loss: 1778.9831 +/- 12.0643
 INFO:root:Epoch no. 345 of 500 (samples: 141442)
-INFO:root:Loss: 1772.6626 +/- 22.7166
+INFO:root:Loss: 1772.6804 +/- 22.7533
 INFO:root:Epoch no. 346 of 500 (samples: 141442)
-INFO:root:Loss: 1768.2682 +/- 16.164
+INFO:root:Loss: 1768.3433 +/- 16.129
 INFO:root:Epoch no. 347 of 500 (samples: 141442)
-INFO:root:Loss: 1759.4938 +/- 17.9732
+INFO:root:Loss: 1759.5907 +/- 17.8157
 INFO:root:Epoch no. 348 of 500 (samples: 141442)
-INFO:root:Loss: 1754.1472 +/- 15.2597
+INFO:root:Loss: 1754.2599 +/- 15.3753
 INFO:root:Epoch no. 349 of 500 (samples: 141442)
-INFO:root:Loss: 1748.816 +/- 9.5051
+INFO:root:Loss: 1748.8941 +/- 9.5235
 INFO:root:Epoch no. 350 of 500 (samples: 141442)
-INFO:root:Loss: 1741.1121 +/- 14.3478
+INFO:root:Loss: 1741.1953 +/- 14.2748
 INFO:root:Epoch no. 351 of 500 (samples: 141442)
-INFO:root:Loss: 1738.956 +/- 10.5966
+INFO:root:Loss: 1739.0562 +/- 10.6144
 INFO:root:Epoch no. 352 of 500 (samples: 141442)
-INFO:root:Loss: 1730.3451 +/- 17.9286
+INFO:root:Loss: 1730.4151 +/- 17.9216
 INFO:root:Epoch no. 353 of 500 (samples: 141442)
-INFO:root:Loss: 1725.5819 +/- 14.6329
+INFO:root:Loss: 1725.7247 +/- 14.6662
 INFO:root:Epoch no. 354 of 500 (samples: 141442)
-INFO:root:Loss: 1720.1707 +/- 14.1695
+INFO:root:Loss: 1720.3001 +/- 14.2735
 INFO:root:Epoch no. 355 of 500 (samples: 141442)
-INFO:root:Loss: 1712.3323 +/- 19.9473
+INFO:root:Loss: 1712.4292 +/- 19.8634
 INFO:root:Epoch no. 356 of 500 (samples: 141442)
-INFO:root:Loss: 1705.3561 +/- 10.0212
+INFO:root:Loss: 1705.474 +/- 9.8812
 INFO:root:Epoch no. 357 of 500 (samples: 141442)
-INFO:root:Loss: 1702.2175 +/- 16.0691
+INFO:root:Loss: 1702.3556 +/- 16.0298
 INFO:root:Epoch no. 358 of 500 (samples: 141442)
-INFO:root:Loss: 1694.3469 +/- 14.8914
+INFO:root:Loss: 1694.5093 +/- 14.9184
 INFO:root:Epoch no. 359 of 500 (samples: 141442)
-INFO:root:Loss: 1687.2958 +/- 10.788
+INFO:root:Loss: 1687.4211 +/- 10.8013
 INFO:root:Epoch no. 360 of 500 (samples: 141442)
-INFO:root:Loss: 1682.793 +/- 14.4172
+INFO:root:Loss: 1683.0557 +/- 14.3911
 INFO:root:Epoch no. 361 of 500 (samples: 141442)
-INFO:root:Loss: 1674.5786 +/- 15.2785
+INFO:root:Loss: 1674.7163 +/- 15.2523
 INFO:root:Epoch no. 362 of 500 (samples: 141442)
-INFO:root:Loss: 1667.6291 +/- 17.4348
+INFO:root:Loss: 1667.8124 +/- 17.5359
 INFO:root:Epoch no. 363 of 500 (samples: 141442)
-INFO:root:Loss: 1662.0522 +/- 20.3725
+INFO:root:Loss: 1662.2899 +/- 20.2757
 INFO:root:Epoch no. 364 of 500 (samples: 141442)
-INFO:root:Loss: 1654.2055 +/- 22.2212
+INFO:root:Loss: 1654.2736 +/- 22.2171
 INFO:root:Epoch no. 365 of 500 (samples: 141442)
-INFO:root:Loss: 1647.3838 +/- 16.2131
+INFO:root:Loss: 1647.5778 +/- 16.0862
 INFO:root:Epoch no. 366 of 500 (samples: 141442)
-INFO:root:Loss: 1642.9636 +/- 14.7603
+INFO:root:Loss: 1643.1594 +/- 14.805
 INFO:root:Epoch no. 367 of 500 (samples: 141442)
-INFO:root:Loss: 1638.0697 +/- 10.5605
+INFO:root:Loss: 1638.2358 +/- 10.5798
 INFO:root:Epoch no. 368 of 500 (samples: 141442)
-INFO:root:Loss: 1628.758 +/- 6.5786
+INFO:root:Loss: 1629.1873 +/- 6.6887
 INFO:root:Epoch no. 369 of 500 (samples: 141442)
-INFO:root:Loss: 1623.2988 +/- 11.2672
+INFO:root:Loss: 1623.525 +/- 11.2465
 INFO:root:Epoch no. 370 of 500 (samples: 141442)
-INFO:root:Loss: 1614.0627 +/- 17.6306
+INFO:root:Loss: 1614.2494 +/- 17.6854
 INFO:root:Epoch no. 371 of 500 (samples: 141442)
-INFO:root:Loss: 1607.6216 +/- 14.4982
+INFO:root:Loss: 1607.9432 +/- 14.6206
 INFO:root:Epoch no. 372 of 500 (samples: 141442)
-INFO:root:Loss: 1601.1758 +/- 10.7898
+INFO:root:Loss: 1601.5628 +/- 10.7511
 INFO:root:Epoch no. 373 of 500 (samples: 141442)
-INFO:root:Loss: 1594.9301 +/- 15.1526
+INFO:root:Loss: 1595.0754 +/- 15.1593
 INFO:root:Epoch no. 374 of 500 (samples: 141442)
-INFO:root:Loss: 1588.5825 +/- 18.0542
+INFO:root:Loss: 1589.0192 +/- 18.12
 INFO:root:Epoch no. 375 of 500 (samples: 141442)
-INFO:root:Loss: 1580.1488 +/- 9.926
+INFO:root:Loss: 1580.5456 +/- 9.8972
 INFO:root:Epoch no. 376 of 500 (samples: 141442)
-INFO:root:Loss: 1573.6362 +/- 24.2326
+INFO:root:Loss: 1574.0485 +/- 24.2817
 INFO:root:Epoch no. 377 of 500 (samples: 141442)
-INFO:root:Loss: 1567.099 +/- 13.5585
+INFO:root:Loss: 1567.5007 +/- 13.6214
 INFO:root:Epoch no. 378 of 500 (samples: 141442)
-INFO:root:Loss: 1558.7588 +/- 9.3818
+INFO:root:Loss: 1559.212 +/- 9.4356
 INFO:root:Epoch no. 379 of 500 (samples: 141442)
-INFO:root:Loss: 1552.3838 +/- 13.5367
+INFO:root:Loss: 1552.7425 +/- 13.541
 INFO:root:Epoch no. 380 of 500 (samples: 141442)
-INFO:root:Loss: 1544.4687 +/- 13.7888
+INFO:root:Loss: 1544.9236 +/- 13.8209
 INFO:root:Epoch no. 381 of 500 (samples: 141442)
-INFO:root:Loss: 1537.4373 +/- 13.9306
+INFO:root:Loss: 1537.7232 +/- 13.8839
 INFO:root:Epoch no. 382 of 500 (samples: 141442)
-INFO:root:Loss: 1530.3413 +/- 14.2496
+INFO:root:Loss: 1530.5827 +/- 14.1854
 INFO:root:Epoch no. 383 of 500 (samples: 141442)
-INFO:root:Loss: 1525.3958 +/- 12.3687
+INFO:root:Loss: 1525.7692 +/- 12.3361
 INFO:root:Epoch no. 384 of 500 (samples: 141442)
-INFO:root:Loss: 1516.3578 +/- 12.849
+INFO:root:Loss: 1516.6552 +/- 12.7844
 INFO:root:Epoch no. 385 of 500 (samples: 141442)
-INFO:root:Loss: 1508.7341 +/- 12.197
+INFO:root:Loss: 1509.1304 +/- 12.4081
 INFO:root:Epoch no. 386 of 500 (samples: 141442)
-INFO:root:Loss: 1503.4962 +/- 12.9412
+INFO:root:Loss: 1503.7424 +/- 12.9747
 INFO:root:Epoch no. 387 of 500 (samples: 141442)
-INFO:root:Loss: 1494.5541 +/- 9.9464
+INFO:root:Loss: 1494.8468 +/- 9.9157
 INFO:root:Epoch no. 388 of 500 (samples: 141442)
-INFO:root:Loss: 1489.4772 +/- 19.2291
+INFO:root:Loss: 1489.8473 +/- 19.2604
 INFO:root:Epoch no. 389 of 500 (samples: 141442)
-INFO:root:Loss: 1479.5892 +/- 12.2493
+INFO:root:Loss: 1479.7745 +/- 12.2882
 INFO:root:Epoch no. 390 of 500 (samples: 141442)
-INFO:root:Loss: 1472.1463 +/- 14.4812
+INFO:root:Loss: 1472.3438 +/- 14.3616
 INFO:root:Epoch no. 391 of 500 (samples: 141442)
-INFO:root:Loss: 1465.5507 +/- 9.9478
+INFO:root:Loss: 1465.7605 +/- 10.0803
 INFO:root:Epoch no. 392 of 500 (samples: 141442)
-INFO:root:Loss: 1458.0927 +/- 20.2612
+INFO:root:Loss: 1458.2369 +/- 20.2284
 INFO:root:Epoch no. 393 of 500 (samples: 141442)
-INFO:root:Loss: 1450.5659 +/- 17.5877
+INFO:root:Loss: 1450.8808 +/- 17.6688
 INFO:root:Epoch no. 394 of 500 (samples: 141442)
-INFO:root:Loss: 1442.4914 +/- 10.8723
+INFO:root:Loss: 1442.8258 +/- 10.8792
 INFO:root:Epoch no. 395 of 500 (samples: 141442)
-INFO:root:Loss: 1435.1488 +/- 11.5934
+INFO:root:Loss: 1435.4848 +/- 11.6229
 INFO:root:Epoch no. 396 of 500 (samples: 141442)
-INFO:root:Loss: 1429.1001 +/- 19.2909
+INFO:root:Loss: 1429.4137 +/- 19.2202
 INFO:root:Epoch no. 397 of 500 (samples: 141442)
-INFO:root:Loss: 1424.3791 +/- 11.5401
+INFO:root:Loss: 1424.7412 +/- 11.6061
 INFO:root:Epoch no. 398 of 500 (samples: 141442)
-INFO:root:Loss: 1417.1013 +/- 16.8794
+INFO:root:Loss: 1417.4309 +/- 17.0159
 INFO:root:Epoch no. 399 of 500 (samples: 141442)
-INFO:root:Loss: 1409.1051 +/- 13.2269
+INFO:root:Loss: 1409.3771 +/- 13.3513
 INFO:root:Epoch no. 400 of 500 (samples: 141442)
-INFO:root:Loss: 1404.9048 +/- 15.6675
+INFO:root:Loss: 1405.1609 +/- 15.7466
 INFO:root:Epoch no. 401 of 500 (samples: 141442)
-INFO:root:Loss: 1396.6318 +/- 14.7999
+INFO:root:Loss: 1397.0159 +/- 14.8606
 INFO:root:Epoch no. 402 of 500 (samples: 141442)
-INFO:root:Loss: 1388.773 +/- 13.1819
+INFO:root:Loss: 1388.9734 +/- 13.2325
 INFO:root:Epoch no. 403 of 500 (samples: 141442)
-INFO:root:Loss: 1381.2836 +/- 9.5246
+INFO:root:Loss: 1381.5402 +/- 9.4958
 INFO:root:Epoch no. 404 of 500 (samples: 141442)
-INFO:root:Loss: 1377.1488 +/- 13.1129
+INFO:root:Loss: 1377.3301 +/- 13.1133
 INFO:root:Epoch no. 405 of 500 (samples: 141442)
-INFO:root:Loss: 1369.4706 +/- 16.8738
+INFO:root:Loss: 1369.753 +/- 16.7937
 INFO:root:Epoch no. 406 of 500 (samples: 141442)
-INFO:root:Loss: 1364.2414 +/- 15.5085
+INFO:root:Loss: 1364.5994 +/- 15.3577
 INFO:root:Epoch no. 407 of 500 (samples: 141442)
-INFO:root:Loss: 1354.0256 +/- 11.4038
+INFO:root:Loss: 1354.2379 +/- 11.4334
 INFO:root:Epoch no. 408 of 500 (samples: 141442)
-INFO:root:Loss: 1349.023 +/- 19.2703
+INFO:root:Loss: 1349.3817 +/- 19.3073
 INFO:root:Epoch no. 409 of 500 (samples: 141442)
-INFO:root:Loss: 1342.5139 +/- 15.6304
+INFO:root:Loss: 1342.7747 +/- 15.5466
 INFO:root:Epoch no. 410 of 500 (samples: 141442)
-INFO:root:Loss: 1336.5401 +/- 14.1543
+INFO:root:Loss: 1336.731 +/- 14.2808
 INFO:root:Epoch no. 411 of 500 (samples: 141442)
-INFO:root:Loss: 1329.2058 +/- 12.5618
+INFO:root:Loss: 1329.6543 +/- 12.5347
 INFO:root:Epoch no. 412 of 500 (samples: 141442)
-INFO:root:Loss: 1322.348 +/- 15.6832
+INFO:root:Loss: 1322.5601 +/- 15.6117
 INFO:root:Epoch no. 413 of 500 (samples: 141442)
-INFO:root:Loss: 1316.4807 +/- 12.9962
+INFO:root:Loss: 1316.5532 +/- 13.1594
 INFO:root:Epoch no. 414 of 500 (samples: 141442)
-INFO:root:Loss: 1309.9121 +/- 20.8793
+INFO:root:Loss: 1310.1047 +/- 20.7603
 INFO:root:Epoch no. 415 of 500 (samples: 141442)
-INFO:root:Loss: 1303.2594 +/- 11.8553
+INFO:root:Loss: 1303.3175 +/- 11.7214
 INFO:root:Epoch no. 416 of 500 (samples: 141442)
-INFO:root:Loss: 1300.1413 +/- 11.5244
+INFO:root:Loss: 1300.1398 +/- 11.5084
 INFO:root:Epoch no. 417 of 500 (samples: 141442)
-INFO:root:Loss: 1292.427 +/- 15.2251
+INFO:root:Loss: 1292.389 +/- 15.1928
 INFO:root:Epoch no. 418 of 500 (samples: 141442)
-INFO:root:Loss: 1286.496 +/- 14.5081
+INFO:root:Loss: 1286.4956 +/- 14.5706
 INFO:root:Epoch no. 419 of 500 (samples: 141442)
-INFO:root:Loss: 1281.7844 +/- 13.7872
+INFO:root:Loss: 1281.6424 +/- 13.945
 INFO:root:Epoch no. 420 of 500 (samples: 141442)
-INFO:root:Loss: 1275.9621 +/- 15.114
+INFO:root:Loss: 1276.0134 +/- 15.0949
 INFO:root:Epoch no. 421 of 500 (samples: 141442)
-INFO:root:Loss: 1269.559 +/- 15.4273
+INFO:root:Loss: 1269.4922 +/- 15.2776
 INFO:root:Epoch no. 422 of 500 (samples: 141442)
-INFO:root:Loss: 1263.4045 +/- 13.8604
+INFO:root:Loss: 1263.3801 +/- 13.8257
 INFO:root:Epoch no. 423 of 500 (samples: 141442)
-INFO:root:Loss: 1254.9257 +/- 20.9699
+INFO:root:Loss: 1254.8808 +/- 21.0534
 INFO:root:Epoch no. 424 of 500 (samples: 141442)
-INFO:root:Loss: 1251.7728 +/- 19.248
+INFO:root:Loss: 1251.8696 +/- 19.3558
 INFO:root:Epoch no. 425 of 500 (samples: 141442)
-INFO:root:Loss: 1246.7431 +/- 18.5185
+INFO:root:Loss: 1246.7297 +/- 18.5182
 INFO:root:Epoch no. 426 of 500 (samples: 141442)
-INFO:root:Loss: 1244.3403 +/- 16.6809
+INFO:root:Loss: 1244.3102 +/- 16.8241
 INFO:root:Epoch no. 427 of 500 (samples: 141442)
-INFO:root:Loss: 1237.3985 +/- 18.2223
+INFO:root:Loss: 1237.3785 +/- 18.1986
 INFO:root:Epoch no. 428 of 500 (samples: 141442)
-INFO:root:Loss: 1231.5796 +/- 12.391
+INFO:root:Loss: 1231.6483 +/- 12.5677
 INFO:root:Epoch no. 429 of 500 (samples: 141442)
-INFO:root:Loss: 1225.8364 +/- 15.3849
+INFO:root:Loss: 1225.9918 +/- 15.3679
 INFO:root:Epoch no. 430 of 500 (samples: 141442)
-INFO:root:Loss: 1221.5532 +/- 13.7988
+INFO:root:Loss: 1221.6848 +/- 13.888
 INFO:root:Epoch no. 431 of 500 (samples: 141442)
-INFO:root:Loss: 1217.0782 +/- 12.6336
+INFO:root:Loss: 1217.1275 +/- 12.576
 INFO:root:Epoch no. 432 of 500 (samples: 141442)
-INFO:root:Loss: 1211.1391 +/- 9.4874
+INFO:root:Loss: 1211.4744 +/- 9.4672
 INFO:root:Epoch no. 433 of 500 (samples: 141442)
-INFO:root:Loss: 1207.6528 +/- 12.9051
+INFO:root:Loss: 1207.9165 +/- 12.8827
 INFO:root:Epoch no. 434 of 500 (samples: 141442)
-INFO:root:Loss: 1203.7428 +/- 7.8199
+INFO:root:Loss: 1204.031 +/- 7.7505
 INFO:root:Epoch no. 435 of 500 (samples: 141442)
-INFO:root:Loss: 1200.3179 +/- 16.4349
+INFO:root:Loss: 1200.4795 +/- 16.3896
 INFO:root:Epoch no. 436 of 500 (samples: 141442)
-INFO:root:Loss: 1194.6267 +/- 13.3952
+INFO:root:Loss: 1194.7954 +/- 13.2545
 INFO:root:Epoch no. 437 of 500 (samples: 141442)
-INFO:root:Loss: 1188.7431 +/- 14.027
+INFO:root:Loss: 1188.9459 +/- 14.0443
 INFO:root:Epoch no. 438 of 500 (samples: 141442)
-INFO:root:Loss: 1184.3357 +/- 10.4578
+INFO:root:Loss: 1184.4477 +/- 10.4286
 INFO:root:Epoch no. 439 of 500 (samples: 141442)
-INFO:root:Loss: 1181.6452 +/- 10.8321
+INFO:root:Loss: 1181.7305 +/- 10.7538
 INFO:root:Epoch no. 440 of 500 (samples: 141442)
-INFO:root:Loss: 1178.384 +/- 13.8119
+INFO:root:Loss: 1178.3683 +/- 13.8191
 INFO:root:Epoch no. 441 of 500 (samples: 141442)
-INFO:root:Loss: 1175.5873 +/- 15.9806
+INFO:root:Loss: 1175.7705 +/- 15.9947
 INFO:root:Epoch no. 442 of 500 (samples: 141442)
-INFO:root:Loss: 1172.3319 +/- 14.043
+INFO:root:Loss: 1172.3183 +/- 14.1749
 INFO:root:Epoch no. 443 of 500 (samples: 141442)
-INFO:root:Loss: 1170.0851 +/- 14.5222
+INFO:root:Loss: 1170.2056 +/- 14.5204
 INFO:root:Epoch no. 444 of 500 (samples: 141442)
-INFO:root:Loss: 1165.1768 +/- 12.9281
+INFO:root:Loss: 1165.259 +/- 12.9435
 INFO:root:Epoch no. 445 of 500 (samples: 141442)
-INFO:root:Loss: 1160.8693 +/- 14.8516
+INFO:root:Loss: 1160.9392 +/- 14.8351
 INFO:root:Epoch no. 446 of 500 (samples: 141442)
-INFO:root:Loss: 1156.9966 +/- 20.3129
+INFO:root:Loss: 1157.1086 +/- 20.3587
 INFO:root:Epoch no. 447 of 500 (samples: 141442)
-INFO:root:Loss: 1150.8942 +/- 12.6516
+INFO:root:Loss: 1150.9321 +/- 12.6148
 INFO:root:Epoch no. 448 of 500 (samples: 141442)
-INFO:root:Loss: 1146.2237 +/- 15.0782
+INFO:root:Loss: 1146.0161 +/- 15.0055
 INFO:root:Epoch no. 449 of 500 (samples: 141442)
-INFO:root:Loss: 1143.2595 +/- 16.9867
+INFO:root:Loss: 1143.1174 +/- 17.0649
 INFO:root:Epoch no. 450 of 500 (samples: 141442)
-INFO:root:Loss: 1137.7101 +/- 12.196
+INFO:root:Loss: 1137.7109 +/- 12.2436
 INFO:root:Epoch no. 451 of 500 (samples: 141442)
-INFO:root:Loss: 1135.057 +/- 13.1184
+INFO:root:Loss: 1134.8196 +/- 12.8219
 INFO:root:Epoch no. 452 of 500 (samples: 141442)
-INFO:root:Loss: 1129.4439 +/- 18.8135
+INFO:root:Loss: 1129.2281 +/- 18.7024
 INFO:root:Epoch no. 453 of 500 (samples: 141442)
-INFO:root:Loss: 1127.3062 +/- 16.5558
+INFO:root:Loss: 1127.2646 +/- 16.6213
 INFO:root:Epoch no. 454 of 500 (samples: 141442)
-INFO:root:Loss: 1124.1563 +/- 10.3728
+INFO:root:Loss: 1124.0092 +/- 10.3523
 INFO:root:Epoch no. 455 of 500 (samples: 141442)
-INFO:root:Loss: 1116.7143 +/- 14.2999
+INFO:root:Loss: 1116.6675 +/- 14.1536
 INFO:root:Epoch no. 456 of 500 (samples: 141442)
-INFO:root:Loss: 1114.4698 +/- 10.9374
+INFO:root:Loss: 1114.158 +/- 10.9118
 INFO:root:Epoch no. 457 of 500 (samples: 141442)
-INFO:root:Loss: 1108.4775 +/- 12.8416
+INFO:root:Loss: 1108.389 +/- 12.633
 INFO:root:Epoch no. 458 of 500 (samples: 141442)
-INFO:root:Loss: 1104.1975 +/- 11.4924
+INFO:root:Loss: 1103.9821 +/- 11.5413
 INFO:root:Epoch no. 459 of 500 (samples: 141442)
-INFO:root:Loss: 1097.8207 +/- 13.7804
+INFO:root:Loss: 1097.5239 +/- 13.5104
 INFO:root:Epoch no. 460 of 500 (samples: 141442)
-INFO:root:Loss: 1094.1468 +/- 14.741
+INFO:root:Loss: 1094.1971 +/- 14.7792
 INFO:root:Epoch no. 461 of 500 (samples: 141442)
-INFO:root:Loss: 1086.6118 +/- 11.0531
+INFO:root:Loss: 1086.4309 +/- 11.2328
 INFO:root:Epoch no. 462 of 500 (samples: 141442)
-INFO:root:Loss: 1082.7505 +/- 8.0456
+INFO:root:Loss: 1082.7233 +/- 8.043
 INFO:root:Epoch no. 463 of 500 (samples: 141442)
-INFO:root:Loss: 1077.3363 +/- 15.95
+INFO:root:Loss: 1077.3043 +/- 16.1551
 INFO:root:Epoch no. 464 of 500 (samples: 141442)
-INFO:root:Loss: 1071.3898 +/- 14.3518
+INFO:root:Loss: 1071.4236 +/- 14.4487
 INFO:root:Epoch no. 465 of 500 (samples: 141442)
-INFO:root:Loss: 1068.8461 +/- 11.3207
+INFO:root:Loss: 1068.641 +/- 11.4666
 INFO:root:Epoch no. 466 of 500 (samples: 141442)
-INFO:root:Loss: 1062.2997 +/- 9.1792
+INFO:root:Loss: 1062.3779 +/- 9.1712
 INFO:root:Epoch no. 467 of 500 (samples: 141442)
-INFO:root:Loss: 1056.9441 +/- 15.3689
+INFO:root:Loss: 1056.9918 +/- 15.5673
 INFO:root:Epoch no. 468 of 500 (samples: 141442)
-INFO:root:Loss: 1050.0533 +/- 19.6273
+INFO:root:Loss: 1049.9533 +/- 19.5815
 INFO:root:Epoch no. 469 of 500 (samples: 141442)
-INFO:root:Loss: 1044.4103 +/- 13.0894
+INFO:root:Loss: 1044.3563 +/- 12.976
 INFO:root:Epoch no. 470 of 500 (samples: 141442)
-INFO:root:Loss: 1041.0977 +/- 10.63
+INFO:root:Loss: 1040.9822 +/- 10.6447
 INFO:root:Epoch no. 471 of 500 (samples: 141442)
-INFO:root:Loss: 1034.3538 +/- 14.1304
+INFO:root:Loss: 1034.3269 +/- 14.1386
 INFO:root:Epoch no. 472 of 500 (samples: 141442)
-INFO:root:Loss: 1028.4483 +/- 15.3635
+INFO:root:Loss: 1028.4147 +/- 15.4042
 INFO:root:Epoch no. 473 of 500 (samples: 141442)
-INFO:root:Loss: 1022.5975 +/- 7.8325
+INFO:root:Loss: 1022.6136 +/- 7.9209
 INFO:root:Epoch no. 474 of 500 (samples: 141442)
-INFO:root:Loss: 1016.9472 +/- 12.773
+INFO:root:Loss: 1016.867 +/- 12.7176
 INFO:root:Epoch no. 475 of 500 (samples: 141442)
-INFO:root:Loss: 1010.0395 +/- 10.8782
+INFO:root:Loss: 1010.0357 +/- 10.8737
 INFO:root:Epoch no. 476 of 500 (samples: 141442)
-INFO:root:Loss: 1005.5656 +/- 8.0164
+INFO:root:Loss: 1005.74 +/- 8.0206
 INFO:root:Epoch no. 477 of 500 (samples: 141442)
-INFO:root:Loss: 997.4363 +/- 12.4793
+INFO:root:Loss: 997.5451 +/- 12.7294
 INFO:root:Epoch no. 478 of 500 (samples: 141442)
-INFO:root:Loss: 993.2196 +/- 12.6553
+INFO:root:Loss: 993.2152 +/- 12.6085
 INFO:root:Epoch no. 479 of 500 (samples: 141442)
-INFO:root:Loss: 988.9912 +/- 14.324
+INFO:root:Loss: 988.9814 +/- 14.3679
 INFO:root:Epoch no. 480 of 500 (samples: 141442)
-INFO:root:Loss: 984.9579 +/- 12.3374
+INFO:root:Loss: 984.7098 +/- 12.3425
 INFO:root:Epoch no. 481 of 500 (samples: 141442)
-INFO:root:Loss: 977.7194 +/- 10.5745
+INFO:root:Loss: 977.8258 +/- 10.6819
 INFO:root:Epoch no. 482 of 500 (samples: 141442)
-INFO:root:Loss: 970.6378 +/- 18.5829
+INFO:root:Loss: 970.4805 +/- 18.444
 INFO:root:Epoch no. 483 of 500 (samples: 141442)
-INFO:root:Loss: 969.3233 +/- 8.3334
+INFO:root:Loss: 969.336 +/- 8.4731
 INFO:root:Epoch no. 484 of 500 (samples: 141442)
-INFO:root:Loss: 959.6234 +/- 9.8623
+INFO:root:Loss: 959.8658 +/- 9.9251
 INFO:root:Epoch no. 485 of 500 (samples: 141442)
-INFO:root:Loss: 954.2339 +/- 14.4988
+INFO:root:Loss: 954.2557 +/- 14.4116
 INFO:root:Epoch no. 486 of 500 (samples: 141442)
-INFO:root:Loss: 953.0833 +/- 8.8708
+INFO:root:Loss: 952.9586 +/- 8.8044
 INFO:root:Epoch no. 487 of 500 (samples: 141442)
-INFO:root:Loss: 942.9644 +/- 14.406
+INFO:root:Loss: 943.001 +/- 14.3336
 INFO:root:Epoch no. 488 of 500 (samples: 141442)
-INFO:root:Loss: 939.4424 +/- 11.1547
+INFO:root:Loss: 939.5674 +/- 11.0153
 INFO:root:Epoch no. 489 of 500 (samples: 141442)
-INFO:root:Loss: 936.6927 +/- 10.5236
+INFO:root:Loss: 936.691 +/- 10.6514
 INFO:root:Epoch no. 490 of 500 (samples: 141442)
-INFO:root:Loss: 932.2838 +/- 12.9992
+INFO:root:Loss: 932.3274 +/- 13.2271
 INFO:root:Epoch no. 491 of 500 (samples: 141442)
-INFO:root:Loss: 924.0777 +/- 14.4507
+INFO:root:Loss: 924.1539 +/- 14.5243
 INFO:root:Epoch no. 492 of 500 (samples: 141442)
-INFO:root:Loss: 919.5602 +/- 11.2309
+INFO:root:Loss: 919.5535 +/- 11.4129
 INFO:root:Epoch no. 493 of 500 (samples: 141442)
-INFO:root:Loss: 917.681 +/- 12.1219
+INFO:root:Loss: 917.6006 +/- 12.2363
 INFO:root:Epoch no. 494 of 500 (samples: 141442)
-INFO:root:Loss: 911.6366 +/- 9.2169
+INFO:root:Loss: 911.6769 +/- 9.1406
 INFO:root:Epoch no. 495 of 500 (samples: 141442)
-INFO:root:Loss: 908.7154 +/- 15.0943
+INFO:root:Loss: 908.6646 +/- 15.1172
 INFO:root:Epoch no. 496 of 500 (samples: 141442)
-INFO:root:Loss: 903.1333 +/- 6.4843
+INFO:root:Loss: 903.1529 +/- 6.7443
 INFO:root:Epoch no. 497 of 500 (samples: 141442)
-INFO:root:Loss: 900.434 +/- 15.4626
+INFO:root:Loss: 900.3808 +/- 15.3084
 INFO:root:Epoch no. 498 of 500 (samples: 141442)
-INFO:root:Loss: 895.0538 +/- 13.7806
+INFO:root:Loss: 894.9701 +/- 13.7324
 INFO:root:Epoch no. 499 of 500 (samples: 141442)
-INFO:root:Loss: 890.083 +/- 13.7422
+INFO:root:Loss: 890.0404 +/- 13.7804
 INFO:root:Epoch no. 500 of 500 (samples: 141442)
-INFO:root:Loss: 885.6832 +/- 12.2512
+INFO:root:Loss: 885.7606 +/- 12.2347
+/usr/local/lib/python3.5/dist-packages/keras/backend/theano_backend.py:527: UserWarning: theano.function was asked to create a function computing outputs given certain inputs, but the provided input variable at index 2 is not part of the computational graph needed to compute the outputs: keras_learning_phase.
+To make this warning into an error, you can pass the parameter on_unused_input='raise' to theano.function. To disable it completely, use on_unused_input='ignore'.
+  **kwargs)
 INFO:root:### MICRO (validation raw):
-INFO:root:	-- left   >> mean: 377.4962, median: 3.0, mrr: 0.431, hits@1: 29.58%
-INFO:root:	-- right  >> mean: 375.0098, median: 4.0, mrr: 0.413, hits@1: 27.82%
-INFO:root:	-- global >> mean: 376.253, median: 3.0, mrr: 0.422, hits@1: 28.7%
+INFO:root:	-- left   >> mean: 378.206, median: 3.0, mrr: 0.431, hits@1: 29.58%
+INFO:root:	-- right  >> mean: 376.0134, median: 4.0, mrr: 0.412, hits@1: 27.74%
+INFO:root:	-- global >> mean: 377.1097, median: 3.0, mrr: 0.422, hits@1: 28.66%
 INFO:root:### MICRO (validation raw):
-INFO:root:	-- left   >> mean: 377.4962, median: 3.0, mrr: 0.431, hits@3: 51.36%
-INFO:root:	-- right  >> mean: 375.0098, median: 4.0, mrr: 0.413, hits@3: 49.48%
-INFO:root:	-- global >> mean: 376.253, median: 3.0, mrr: 0.422, hits@3: 50.42%
+INFO:root:	-- left   >> mean: 378.206, median: 3.0, mrr: 0.431, hits@3: 51.38%
+INFO:root:	-- right  >> mean: 376.0134, median: 4.0, mrr: 0.412, hits@3: 49.34%
+INFO:root:	-- global >> mean: 377.1097, median: 3.0, mrr: 0.422, hits@3: 50.36%
 INFO:root:### MICRO (validation raw):
-INFO:root:	-- left   >> mean: 377.4962, median: 3.0, mrr: 0.431, hits@5: 60.34%
-INFO:root:	-- right  >> mean: 375.0098, median: 4.0, mrr: 0.413, hits@5: 58.22%
-INFO:root:	-- global >> mean: 376.253, median: 3.0, mrr: 0.422, hits@5: 59.28%
+INFO:root:	-- left   >> mean: 378.206, median: 3.0, mrr: 0.431, hits@5: 60.2%
+INFO:root:	-- right  >> mean: 376.0134, median: 4.0, mrr: 0.412, hits@5: 58.26%
+INFO:root:	-- global >> mean: 377.1097, median: 3.0, mrr: 0.422, hits@5: 59.23%
 INFO:root:### MICRO (validation raw):
-INFO:root:	-- left   >> mean: 377.4962, median: 3.0, mrr: 0.431, hits@10: 69.3%
-INFO:root:	-- right  >> mean: 375.0098, median: 4.0, mrr: 0.413, hits@10: 67.24%
-INFO:root:	-- global >> mean: 376.253, median: 3.0, mrr: 0.422, hits@10: 68.27%
+INFO:root:	-- left   >> mean: 378.206, median: 3.0, mrr: 0.431, hits@10: 69.32%
+INFO:root:	-- right  >> mean: 376.0134, median: 4.0, mrr: 0.412, hits@10: 67.56%
+INFO:root:	-- global >> mean: 377.1097, median: 3.0, mrr: 0.422, hits@10: 68.44%
 INFO:root:### MICRO (validation filtered):
-INFO:root:	-- left   >> mean: 365.5798, median: 1.0, mrr: 0.632, hits@1: 53.94%
-INFO:root:	-- right  >> mean: 362.3416, median: 1.0, mrr: 0.624, hits@1: 53.36%
-INFO:root:	-- global >> mean: 363.9607, median: 1.0, mrr: 0.628, hits@1: 53.65%
+INFO:root:	-- left   >> mean: 366.2848, median: 1.0, mrr: 0.631, hits@1: 53.8%
+INFO:root:	-- right  >> mean: 363.3574, median: 1.0, mrr: 0.623, hits@1: 53.26%
+INFO:root:	-- global >> mean: 364.8211, median: 1.0, mrr: 0.627, hits@1: 53.53%
 INFO:root:### MICRO (validation filtered):
-INFO:root:	-- left   >> mean: 365.5798, median: 1.0, mrr: 0.632, hits@3: 69.84%
-INFO:root:	-- right  >> mean: 362.3416, median: 1.0, mrr: 0.624, hits@3: 68.82%
-INFO:root:	-- global >> mean: 363.9607, median: 1.0, mrr: 0.628, hits@3: 69.33%
+INFO:root:	-- left   >> mean: 366.2848, median: 1.0, mrr: 0.631, hits@3: 69.78%
+INFO:root:	-- right  >> mean: 363.3574, median: 1.0, mrr: 0.623, hits@3: 68.76%
+INFO:root:	-- global >> mean: 364.8211, median: 1.0, mrr: 0.627, hits@3: 69.27%
 INFO:root:### MICRO (validation filtered):
-INFO:root:	-- left   >> mean: 365.5798, median: 1.0, mrr: 0.632, hits@5: 74.0%
-INFO:root:	-- right  >> mean: 362.3416, median: 1.0, mrr: 0.624, hits@5: 72.44%
-INFO:root:	-- global >> mean: 363.9607, median: 1.0, mrr: 0.628, hits@5: 73.22%
+INFO:root:	-- left   >> mean: 366.2848, median: 1.0, mrr: 0.631, hits@5: 73.8%
+INFO:root:	-- right  >> mean: 363.3574, median: 1.0, mrr: 0.623, hits@5: 72.6%
+INFO:root:	-- global >> mean: 364.8211, median: 1.0, mrr: 0.627, hits@5: 73.2%
 INFO:root:### MICRO (validation filtered):
-INFO:root:	-- left   >> mean: 365.5798, median: 1.0, mrr: 0.632, hits@10: 78.48%
-INFO:root:	-- right  >> mean: 362.3416, median: 1.0, mrr: 0.624, hits@10: 77.38%
-INFO:root:	-- global >> mean: 363.9607, median: 1.0, mrr: 0.628, hits@10: 77.93%
+INFO:root:	-- left   >> mean: 366.2848, median: 1.0, mrr: 0.631, hits@10: 78.62%
+INFO:root:	-- right  >> mean: 363.3574, median: 1.0, mrr: 0.623, hits@10: 77.54%
+INFO:root:	-- global >> mean: 364.8211, median: 1.0, mrr: 0.627, hits@10: 78.08%
 INFO:root:### MICRO (test raw):
-INFO:root:	-- left   >> mean: 289.021, median: 4.0, mrr: 0.411, hits@1: 26.92%
-INFO:root:	-- right  >> mean: 293.794, median: 3.0, mrr: 0.43, hits@1: 29.32%
-INFO:root:	-- global >> mean: 291.4075, median: 3.0, mrr: 0.421, hits@1: 28.12%
+INFO:root:	-- left   >> mean: 295.8994, median: 4.0, mrr: 0.412, hits@1: 27.04%
+INFO:root:	-- right  >> mean: 299.734, median: 3.0, mrr: 0.432, hits@1: 29.56%
+INFO:root:	-- global >> mean: 297.8167, median: 3.0, mrr: 0.422, hits@1: 28.3%
 INFO:root:### MICRO (test raw):
-INFO:root:	-- left   >> mean: 289.021, median: 4.0, mrr: 0.411, hits@3: 49.04%
-INFO:root:	-- right  >> mean: 293.794, median: 3.0, mrr: 0.43, hits@3: 51.06%
-INFO:root:	-- global >> mean: 291.4075, median: 3.0, mrr: 0.421, hits@3: 50.05%
+INFO:root:	-- left   >> mean: 295.8994, median: 4.0, mrr: 0.412, hits@3: 49.34%
+INFO:root:	-- right  >> mean: 299.734, median: 3.0, mrr: 0.432, hits@3: 51.02%
+INFO:root:	-- global >> mean: 297.8167, median: 3.0, mrr: 0.422, hits@3: 50.18%
 INFO:root:### MICRO (test raw):
-INFO:root:	-- left   >> mean: 289.021, median: 4.0, mrr: 0.411, hits@5: 58.78%
-INFO:root:	-- right  >> mean: 293.794, median: 3.0, mrr: 0.43, hits@5: 60.52%
-INFO:root:	-- global >> mean: 291.4075, median: 3.0, mrr: 0.421, hits@5: 59.65%
+INFO:root:	-- left   >> mean: 295.8994, median: 4.0, mrr: 0.412, hits@5: 58.8%
+INFO:root:	-- right  >> mean: 299.734, median: 3.0, mrr: 0.432, hits@5: 60.54%
+INFO:root:	-- global >> mean: 297.8167, median: 3.0, mrr: 0.422, hits@5: 59.67%
 INFO:root:### MICRO (test raw):
-INFO:root:	-- left   >> mean: 289.021, median: 4.0, mrr: 0.411, hits@10: 69.3%
-INFO:root:	-- right  >> mean: 293.794, median: 3.0, mrr: 0.43, hits@10: 69.1%
-INFO:root:	-- global >> mean: 291.4075, median: 3.0, mrr: 0.421, hits@10: 69.2%
+INFO:root:	-- left   >> mean: 295.8994, median: 4.0, mrr: 0.412, hits@10: 69.36%
+INFO:root:	-- right  >> mean: 299.734, median: 3.0, mrr: 0.432, hits@10: 69.1%
+INFO:root:	-- global >> mean: 297.8167, median: 3.0, mrr: 0.422, hits@10: 69.23%
 INFO:root:### MICRO (test filtered):
-INFO:root:	-- left   >> mean: 276.5386, median: 1.0, mrr: 0.628, hits@1: 53.24%
-INFO:root:	-- right  >> mean: 282.3174, median: 1.0, mrr: 0.633, hits@1: 53.68%
-INFO:root:	-- global >> mean: 279.428, median: 1.0, mrr: 0.63, hits@1: 53.46%
+INFO:root:	-- left   >> mean: 283.4334, median: 1.0, mrr: 0.628, hits@1: 53.24%
+INFO:root:	-- right  >> mean: 288.2684, median: 1.0, mrr: 0.634, hits@1: 53.82%
+INFO:root:	-- global >> mean: 285.8509, median: 1.0, mrr: 0.631, hits@1: 53.53%
 INFO:root:### MICRO (test filtered):
-INFO:root:	-- left   >> mean: 276.5386, median: 1.0, mrr: 0.628, hits@3: 69.18%
-INFO:root:	-- right  >> mean: 282.3174, median: 1.0, mrr: 0.633, hits@3: 70.12%
-INFO:root:	-- global >> mean: 279.428, median: 1.0, mrr: 0.63, hits@3: 69.65%
+INFO:root:	-- left   >> mean: 283.4334, median: 1.0, mrr: 0.628, hits@3: 69.36%
+INFO:root:	-- right  >> mean: 288.2684, median: 1.0, mrr: 0.634, hits@3: 70.0%
+INFO:root:	-- global >> mean: 285.8509, median: 1.0, mrr: 0.631, hits@3: 69.68%
 INFO:root:### MICRO (test filtered):
-INFO:root:	-- left   >> mean: 276.5386, median: 1.0, mrr: 0.628, hits@5: 74.14%
-INFO:root:	-- right  >> mean: 282.3174, median: 1.0, mrr: 0.633, hits@5: 74.64%
-INFO:root:	-- global >> mean: 279.428, median: 1.0, mrr: 0.63, hits@5: 74.39%
+INFO:root:	-- left   >> mean: 283.4334, median: 1.0, mrr: 0.628, hits@5: 74.18%
+INFO:root:	-- right  >> mean: 288.2684, median: 1.0, mrr: 0.634, hits@5: 74.74%
+INFO:root:	-- global >> mean: 285.8509, median: 1.0, mrr: 0.631, hits@5: 74.46%
 INFO:root:### MICRO (test filtered):
-INFO:root:	-- left   >> mean: 276.5386, median: 1.0, mrr: 0.628, hits@10: 79.06%
-INFO:root:	-- right  >> mean: 282.3174, median: 1.0, mrr: 0.633, hits@10: 78.52%
-INFO:root:	-- global >> mean: 279.428, median: 1.0, mrr: 0.63, hits@10: 78.79%
+INFO:root:	-- left   >> mean: 283.4334, median: 1.0, mrr: 0.628, hits@10: 79.22%
+INFO:root:	-- right  >> mean: 288.2684, median: 1.0, mrr: 0.634, hits@10: 78.46%
+INFO:root:	-- global >> mean: 285.8509, median: 1.0, mrr: 0.631, hits@10: 78.84%
