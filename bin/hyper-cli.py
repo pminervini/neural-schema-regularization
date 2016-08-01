@@ -416,7 +416,7 @@ def main(argv):
 
     if args.save is not None:
         prefix = args.save
-        serialize(prefix, model, parser)
+        serialize(prefix, model=model, parser=parser, argv=argv)
 
     validation_sequences = parser.facts_to_sequences(validation_facts)
     test_sequences = parser.facts_to_sequences(test_facts)

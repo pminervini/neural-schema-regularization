@@ -21,12 +21,11 @@ def main(argv):
     argparser.add_argument('rules', action='store', type=str, default=None,
                            help='JSON document containing the rules extracted from the Knowledge Graph')
 
-    argparser.add_argument('--rules-top-k', action='store', type=int, default=None,
+    argparser.add_argument('--rules-top-k', '-k', action='store', type=int, default=None,
                            help='Only show the top-k rules, according to the associated score')
-    argparser.add_argument('--rules-threshold', action='store', type=float, default=None,
+    argparser.add_argument('--rules-threshold', '-t', action='store', type=float, default=None,
                            help='Only show the rules with a score above the given threshold')
-
-    argparser.add_argument('--rules-max-length', action='store', type=int, default=None,
+    argparser.add_argument('--rules-max-length', '-m', action='store', type=int, default=None,
                            help='Maximum (body) length for the considered rules')
 
     args = argparser.parse_args(argv)
