@@ -342,7 +342,7 @@ def manifold_sphere_merge_function(args, similarity):
     # does not have the correct shape.
     M = - K.reshape(similarity(translation, obj), (-1, 1))
     D = pred[:, n:]
-    return norms.square_l2(M - (D ** 2))
+    return K.reshape(norms.square_l2(M - (D ** 2)), (-1, 1))
 
 
 def manifold_hyperplane_merge_function(args, similarity):
@@ -364,10 +364,11 @@ def manifold_hyperplane_merge_function(args, similarity):
     translation_subj = subj + translation[:, :n]
     translation_obj = obj + translation[:, n:]
 
+    # Check if the following is correct - it behaves like the returned value
+    # does not have the correct shape.
     M = - K.reshape(similarity(translation_subj, translation_obj), (-1, 1))
     D = pred[:, (n * 2):]
-
-    return norms.square_l2(M - (D ** 2))
+    return K.reshape(norms.square_l2(M - (D ** 2)), (-1, 1))
 
 
 # aliases
