@@ -52,6 +52,35 @@ def dual_translating_merge_function(args, similarity):
     return sim
 
 
+def complex_merge_function(args, similarity):
+    """
+    Keras Merge function for the Complex Embeddings model [1]
+
+    [1] Trouillon, T. et al. - Complex Embeddings for Simple Link Prediction - ICML 2016
+    :param args: List of two arguments: the former containing the relation embedding,
+        and the latter containing the two entity embeddings.
+    :param similarity: Similarity function (assumed to be the dot product in [1]).
+    :return: The score associated by the model to the triples.
+    """
+    subj, pred, obj = to_triples(args)
+
+    N = subj.shape[1]
+    n = K.cast(N / 2, dtype='int32')
+
+    es_re = subj[:, :n]
+    es_im = subj[:, n:]
+
+    ep_re = pred[:, :n]
+    ep_im = pred[:, n:]
+
+    eo_re = obj[:, :n]
+    eo_im = obj[:, n:]
+
+    s = similarity
+    score = s(es_re * ep_re, eo_re) + s(es_im * ep_re, eo_im) + s(es_re * ep_im, eo_im) - s(es_im * ep_im, eo_re)
+    return K.reshape(score, (-1, 1))
+
+
 def scaling_merge_function(args, similarity):
     """
     Keras Merge function for the multiplicative interactions model described in:
@@ -308,9 +337,11 @@ def manifold_sphere_merge_function(args, similarity):
     n = subj.shape[1]
 
     translation = subj + pred[:, :n]
+
+    # Check if the following is correct - it behaves like the returned value
+    # does not have the correct shape.
     M = - K.reshape(similarity(translation, obj), (-1, 1))
     D = pred[:, n:]
-
     return norms.square_l2(M - (D ** 2))
 
 
@@ -342,6 +373,8 @@ def manifold_hyperplane_merge_function(args, similarity):
 # aliases
 TransE = TranslatingEmbeddings = translating_merge_function
 DualTransE = DualTranslatingEmbeddings = dual_translating_merge_function
+
+ComplEx = ComplexEmbeddings = complex_merge_function
 
 ScalE = ScalEQ = DistMult = ScalingEmbeddings = scaling_merge_function
 DualScalE = DualScalingEmbeddings = dual_scaling_merge_function
