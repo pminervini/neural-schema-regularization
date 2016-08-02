@@ -21,28 +21,40 @@ def main(argv):
 
     argparser.add_argument('weights', action='store', type=str, default=None)
     argparser.add_argument('parser', action='store', type=str, default=None)
+    argparser.add_argument('--entities', '-e', action='store', nargs='+', default=[])
     argparser.add_argument('--predicates', '-p', action='store', nargs='+', default=[])
 
     args = argparser.parse_args(argv)
 
     weights_path = args.weights
     parser_path = args.parser
+
+    entities = args.entities
     predicates = args.predicates
 
     with h5py.File(weights_path) as f:
-        W = f['/embedding_1/embedding_1_W'][()]
         E = f['/embedding_2/embedding_2_W'][()]
+        W = f['/embedding_1/embedding_1_W'][()]
 
     with open(parser_path, 'rb') as f:
         parser = pickle.load(f)
 
-    predicate_index = parser.predicate_index
     entity_index = parser.entity_index
+    predicate_index = parser.predicate_index
 
-    idx_lst = [predicate_index[p] for p in predicates]
+    entity_idx_lst = [entity_index[e] for e in entities]
+    predicate_idx_lst = [predicate_index[p] for p in predicates]
+
+    print('# Entities')
+
+    for i in range(E.shape[1]):
+        print('[%3i]\t%s' % (i, '\t'.join(["%.3f" % E[e_idx][i] for e_idx in entity_idx_lst])))
+
+    print('# Predicates')
 
     for i in range(W.shape[1]):
-        print('[%3i]\t%s' % (i, '\t'.join(["%.3f" % W[p_idx][i] for p_idx in idx_lst])))
+        print('[%3i]\t%s' % (i, '\t'.join(["%.3f" % W[p_idx][i] for p_idx in predicate_idx_lst])))
+
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
