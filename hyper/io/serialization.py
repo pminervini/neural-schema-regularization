@@ -21,13 +21,13 @@ def serialize(prefix, model=None, parser=None, argv=None):
         readme_path = "%s_README.md" % prefix
 
         content = """
-        # Model Details
+# Model Details
 
-        This model was created by using the following command line:
+This model was created by using the following command line:
 
-        ```
-        ./bin/hyper-cli.py %s
-        ```
+```
+./bin/hyper-cli.py %s
+```
         """ % ' '.join(argv)
 
         with open(readme_path, 'w') as f:
