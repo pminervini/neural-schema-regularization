@@ -221,3 +221,40 @@ class DistMultRuleRegularizer(RuleRegularizer):
         config = {"name": self.__class__.__name__}
         config.update(sc)
         return config
+
+
+class ComplExRuleRegularizer(RuleRegularizer):
+    def __init__(self, head, tail, *args, **kwargs):
+        super(ComplExRuleRegularizer, self).__init__(*args, **kwargs)
+        self.head, self.tail = head, tail
+
+    def __call__(self, loss):
+        if not hasattr(self, 'p'):
+            raise Exception('Need to call `set_param` on RuleRegularizer instance before calling the instance.')
+
+        head_embedding = self.p[self.head, :]
+        tail_embedding = None
+
+        n = self.entity_embedding_size / 2
+
+        for hop, is_reversed in self.tail:
+            # hop_embedding = (1. / self.p[hop, :]) if is_reversed is True else self.p[hop, :]
+
+            if is_reversed is False:
+                hop_embedding = self.p[hop, :]
+            else:
+                hop_embedding_re = self.p[hop, :n]
+                hop_embedding_im = - self.p[hop, n:]
+                hop_embedding = K.concatenate([hop_embedding_re, hop_embedding_im], axis=0)
+            tail_embedding = hop_embedding if tail_embedding is None else (tail_embedding * hop_embedding)
+
+        sim = K.reshape(self.similarity(head_embedding, tail_embedding, axis=-1), (1,))[0]
+
+        regularized_loss = loss - sim * self.l
+        return K.in_train_phase(regularized_loss, loss)
+
+    def get_config(self):
+        sc = super(ComplExRuleRegularizer, self).get_config()
+        config = {"name": self.__class__.__name__}
+        config.update(sc)
+        return config
