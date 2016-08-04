@@ -235,7 +235,7 @@ class ComplExRuleRegularizer(RuleRegularizer):
         head_embedding = self.p[self.head, :]
         tail_embedding = None
 
-        n = self.entity_embedding_size / 2
+        n = self.entity_embedding_size
 
         for hop, is_reversed in self.tail:
             # hop_embedding = (1. / self.p[hop, :]) if is_reversed is True else self.p[hop, :]
