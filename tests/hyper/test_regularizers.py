@@ -40,6 +40,50 @@ class TestRegularizers(unittest.TestCase):
 
         self.assertTrue(d < 0.005)
 
+    def test_complex(self):
+        r = regularizers.ComplExRuleRegularizer([0], [(1, False)], l=1000.)
+        r.entity_embedding_size = 5
+
+        model = Sequential()
+        embedding_layer = Embedding(input_dim=2, output_dim=10, input_length=None,
+                                    W_regularizer=r, W_constraint=constraints.NormConstraint(1.))
+        model.add(embedding_layer)
+
+        model.compile(loss=zero_loss, optimizer='adagrad')
+
+        X, y = np.zeros((32, 2)), np.zeros((32, 1, 10))
+        model.fit(X, y, batch_size=32, nb_epoch=100000, verbose=0)
+
+        W = embedding_layer.trainable_weights[0].get_value()
+
+        d = np.sum(abs(W[0, :5] - W[1, :5]))
+        self.assertTrue(d < 0.005)
+
+        d = np.sum(abs(W[0, 5:] - W[1, 5:]))
+        self.assertTrue(d < 0.005)
+
+    def test_complex_inverse(self):
+        r = regularizers.ComplExRuleRegularizer([0], [(1, True)], l=1000.)
+        r.entity_embedding_size = 5
+
+        model = Sequential()
+        embedding_layer = Embedding(input_dim=2, output_dim=10, input_length=None,
+                                    W_regularizer=r, W_constraint=constraints.NormConstraint(1.))
+        model.add(embedding_layer)
+
+        model.compile(loss=zero_loss, optimizer='adagrad')
+
+        X, y = np.zeros((32, 2)), np.zeros((32, 1, 10))
+        model.fit(X, y, batch_size=32, nb_epoch=100000, verbose=0)
+
+        W = embedding_layer.trainable_weights[0].get_value()
+
+        d = np.sum(abs(W[0, :5] - W[1, :5]))
+        self.assertTrue(d < 0.005)
+
+        d = np.sum(abs(W[0, 5:] + W[1, 5:]))
+        self.assertTrue(d < 0.005)
+
     def test_group(self):
         reg_1 = regularizers.TranslationRuleRegularizer([0], [(1, False), (2, False)], l=100.)
         reg_2 = regularizers.TranslationRuleRegularizer([2], [(3, False)], l=100.)
