@@ -130,8 +130,6 @@ def filtered_ranking_score_fast(scoring_function, triples, max_subj_idx, max_obj
     Xr_l_lst, Xe_l_lst = [], []
     Xr_r_lst, Xe_r_lst = [], []
 
-    triples = triples[:10]
-
     for subj_idx, pred_idx, obj_idx in triples:
         Xr = np.empty((max_subj_idx, 1))
         Xr[:, 0] = pred_idx

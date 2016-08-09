@@ -169,7 +169,6 @@ def main(argv):
     argparser.add_argument('--tensorflow', '--tf', action='store_true', help='Use TensorFlow')
     argparser.add_argument('--fast-eval', action='store_true', help='Fast Evaluation')
 
-
     argparser.add_argument('--save', action='store', type=str, default=None,
                            help='Where to save the trained model')
 
