@@ -33,6 +33,58 @@ def ranking_score(scoring_function, triples, max_subj_idx, max_obj_idx):
     return err_subj, err_obj
 
 
+def ranking_score_fast(scoring_function, triples, max_subj_idx, max_obj_idx):
+    subj_idx_lst, obj_idx_lst = [], []
+    Xr_l_lst, Xe_l_lst = [], []
+    Xr_r_lst, Xe_r_lst = [], []
+
+    for subj_idx, pred_idx, obj_idx in triples:
+        subj_idx_lst += [subj_idx]
+        obj_idx_lst += [obj_idx]
+
+        Xr = np.empty((max_subj_idx, 1))
+        Xr[:, 0] = pred_idx
+
+        Xe = np.empty((max_subj_idx, 2))
+        Xe[:, 0] = np.arange(1, max_subj_idx + 1)
+        Xe[:, 1] = obj_idx
+
+        Xr_l_lst += [Xr]
+        Xe_l_lst += [Xe]
+
+        Xr = np.empty((max_obj_idx, 1))
+        Xr[:, 0] = pred_idx
+
+        Xe = np.empty((max_obj_idx, 2))
+        Xe[:, 0] = subj_idx
+        Xe[:, 1] = np.arange(1, max_obj_idx + 1)
+
+        Xr_r_lst += [Xr]
+        Xe_r_lst += [Xe]
+
+    all_Xr_l = np.concatenate(Xr_l_lst, axis=0)
+    all_Xe_l = np.concatenate(Xe_l_lst, axis=0)
+
+    all_Xr_r = np.concatenate(Xr_r_lst, axis=0)
+    all_Xe_r = np.concatenate(Xe_r_lst, axis=0)
+
+    all_scores_left = scoring_function([all_Xr_l, all_Xe_l])
+    all_scores_right = scoring_function([all_Xr_r, all_Xe_r])
+
+    err_subj, err_obj = [], []
+    start_idx, end_idx = 0, 0
+
+    for (subj_idx, pred_idx, obj_idx), Xr_l in zip(triples, Xr_l_lst):
+        end_idx += Xr_l.shape[0]
+
+        err_obj += [np.argsort(np.argsort(- all_scores_right[start_idx:end_idx]))[obj_idx - 1] + 1]
+        err_subj += [np.argsort(np.argsort(- all_scores_left[start_idx:end_idx]))[subj_idx - 1] + 1]
+
+        start_idx += Xr_l.shape[0]
+
+    return err_subj, err_obj
+
+
 def filtered_ranking_score(scoring_function, triples, max_subj_idx, max_obj_idx, true_triples):
     err_subj, err_obj = [], []
 
@@ -70,6 +122,72 @@ def filtered_ranking_score(scoring_function, triples, max_subj_idx, max_obj_idx,
         scores_right[rmv_idx_obj] = - np.inf
 
         err_obj += [np.argsort(np.argsort(scores_right.flatten())[::-1])[obj_idx - 1] + 1]
+
+    return err_subj, err_obj
+
+
+def filtered_ranking_score_fast(scoring_function, triples, max_subj_idx, max_obj_idx, true_triples):
+    Xr_l_lst, Xe_l_lst = [], []
+    Xr_r_lst, Xe_r_lst = [], []
+
+    triples = triples[:10]
+
+    for subj_idx, pred_idx, obj_idx in triples:
+        Xr = np.empty((max_subj_idx, 1))
+        Xr[:, 0] = pred_idx
+
+        Xe = np.empty((max_subj_idx, 2))
+        Xe[:, 0] = np.arange(1, max_subj_idx + 1)
+        Xe[:, 1] = obj_idx
+
+        Xr_l_lst += [Xr]
+        Xe_l_lst += [Xe]
+
+        Xr = np.empty((max_obj_idx, 1))
+        Xr[:, 0] = pred_idx
+
+        Xe = np.empty((max_obj_idx, 2))
+        Xe[:, 0] = subj_idx
+        Xe[:, 1] = np.arange(1, max_obj_idx + 1)
+
+        Xr_r_lst += [Xr]
+        Xe_r_lst += [Xe]
+
+    all_Xr_l = np.concatenate(Xr_l_lst, axis=0)
+    all_Xe_l = np.concatenate(Xe_l_lst, axis=0)
+
+    all_Xr_r = np.concatenate(Xr_r_lst, axis=0)
+    all_Xe_r = np.concatenate(Xe_r_lst, axis=0)
+
+    all_scores_left = scoring_function([all_Xr_l, all_Xe_l])
+    all_scores_right = scoring_function([all_Xr_r, all_Xe_r])
+
+    err_subj, err_obj = [], []
+    start_idx, end_idx = 0, 0
+
+    for (subj_idx, pred_idx, obj_idx), Xr_l in zip(triples, Xr_l_lst):
+        end_idx += Xr_l.shape[0]
+
+        scores_left = all_scores_left[start_idx:end_idx]
+        scores_right = all_scores_right[start_idx:end_idx]
+
+        _is = np.argwhere(true_triples[:, 0] == subj_idx).reshape(-1,)
+        _ip = np.argwhere(true_triples[:, 1] == pred_idx).reshape(-1,)
+        _io = np.argwhere(true_triples[:, 2] == obj_idx).reshape(-1,)
+
+        inter_subj = [i for i in _io if i in _ip]
+        rmv_idx_subj = [true_triples[i, 0] - 1 for i in inter_subj if true_triples[i, 0] != subj_idx]
+        scores_left[rmv_idx_subj] = - np.inf
+
+        err_subj += [np.argsort(np.argsort(scores_left.flatten())[::-1])[subj_idx - 1] + 1]
+
+        inter_obj = [i for i in _is if i in _ip]
+        rmv_idx_obj = [true_triples[i, 2] - 1 for i in inter_obj if true_triples[i, 2] != obj_idx]
+        scores_right[rmv_idx_obj] = - np.inf
+
+        err_obj += [np.argsort(np.argsort(scores_right.flatten())[::-1])[obj_idx - 1] + 1]
+
+        start_idx += Xr_l.shape[0]
 
     return err_subj, err_obj
 

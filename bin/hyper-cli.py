@@ -27,7 +27,7 @@ __author__ = 'pminervini'
 __copyright__ = 'INSIGHT Centre for Data Analytics 2016'
 
 
-def evaluate_model(model, evaluation_sequences, nb_entities, true_triples=None, tag=None):
+def evaluate_model(model, evaluation_sequences, nb_entities, true_triples=None, tag=None, fast_eval=False):
 
     def scoring_function(args):
         Xr, Xe = args[0], args[1]
@@ -36,11 +36,19 @@ def evaluate_model(model, evaluation_sequences, nb_entities, true_triples=None, 
 
     evaluation_triples = [(s, p, o) for (p, [s, o]) in evaluation_sequences]
 
+    res = None
     if true_triples is None:
-        res = metrics.ranking_score(scoring_function, evaluation_triples, nb_entities, nb_entities)
+        if fast_eval is True:
+            res = metrics.ranking_score_fast(scoring_function, evaluation_triples, nb_entities, nb_entities)
+        else:
+            res = metrics.ranking_score(scoring_function, evaluation_triples, nb_entities, nb_entities)
     else:
-        res = metrics.filtered_ranking_score(scoring_function, evaluation_triples,
-                                             nb_entities, nb_entities, true_triples)
+        if fast_eval is True:
+            res = metrics.filtered_ranking_score_fast(scoring_function, evaluation_triples,
+                                                      nb_entities, nb_entities, true_triples)
+        else:
+            res = metrics.filtered_ranking_score(scoring_function, evaluation_triples,
+                                                 nb_entities, nb_entities, true_triples)
     for n in [1, 3, 5, 10]:
         metrics.ranking_summary(res, tag=tag, n=n)
 
@@ -159,6 +167,8 @@ def main(argv):
                            help='Beta2 parameter for the adam and adamax optimizers')
 
     argparser.add_argument('--tensorflow', '--tf', action='store_true', help='Use TensorFlow')
+    argparser.add_argument('--fast-eval', action='store_true', help='Fast Evaluation')
+
 
     argparser.add_argument('--save', action='store', type=str, default=None,
                            help='Where to save the trained model')
@@ -429,17 +439,17 @@ def main(argv):
 
     if len(validation_sequences) > 0:
         if is_raw is True:
-            evaluate_model(model, validation_sequences, nb_entities, tag='validation raw')
+            evaluate_model(model, validation_sequences, nb_entities, tag='validation raw', fast_eval=args.fast_eval)
         if is_filtered is True:
             evaluate_model(model, validation_sequences, nb_entities,
-                           true_triples=true_triples, tag='validation filtered')
+                           true_triples=true_triples, tag='validation filtered', fast_eval=args.fast_eval)
 
     if len(test_sequences) > 0:
         if is_raw is True:
-            evaluate_model(model, test_sequences, nb_entities, tag='test raw')
+            evaluate_model(model, test_sequences, nb_entities, tag='test raw', fast_eval=args.fast_eval)
         if is_filtered is True:
             evaluate_model(model, test_sequences, nb_entities,
-                           true_triples=true_triples, tag='test filtered')
+                           true_triples=true_triples, tag='test filtered', fast_eval=args.fast_eval)
 
     return model
 
