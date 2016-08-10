@@ -43,7 +43,7 @@ def to_logfile(c, dir):
 
 
 hyperparameters_space = dict(
-    epochs=[100],
+    epochs=[50, 100],
     optimizer=['adagrad'],
     lr=[.1],
     batches=[10],
