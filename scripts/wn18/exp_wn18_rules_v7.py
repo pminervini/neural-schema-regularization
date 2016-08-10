@@ -50,11 +50,11 @@ hyperparameters_space = dict(
     model=['DistMult'],
     similarity=['dot'],
     margin=[1, 2, 5, 10],
-    embedding_size=[20, 50, 100, 200, 300],
+    embedding_size=[10, 20, 50, 100, 150, 200, 300],
 
     rules_top=[10],
     sample_facts=[1],
-    rules_lambda=[.0, 10, 100, 1000, 10000]
+    rules_lambda=[.0, 1, 10, 100, 1000, 10000]
 )
 
 configurations = cartesian_product(hyperparameters_space)
