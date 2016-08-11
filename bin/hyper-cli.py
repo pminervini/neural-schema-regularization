@@ -8,7 +8,7 @@ from hyper.parsing import knowledgebase
 from hyper import optimizers
 
 from hyper.regularizers import L1, L2, GroupRegularizer, TranslationRuleRegularizer,\
-    ScalingRuleRegularizer, DistMultRuleRegularizer, ComplExRuleRegularizer
+    DistMultRuleRegularizer, ComplExRuleRegularizer
 
 from keras.constraints import nonneg
 
@@ -36,7 +36,6 @@ def evaluate_model(model, evaluation_sequences, nb_entities, true_triples=None, 
 
     evaluation_triples = [(s, p, o) for (p, [s, o]) in evaluation_sequences]
 
-    res = None
     if true_triples is None:
         if fast_eval is True:
             res = metrics.ranking_score_fast(scoring_function, evaluation_triples, nb_entities, nb_entities)
@@ -280,7 +279,6 @@ def main(argv):
 
         model_to_regularizer = dict(
             TransE=TranslationRuleRegularizer,
-            ScalE=ScalingRuleRegularizer,
             DistMult=DistMultRuleRegularizer,
             ComplEx=ComplExRuleRegularizer)
 

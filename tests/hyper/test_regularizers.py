@@ -22,6 +22,7 @@ class TestRegularizers(unittest.TestCase):
         np.random.seed(0)
 
     def test_translation(self):
+        #pass
         r = regularizers.TranslationRuleRegularizer([0], [(1, False), (2, False)], l=1.)
 
         model = Sequential()
@@ -41,6 +42,7 @@ class TestRegularizers(unittest.TestCase):
         self.assertTrue(d < 0.005)
 
     def test_complex(self):
+        #pass
         r = regularizers.ComplExRuleRegularizer([0], [(1, False)], l=1000.)
         r.entity_embedding_size = 5
 
@@ -63,11 +65,15 @@ class TestRegularizers(unittest.TestCase):
         self.assertTrue(d < 0.005)
 
     def test_complex_inverse(self):
+        #pass
         r = regularizers.ComplExRuleRegularizer([0], [(1, True)], l=1000.)
         r.entity_embedding_size = 5
 
         model = Sequential()
-        embedding_layer = Embedding(input_dim=2, output_dim=10, input_length=None,
+
+        # Note that parameters are in the complex space, so it takes
+        # twice r.entity_embedding_size real parameters for representing them.
+        embedding_layer = Embedding(input_dim=2, output_dim=r.entity_embedding_size * 2, input_length=None,
                                     W_regularizer=r, W_constraint=constraints.NormConstraint(1.))
         model.add(embedding_layer)
 
@@ -78,13 +84,16 @@ class TestRegularizers(unittest.TestCase):
 
         W = embedding_layer.trainable_weights[0].get_value()
 
-        d = np.sum(abs(W[0, :5] - W[1, :5]))
+        print(W)
+
+        d = np.sum(abs(W[0, :r.entity_embedding_size] - W[1, :r.entity_embedding_size]))
         self.assertTrue(d < 0.005)
 
-        d = np.sum(abs(W[0, 5:] + W[1, 5:]))
+        d = np.sum(abs(W[0, r.entity_embedding_size:] + W[1, r.entity_embedding_size:]))
         self.assertTrue(d < 0.005)
 
     def test_group(self):
+        #pass
         reg_1 = regularizers.TranslationRuleRegularizer([0], [(1, False), (2, False)], l=100.)
         reg_2 = regularizers.TranslationRuleRegularizer([2], [(3, False)], l=100.)
 
@@ -108,6 +117,7 @@ class TestRegularizers(unittest.TestCase):
         self.assertTrue(d_2 < 0.005)
 
     def test_stress(self):
+        #pass
         n = 5
         rs = [regularizers.TranslationRuleRegularizer([i], [(i + 1, False)], l=100) for i in range(n)]
 

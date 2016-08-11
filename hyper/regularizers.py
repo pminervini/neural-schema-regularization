@@ -163,37 +163,6 @@ class TranslationRuleRegularizer(RuleRegularizer):
         return config
 
 
-DualTranslationRuleRegularizer = TranslationRuleRegularizer
-
-
-class ScalingRuleRegularizer(RuleRegularizer):
-    def __init__(self, head, tail, *args, **kwargs):
-        super(ScalingRuleRegularizer, self).__init__(*args, **kwargs)
-        self.head, self.tail = head, tail
-
-    def __call__(self, loss):
-        if not hasattr(self, 'p'):
-            raise Exception('Need to call `set_param` on RuleRegularizer instance before calling the instance.')
-
-        head_embedding = self.p[self.head, :]
-        tail_embedding = None
-
-        for hop, is_reversed in self.tail:
-            hop_embedding = (1. / self.p[hop, :]) if is_reversed is True else self.p[hop, :]
-            tail_embedding = hop_embedding if tail_embedding is None else (tail_embedding * hop_embedding)
-
-        sim = K.reshape(self.similarity(head_embedding, tail_embedding, axis=-1), (1,))[0]
-
-        regularized_loss = loss - sim * self.l
-        return K.in_train_phase(regularized_loss, loss)
-
-    def get_config(self):
-        sc = super(ScalingRuleRegularizer, self).get_config()
-        config = {"name": self.__class__.__name__}
-        config.update(sc)
-        return config
-
-
 class DistMultRuleRegularizer(RuleRegularizer):
     def __init__(self, head, tail, *args, **kwargs):
         super(DistMultRuleRegularizer, self).__init__(*args, **kwargs)
@@ -207,7 +176,6 @@ class DistMultRuleRegularizer(RuleRegularizer):
         tail_embedding = None
 
         for hop, is_reversed in self.tail:
-            # hop_embedding = (1. / self.p[hop, :]) if is_reversed is True else self.p[hop, :]
             hop_embedding = self.p[hop, :]
             tail_embedding = hop_embedding if tail_embedding is None else (tail_embedding * hop_embedding)
 
