@@ -54,7 +54,7 @@ hyperparameters_space = dict(
 
     rules_top=[10],
     sample_facts=[1],
-    rules_lambda=[.0, .01, .1, 1, 10, 100, 1000, 10000]
+    rules_lambda=[.0, .00001, .0001, .001, .01, .1, 1, 10, 100, 1000, 10000, 100000]
 )
 
 configurations = cartesian_product(hyperparameters_space)
