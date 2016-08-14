@@ -17,7 +17,7 @@ def summary(configuration):
 
 def to_command(c):
     command = "PYTHONPATH=. ./bin/hyper-cli.py" \
-              " --rules-max-length 1" \
+              " --rules-max-length 1 --filtered" \
               " --train data/fb15k/freebase_mtr100_mte100-train.txt" \
               " --valid data/fb15k/freebase_mtr100_mte100-valid.txt" \
               " --test data/fb15k/freebase_mtr100_mte100-test.txt" \
