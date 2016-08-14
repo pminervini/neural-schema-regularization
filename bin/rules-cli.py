@@ -38,13 +38,17 @@ def main(argv):
 
     if rules is not None:
         path_ranking_client = PathRankingClient(url_or_path=rules)
-        pfw_triples = path_ranking_client.request(None, threshold=.0, top_k=rules_top_k)
+        pfw_triples = path_ranking_client.request(None, threshold=.0)
 
         rule_weight_lst = []
         for rule_predicate, rule_feature, rule_weight in pfw_triples:
             if rules_threshold is None or rule_weight >= rules_threshold:
                 if rules_max_length is None or len(rule_feature.hops) <= rules_max_length:
                     rule_weight_lst += [(rule_predicate, rule_feature, rule_weight)]
+
+        if rules_top_k is not None:
+            sorted_pfw_triples = list(reversed(sorted(rule_weight_lst, key=lambda x: x[2])))
+            rule_weight_lst = sorted_pfw_triples[:rules_top_k]
 
         for i, (rule_predicate, rule_feature, rule_weight) in enumerate(rule_weight_lst):
             print('[%d] %s :- %s, %s' % (i, rule_predicate, str(rule_feature), rule_weight))

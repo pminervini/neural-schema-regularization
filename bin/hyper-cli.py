@@ -275,27 +275,34 @@ def main(argv):
 
     if rules is not None and rules_lambda is not None and rules_lambda > .0:
         path_ranking_client = PathRankingClient(url_or_path=rules)
-        pfw_triples = path_ranking_client.request(None, threshold=.0, top_k=rules_top_k)
+        pfw_triples = path_ranking_client.request(None, threshold=.0) # , top_k=rules_top_k)
 
         model_to_regularizer = dict(
             TransE=TranslationRuleRegularizer,
             DistMult=DistMultRuleRegularizer,
             ComplEx=ComplExRuleRegularizer)
 
+        rule_weight_lst = []
         for rule_predicate, rule_feature, rule_weight in pfw_triples:
             if rules_threshold is None or rule_weight >= rules_threshold:
                 if rules_max_length is None or len(rule_feature.hops) <= rules_max_length:
-                    head = parser.predicate_index[rule_predicate]
-                    tail = [(parser.predicate_index[hop.predicate], hop.is_inverse) for hop in rule_feature.hops]
+                    rule_weight_lst += [(rule_predicate, rule_feature, rule_weight)]
 
-                    logging.info('[Rules] Adding Head: %s, Tail: %s' % (str(head), str(tail)))
+        if rules_top_k is not None:
+            sorted_pfw_triples = list(reversed(sorted(rule_weight_lst, key=lambda x: x[2])))
+            rule_weight_lst = sorted_pfw_triples[:rules_top_k]
 
-                    if model_name not in model_to_regularizer:
-                        raise ValueError('Rule-based regularizers unsupported for the model: %s' % model_name)
+        for rule_predicate, rule_feature, rule_weight in rule_weight_lst:
+            head = parser.predicate_index[rule_predicate]
+            tail = [(parser.predicate_index[hop.predicate], hop.is_inverse) for hop in rule_feature.hops]
 
-                    regularizer_class = model_to_regularizer[model_name]
-                    _regularizer = regularizer_class(head, tail, l=rules_lambda, entity_embedding_size=entity_embedding_size)
-                    regularizers += [_regularizer]
+            logging.info('[Rules] Adding Head: %s, Tail: %s' % (str(head), str(tail)))
+
+            if model_name not in model_to_regularizer:
+                raise ValueError('Rule-based regularizers unsupported for the model: %s' % model_name)
+
+            regularizer_class = model_to_regularizer[model_name]
+            regularizers += [regularizer_class(head, tail, l=rules_lambda, entity_embedding_size=entity_embedding_size)]
 
     regularizer = None
     if len(regularizers) == 1:

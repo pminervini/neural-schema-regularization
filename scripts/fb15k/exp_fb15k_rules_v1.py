@@ -30,11 +30,11 @@ def to_command(c):
               " --margin %s" \
               " --entity-embedding-size %s" \
               " --rules ./data/fb15k/rules/fb15k-rules.json.gz" \
-              " --rules-threshold %s" \
+              " --rules-top-k %s" \
               " --sample-facts %s" \
               " --rules-lambda %s" \
               % (c['epochs'], c['optimizer'], c['lr'], c['batches'], c['model'], c['similarity'], c['margin'],
-                 c['embedding_size'], c['rules_threshold'], c['sample_facts'], c['rules_lambda'])
+                 c['embedding_size'], c['rules_top_k'], c['sample_facts'], c['rules_lambda'])
     return command
 
 
@@ -51,9 +51,9 @@ hyperparameters_space = dict(
     model=['TransE'],
     similarity=['l1', 'l2'],
     margin=[1, 2, 5, 10],
-    embedding_size=[10, 20, 50, 100, 150, 200, 300],
+    embedding_size=[10, 20, 50, 100, 150, 200],
 
-    rules_threshold=[.8, .9, 1],
+    rules_top_k=[4, 5, 10],
     sample_facts=[1],
     rules_lambda=[.0, .00001, .0001, .001, .01, .1, 1, 10, 100, 1000, 10000, 100000]
 )
