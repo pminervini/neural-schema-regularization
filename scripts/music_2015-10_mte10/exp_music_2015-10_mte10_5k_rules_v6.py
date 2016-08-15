@@ -50,7 +50,7 @@ hyperparameters_space = dict(
     batches=[10],
     model=['ComplEx'],
     similarity=['dot'],
-    margin=[1, 2, 5, 10],
+    margin=[1],
     embedding_size=[10, 20, 50, 100, 150, 200, 300],
 
     rules_threshold=[.9],
