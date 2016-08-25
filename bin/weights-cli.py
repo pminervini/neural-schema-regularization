@@ -5,8 +5,10 @@ import numpy as np
 
 import pandas as pd
 
+import matplotlib
+matplotlib.use("Agg")
+
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 
 import seaborn as sns
 
@@ -21,39 +23,59 @@ __author__ = 'pminervini'
 __copyright__ = 'INSIGHT Centre for Data Analytics 2016'
 
 
-def save_heatmap(model, M, column_names, path):
-    sns.set(font="monospace")
+def save_heatmap(model, M, column_names, path, vmin=None, vmax=None, annot_size=6, kb_name=None):
+    #sns.set(font='monospace')
+
+    rc = {}
+    if kb_name in ['M', 'Y']:
+        rc = {'axes.labelsize': 16, 'axes.titlesize': 16,
+              'xtick.labelsize': 16, 'ytick.labelsize': 16}
+
+    #sns.plotting_context(context='paper')
+
+    sns.set(rc=rc)
+    sns.set_context(rc=rc)
+    #plt.rc('savefig', dpi=100)
+
+    name_to_abbr = {
+        '<http://dbpedia.org/ontology/musicalArtist>': 'musical arist',
+        '<http://dbpedia.org/ontology/musicalBand>': 'musical band',
+        '<http://dbpedia.org/ontology/associatedMusicalArtist>': 'associated musical arist',
+        '<http://dbpedia.org/ontology/associatedBand>': 'associated band'
+    }
+
+    def name_transformer(name):
+        res = name_to_abbr[name] if name in name_to_abbr else name
+        if res.startswith('_'):
+            res = res[1:].replace('_', ' ')
+        return res
 
     df = pd.DataFrame(M)
-    df.index = column_names
+    df.index = [name_transformer(e) for e in column_names]
 
     f, ax = plt.subplots()
+    #f.set_tight_layout(True)
 
-    # Create a custom colormap for the heatmap values
-    cmap = sns.diverging_palette(h_neg=210, h_pos=350, s=90, l=30, as_cmap=True)
+    sns.heatmap(df, linewidths=.0, annot=True, fmt='.1f', annot_kws={'size': annot_size},
+                xticklabels=['' for _ in range(M.shape[0])], square=True, robust=True,
+                cbar=False, vmin=vmin, vmax=vmax, ax=ax)
 
-    ax = sns.heatmap(df, linewidths=0.0, cmap=cmap, xticklabels=False, square=True)
-
-    xlabel = 'Embeddings'
+    xlabel = ''
 
     if model in ['ComplEx']:
         idx = int(M.shape[1] / 2)
         ax.axvline(idx, c='w')
-
-        xlabel += ' (Real and Imaginary Part)'
-    ax.set(xlabel=xlabel, ylabel='')
+        xlabel += '       Real Part                 Imaginary Part  '
+    ax.set(xlabel=xlabel, ylabel='Predicates')
 
     for i in range(M.shape[0]):
-        if i > 0 and i % 2 == 0:
+        if (i > 0 and i % 2 == 0 and kb_name in ['WN', 'M']) or (i in [1] and kb_name == 'WN') or (i in [1, 2, 3] and kb_name == 'Y'):
             ax.axhline(i, c='w')
 
-    #ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%d'))
-    #ax.yaxis.set_major_locator(ticker.MultipleLocator(base=idx))
+    ax.xaxis.set_label_position('top')
 
-    plt.yticks(rotation=0)
-
-    plt.figure(figsize=(45, 10))
-    f.savefig(path)
+    f.tight_layout()
+    plt.savefig(path, bbox_inches='tight')
 
 
 def main(argv):
@@ -71,6 +93,12 @@ def main(argv):
     argparser.add_argument('--model', action='store', type=str, default=None)
     argparser.add_argument('--heatmap', action='store', type=str, default=None)
 
+    argparser.add_argument('--vmin', action='store', type=float, default=None)
+    argparser.add_argument('--vmax', action='store', type=float, default=None)
+
+    argparser.add_argument('--annot-size', action='store', type=int, default=None)
+    argparser.add_argument('--kb-name', action='store', type=str, default=None)
+
     args = argparser.parse_args(argv)
 
     weights_path = args.weights
@@ -81,6 +109,11 @@ def main(argv):
 
     model = args.model
     heatmap_path = args.heatmap
+
+    vmin = args.vmin
+    vmax = args.vmax
+    annot_size = args.annot_size
+    kb_name = args.kb_name
 
     with h5py.File(weights_path) as f:
         E = f['/embedding_2/embedding_2_W'][()]
@@ -103,7 +136,8 @@ def main(argv):
 
         if heatmap_path is not None:
             M = E[np.array(entity_idx_lst), :]
-            save_heatmap(model=model, M=M, column_names=entities, path=heatmap_path)
+            save_heatmap(model=model, M=M, column_names=entities, path=heatmap_path,
+                         vmin=vmin, vmax=vmax, annot_size=annot_size, kb_name=kb_name)
 
     if len(predicate_idx_lst) > 0:
         print('# Predicates')
@@ -113,8 +147,8 @@ def main(argv):
 
         if heatmap_path is not None:
             M = W[np.array(predicate_idx_lst), :]
-            save_heatmap(model=model, M=M, column_names=predicates, path=heatmap_path)
-
+            save_heatmap(model=model, M=M, column_names=predicates, path=heatmap_path,
+                         vmin=vmin, vmax=vmax, annot_size=annot_size, kb_name=kb_name)
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)

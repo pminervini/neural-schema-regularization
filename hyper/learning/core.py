@@ -19,6 +19,7 @@ from hyper import ranking_objectives, constraints
 
 import hyper.learning.util as learning_util
 
+import time
 import logging
 
 
@@ -200,6 +201,8 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
 
     model.compile(loss=loss, optimizer=optimizer)
 
+    t0 = time.time()
+
     for epoch_no in range(1, nb_epochs + 1):
         logging.info('Epoch no. %d of %d (samples: %d)' % (epoch_no, nb_epochs, nb_samples))
 
@@ -247,5 +250,9 @@ def pairwise_training(train_sequences, nb_entities, nb_predicates, seed=1,
 
         if np.isnan(np.mean(losses)):
             raise ValueError('NaN propagation.')
+
+    t1 = time.time()
+
+    logging.info('Training duration (ms): %s' % str(t1 - t0))
 
     return model
