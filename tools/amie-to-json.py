@@ -7,7 +7,6 @@ import argparse
 
 import json
 
-#import hyper.pathranking.domain as domain
 
 __author__ = 'pminervini'
 __copyright__ = 'INSIGHT Centre for Data Analytics 2016'

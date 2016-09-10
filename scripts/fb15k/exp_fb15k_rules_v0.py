@@ -53,7 +53,7 @@ hyperparameters_space = dict(
     margin=[1],
     embedding_size=[10, 20, 50, 100, 150, 200],
 
-    rules_top_k=[10],
+    rules_top_k=[10, 50, 100],
     sample_facts=[1],
     rules_lambda=[.0, .00001, .0001, .001, .01, .1, 1, 10, 100, 1000, 10000, 100000]
 )
