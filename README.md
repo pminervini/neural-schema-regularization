@@ -20,6 +20,76 @@ $ python3 -uB setup.py install --user
 
 ## Running
 
+Usage:
+
+```bash
+$ ./bin/hyper-cli.py -h
+Using Theano backend.
+usage: Latent Factor Models for Knowledge Hypergraphs [-h] --train TRAIN [--validation VALIDATION] [--test TEST] [--seed SEED] [--entity-embedding-size ENTITY_EMBEDDING_SIZE]
+                                                      [--predicate-embedding-size PREDICATE_EMBEDDING_SIZE] [--dropout-entity-embeddings DROPOUT_ENTITY_EMBEDDINGS]
+                                                      [--dropout-predicate-embeddings DROPOUT_PREDICATE_EMBEDDINGS] [--rules RULES] [--rules-top-k RULES_TOP_K] [--rules-threshold RULES_THRESHOLD]
+                                                      [--rules-max-length RULES_MAX_LENGTH] [--sample-facts SAMPLE_FACTS] [--rules-lambda RULES_LAMBDA] [--robust] [--robust-alpha ROBUST_ALPHA]
+                                                      [--robust-beta ROBUST_BETA] [--sort] [--frequency-embedding-lengths FREQUENCY_EMBEDDING_LENGTHS [FREQUENCY_EMBEDDING_LENGTHS ...]]
+                                                      [--frequency-cutoffs FREQUENCY_CUTOFFS [FREQUENCY_CUTOFFS ...]] [--frequency-mask-type {1,2,3}] [--entity-rank ENTITY_RANK]
+                                                      [--predicate-rank PREDICATE_RANK] [--model MODEL] [--similarity SIMILARITY] [--epochs EPOCHS] [--batch-size BATCH_SIZE] [--batches BATCHES]
+                                                      [--margin MARGIN] [--loss LOSS] [--negatives NEGATIVES] [--predicate-l1 PREDICATE_L1] [--predicate-l2 PREDICATE_L2] [--predicate-nonnegative]
+                                                      [--hidden-size HIDDEN_SIZE] [--raw] [--filtered] [--visualize] [--optimizer OPTIMIZER] [--lr LR] [--optimizer-momentum OPTIMIZER_MOMENTUM]
+                                                      [--optimizer-decay OPTIMIZER_DECAY] [--optimizer-nesterov] [--optimizer-epsilon OPTIMIZER_EPSILON] [--optimizer-rho OPTIMIZER_RHO]
+                                                      [--optimizer-beta1 OPTIMIZER_BETA1] [--optimizer-beta2 OPTIMIZER_BETA2] [--fast-eval] [--save SAVE]
+
+optional arguments:
+  -h, --help                                                                                   show this help message and exit
+  --train TRAIN
+  --validation VALIDATION
+  --test TEST
+  --seed SEED                                                                                  Seed for the PRNG
+  --entity-embedding-size ENTITY_EMBEDDING_SIZE                                                Size of entity embeddings
+  --predicate-embedding-size PREDICATE_EMBEDDING_SIZE                                          Size of predicate embeddings
+  --dropout-entity-embeddings DROPOUT_ENTITY_EMBEDDINGS                                        Dropout after the entity embeddings layer
+  --dropout-predicate-embeddings DROPOUT_PREDICATE_EMBEDDINGS                                  Dropout after the predicate embeddings layer
+  --rules RULES                                                                                JSON document containing the rules extracted from the KG
+  --rules-top-k RULES_TOP_K                                                                    Top-k rules to consider during the training process
+  --rules-threshold RULES_THRESHOLD                                                            Only show the rules with a score above the given threshold
+  --rules-max-length RULES_MAX_LENGTH                                                          Maximum (body) length for the considered rules
+  --sample-facts SAMPLE_FACTS                                                                  Fraction of (randomly sampled) facts to use during training
+  --rules-lambda RULES_LAMBDA                                                                  Weight of the Rules-related regularization term
+  --robust                                                                                     Robust Ranking
+  --robust-alpha ROBUST_ALPHA                                                                  Robust Ranking, Alpha parameter
+  --robust-beta ROBUST_BETA                                                                    Robust Ranking, Beta parameter
+  --sort                                                                                       Sort entities according to their frequency in the training set
+  --frequency-embedding-lengths FREQUENCY_EMBEDDING_LENGTHS [FREQUENCY_EMBEDDING_LENGTHS ...]  Frequency-based embedding lengths
+  --frequency-cutoffs FREQUENCY_CUTOFFS [FREQUENCY_CUTOFFS ...]                                Frequency cutoffs
+  --frequency-mask-type {1,2,3}                                                                Frequency-based embedding lengths - Mask type
+  --entity-rank ENTITY_RANK                                                                    Rank of the entity embeddings matrix
+  --predicate-rank PREDICATE_RANK                                                              Rank of the predicate embeddings matrix
+  --model MODEL                                                                                Name of the model to use
+  --similarity SIMILARITY                                                                      Name of the similarity function to use (if distance-based model)
+  --epochs EPOCHS                                                                              Number of training epochs
+  --batch-size BATCH_SIZE                                                                      Batch size
+  --batches BATCHES                                                                            Number of batches
+  --margin MARGIN                                                                              Margin to use in the hinge loss
+  --loss LOSS                                                                                  Loss function to be used (e.g. hinge, logistic)
+  --negatives NEGATIVES                                                                        Method for generating the negative examples (e.g. corrupt, lcwa, schema, bernoulli)
+  --predicate-l1 PREDICATE_L1                                                                  L1 Regularizer on the Predicate Embeddings
+  --predicate-l2 PREDICATE_L2                                                                  L2 Regularizer on the Predicate Embeddings
+  --predicate-nonnegative                                                                      Enforce a non-negativity constraint on the predicate embeddings
+  --hidden-size HIDDEN_SIZE                                                                    Dimension of the hidden layer (used by e.g. the ER-MLP model
+  --raw                                                                                        Evaluate the model in the raw setting
+  --filtered                                                                                   Evaluate the model in the filtered setting
+  --visualize                                                                                  Visualize the embeddings
+  --optimizer OPTIMIZER                                                                        Optimization algorithm to use - sgd, adagrad, adadelta, rmsprop, adam, adamax
+  --lr LR, --optimizer-lr LR                                                                   Learning rate
+  --optimizer-momentum OPTIMIZER_MOMENTUM                                                      Momentum parameter of the SGD optimizer
+  --optimizer-decay OPTIMIZER_DECAY                                                            Decay parameter of the SGD optimizer
+  --optimizer-nesterov                                                                         Applies Nesterov momentum to the SGD optimizer
+  --optimizer-epsilon OPTIMIZER_EPSILON                                                        Epsilon parameter of the adagrad, adadelta, rmsprop, adam and adamax optimizers
+  --optimizer-rho OPTIMIZER_RHO                                                                Rho parameter of the adadelta and rmsprop optimizers
+  --optimizer-beta1 OPTIMIZER_BETA1                                                            Beta1 parameter for the adam and adamax optimizers
+  --optimizer-beta2 OPTIMIZER_BETA2                                                            Beta2 parameter for the adam and adamax optimizers
+  --fast-eval                                                                                  Fast Evaluation
+  --save SAVE     
+```
+
 The following command trains a Translating Embeddings model (in its L1 formulation) on the FB15k dataset: the training process uses AdaGrad [2] with a 0.1 learning rate and a 100 embedding size, and then returns the Mean Rank and Hits@10 metrics on both the validation and the test set.
 
 ```bash

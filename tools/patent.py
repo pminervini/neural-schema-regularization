@@ -3,74 +3,81 @@
 
 import numpy as np
 
-import pandas as pd
-
-import matplotlib
-matplotlib.use("Agg")
-
-import matplotlib.pyplot as plt
-
-import seaborn as sns
-
 import h5py
 import pickle
 
 import sys
 import logging
-import argparse
 
-__author__ = 'pminervini'
-__copyright__ = 'INSIGHT Centre for Data Analytics 2016'
+
+def read_triples(path):
+    with open(path, 'rt') as f:
+        lines = f.readlines()
+    triples = [(s.strip(), p.strip(), o.strip()) for [s, p, o] in [l.split('\t') for l in lines]]
+    return triples
 
 
 def main(argv):
-    def formatter(prog):
-        return argparse.HelpFormatter(prog, max_help_position=100, width=200)
+    test_triples = read_triples('data/wn18/wordnet-mlj12-test.txt')
 
-    argparser = argparse.ArgumentParser('Model Weights Explorer', formatter_class=formatter)
+    definition_triples = read_triples('data/wn18/wordnet-mlj12-definitions.txt')
+    entity_to_name = {entity: name for (entity, name, definition) in definition_triples}
 
-    argparser.add_argument('weights', action='store', type=str, default=None)
-    argparser.add_argument('parser', action='store', type=str, default=None)
+    weights_path = 'model_farm/wn18_transe_200_l1/wn18_weights.h5'
+    parser_path = 'model_farm/wn18_transe_200_l1/wn18_parser.p'
 
-    argparser.add_argument('--entities', '-e', action='store', nargs='+', default=[])
-    argparser.add_argument('--predicates', '-p', action='store', nargs='+', default=[])
+    weights_s_path = 'model_farm/wn18_transe_200_l1_100000/wn18_weights.h5'
+    parser_s_path = 'model_farm/wn18_transe_200_l1_100000/wn18_parser.p'
 
-    argparser.add_argument('--model', action='store', type=str, default=None)
-
-    args = argparser.parse_args(argv)
-
-    weights_path = args.weights
-    parser_path = args.parser
-
-    entities = args.entities
-    predicates = args.predicates
-
-    model = args.model
+    predicates = ['_part_of', '_has_part']
 
     with h5py.File(weights_path) as f:
         E = f['/embedding_2/embedding_2_W'][()]
         W = f['/embedding_1/embedding_1_W'][()]
 
+    with h5py.File(weights_s_path) as f:
+        E_s = f['/embedding_2/embedding_2_W'][()]
+        W_s = f['/embedding_1/embedding_1_W'][()]
+
     with open(parser_path, 'rb') as f:
         parser = pickle.load(f)
+
+    with open(parser_s_path, 'rb') as f:
+        parser_s = pickle.load(f)
 
     entity_index = parser.entity_index
     predicate_index = parser.predicate_index
 
-    entity_idx_lst = [entity_index[e] for e in entities]
-    predicate_idx_lst = [predicate_index[p] for p in predicates]
+    entity_index_s = parser_s.entity_index
+    predicate_index_s = parser_s.predicate_index
 
-    if len(entity_idx_lst) > 0:
-        print('# Entities')
+    for s, p, o in [(s, p, o) for (s, p, o) in test_triples if p in predicates]:
+        # q is the inverse of p (e.g. if p is has_part, q is part_of)
+        q = predicates[1] if p == predicates[0] else predicates[0]
 
-        for i in range(E.shape[1]):
-            print('[%3i]\t%s' % (i, '\t'.join(["%.3f" % E[e_idx][i] for e_idx in entity_idx_lst])))
+        s_idx, o_idx = entity_index[s], entity_index[o]
+        p_idx, q_idx = predicate_index[p], predicate_index[q]
 
-    if len(predicate_idx_lst) > 0:
-        print('# Predicates')
+        s_idx_s, o_idx_s = entity_index_s[s], entity_index_s[o]
+        p_idx_s, q_idx_s = predicate_index_s[p], predicate_index_s[q]
 
-        for i in range(W.shape[1]):
-            print('[%3i]\t%s' % (i, '\t'.join(["%.3f" % W[p_idx][i] for p_idx in predicate_idx_lst])))
+        # Score for s, p, o according to the schema-less model
+        score = - np.sum(np.abs(E[s_idx, :] + W[p_idx, :] - E[o_idx, :]))
+        # Score for o, q, s according to the schema-less model
+        i_score = - np.sum(np.abs(E[o_idx, :] + W[q_idx, :] - E[s_idx, :]))
+
+        # Score for s, p, o according to the schema-aware model
+        score_s = - np.sum(np.abs(E_s[s_idx_s, :] + W_s[p_idx_s, :] - E_s[o_idx_s, :]))
+
+        # Score for o, q, s according to the schema-aware model
+        i_score_s = - np.sum(np.abs(E_s[o_idx_s, :] + W_s[q_idx_s, :] - E_s[s_idx_s, :]))
+
+        if abs(score - i_score) - abs(score_s - i_score_s) > 1.8:
+            print()
+            print('[No Schema] score(', entity_to_name[s], p, entity_to_name[o], ') = ', score)
+            print('[No Schema] score(', entity_to_name[o], q, entity_to_name[s], ') = ', i_score)
+            print('[Schema] score(', entity_to_name[s], p, entity_to_name[o], ') = ', score_s)
+            print('[Schema] score(', entity_to_name[o], q, entity_to_name[s], ') = ', i_score_s)
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
