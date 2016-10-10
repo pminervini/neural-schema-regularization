@@ -32,7 +32,7 @@ def to_command(c):
 
 
 def to_logfile(c, dir):
-    outfile = "%s/exp_wn18_timing_v2_cpu.%s.log" % (dir, summary(c))
+    outfile = "%s/exp_wn18_timing_v2_gpu.%s.log" % (dir, summary(c))
     return outfile
 
 
