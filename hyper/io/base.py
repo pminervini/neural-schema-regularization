@@ -21,5 +21,8 @@ def read_triples(path):
         logging.info('Acquiring %s ..' % path)
         with iopen(path, 'rt') as f:
             lines = f.readlines()
-        triples = [(s.strip(), p.strip(), o.strip()) for [s, p, o] in [l.split() for l in lines]]
+        if path.endswith('.tsv') or path.endswith('.tsv.gz') or path.endswith('.tsv.bz2'):
+            triples = [(s.strip(), p.strip(), o.strip()) for [s, p, o] in [l.split('\t') for l in lines]]
+        else:
+            triples = [(s.strip(), p.strip(), o.strip()) for [s, p, o] in [l.split() for l in lines]]
     return triples
