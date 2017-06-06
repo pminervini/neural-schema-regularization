@@ -1,12 +1,11 @@
-# Hyper: Latent Factor Models for Link Prediction in Knowledge Hypergraphs
+# Regularization of Link Prediction Models
 
-This package implements several state-of-the-art latent factor models for link prediction in Knowledge Graphs such as the Translating Embeddings model, and their extensions for managing Knowledge (Hyper-)Graphs with super-dyadic relation types.
-
+This package implements several state-of-the-art latent factor models for link prediction in Knowledge.
 ## Installation
 
 This library is heavily based on Keras and Theano.
 
-For installing a bleeding edge version of such libraries, run the following command:
+For installing the latest version of such libraries, run the following command:
 
 ```bash
 $ sudo pip3 install --upgrade git+git://github.com/fchollet/keras.git git+git://github.com/Theano/Theano.git
