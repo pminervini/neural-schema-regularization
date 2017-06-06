@@ -1,6 +1,7 @@
 # Regularization of Link Prediction Models
 
-This package implements several state-of-the-art latent factor models for link prediction in Knowledge.
+This package implements several state-of-the-art latent factor models for link prediction in Knowledge Graphs, and a set of novel regularizers based on background knowledge.
+
 ## Installation
 
 This library is heavily based on Keras and Theano.
